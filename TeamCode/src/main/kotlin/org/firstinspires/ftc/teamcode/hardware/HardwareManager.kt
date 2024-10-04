@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.config.CDConfig
+import org.firstinspires.ftc.teamcode.util.DeadWheelEncoder
 import org.firstinspires.ftc.teamcode.util.Encoder
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil
 
@@ -24,9 +25,9 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
     lateinit var driveMotors: List<DcMotorEx>
 
     // Dead wheels
-    var leftEncoder: Encoder? = null
-    var rightEncoder: Encoder? = null
-    var rearEncoder: Encoder? = null
+    var leftEncoder: DeadWheelEncoder? = null
+    var rightEncoder: DeadWheelEncoder? = null
+    var rearEncoder: DeadWheelEncoder? = null
 
     // Platter sensors
     var touchSensor: TouchSensor? = null
@@ -39,6 +40,7 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
         initializeLynxModules(hardware)
         initializeWheelLocalizers(hardware)
         initializeDriveMotors(hardware)
+        initializeSensors(hardware)
     }
 
     private fun systemCheck(hardware: HardwareMap)  {
@@ -63,14 +65,12 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
         // If any of the encoders are missing, don't initialize any of them
         if (leftEncoderMotor == null || rightEncoderMotor == null || rearEncoderMotor == null) return
 
-        leftEncoder = Encoder(leftEncoderMotor)
-        rightEncoder = Encoder(rightEncoderMotor)
-        rearEncoder = Encoder(rearEncoderMotor)
+        leftEncoder = DeadWheelEncoder(leftEncoderMotor)
+        rightEncoder = DeadWheelEncoder(rightEncoderMotor)
+        rearEncoder = DeadWheelEncoder(rearEncoderMotor)
 
         leftEncoder!!.direction = Encoder.Direction.REVERSE
         rightEncoder!!.direction = Encoder.Direction.REVERSE
-
-        // rearEncoder!!.direction = Encoder.Direction.REVERSE
     }
 
     private fun initializeDriveMotors(hardware: HardwareMap) {
@@ -128,9 +128,4 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
         rightRearMotor.power = rearRight
         rightFrontMotor.power = frontRight
     }
-
-    // 81.9786
-    // 81.9384
-    // 81.8898
-    // Avg: 81.9356
 }

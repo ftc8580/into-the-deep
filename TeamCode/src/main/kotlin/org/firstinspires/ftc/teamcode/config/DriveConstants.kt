@@ -47,7 +47,7 @@ object DriveConstants {
      */
     var WHEEL_RADIUS: Double = 1.8898 // in
     var GEAR_RATIO: Double = 1.0 // output (wheel) speed / input (motor) speed
-    var TRACK_WIDTH: Double = 13.0 // in
+    var TRACK_WIDTH: Double = 13.5 // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -56,11 +56,11 @@ object DriveConstants {
      * empirically tuned.
      */
     @JvmStatic
-    var kV: Double = (1.0 / rpmToVelocity(MAX_RPM)) * 1.25
+    var kV: Double = (1.0 / rpmToVelocity(MAX_RPM)) * 1.05
     @JvmStatic
-    var kA: Double = 0.002
+    var kA: Double = 0.003
     @JvmStatic
-    var kStatic: Double = 0.0
+    var kStatic: Double = 0.01
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -71,7 +71,7 @@ object DriveConstants {
      */
     var MAX_VEL: Double = 52.48291908330528
     var MAX_ACCEL: Double = 52.48291908330528
-    var MAX_ANG_VEL: Double = Math.toRadians(231.31152000000003)
+    var MAX_ANG_VEL: Double = Math.toRadians(247.6056)
     var MAX_ANG_ACCEL: Double = Math.toRadians(231.31152000000003)
 
     fun encoderTicksToInches(ticks: Double): Double {

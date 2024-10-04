@@ -35,7 +35,7 @@ import kotlin.math.abs
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-class CDMecanumDrive(private val hardware: HardwareManager) :
+open class CDMecanumDrive(private val hardware: HardwareManager) :
     MecanumDrive(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER) {
     private val trajectorySequenceRunner: TrajectorySequenceRunner
 
@@ -197,9 +197,9 @@ class CDMecanumDrive(private val hardware: HardwareManager) :
 
     companion object {
         var TRANSLATIONAL_PID: PIDCoefficients = PIDCoefficients(0.0, 0.0, 0.0)
-        var HEADING_PID: PIDCoefficients = PIDCoefficients(0.0, 0.0, 0.0)
+        var HEADING_PID: PIDCoefficients = PIDCoefficients(8.0, 0.0, 0.0)
 
-        var LATERAL_MULTIPLIER: Double = 1.0
+        var LATERAL_MULTIPLIER: Double = 1.31868
 
         var VX_WEIGHT: Double = 1.0
         var VY_WEIGHT: Double = 1.0

@@ -3,10 +3,7 @@ package org.firstinspires.ftc.teamcode.drive
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer
-import com.qualcomm.robotcore.hardware.DcMotorEx
-import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
-import org.firstinspires.ftc.teamcode.util.Encoder
 
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:
@@ -42,19 +39,19 @@ class StandardTrackingWheelLocalizer(
     private var yMultiplier = 1.02772238
 
     override fun getWheelPositions(): List<Double> {
-        val leftPos: Int = leftEncoder.currentPosition
-        val rightPos: Int = rightEncoder.currentPosition
-        val frontPos: Int = rearEncoder.currentPosition
+        val leftPos = leftEncoder.currentPosition
+        val rightPos = rightEncoder.currentPosition
+        val frontPos = rearEncoder.currentPosition
 
         lastEncPositions.clear()
-        lastEncPositions.add(leftPos)
-        lastEncPositions.add(rightPos)
-        lastEncPositions.add(frontPos)
+        lastEncPositions.add(leftPos.toInt())
+        lastEncPositions.add(rightPos.toInt())
+        lastEncPositions.add(frontPos.toInt())
 
         return listOf(
-            encoderTicksToInches(leftPos.toDouble() * xMultiplier),
-            encoderTicksToInches(rightPos.toDouble() * xMultiplier),
-            encoderTicksToInches(frontPos.toDouble() * yMultiplier)
+            encoderTicksToInches(leftPos * xMultiplier),
+            encoderTicksToInches(rightPos * xMultiplier),
+            encoderTicksToInches(frontPos * yMultiplier)
         )
     }
 
@@ -80,7 +77,7 @@ class StandardTrackingWheelLocalizer(
         var WHEEL_RADIUS: Double = 0.6299213 // in
         var GEAR_RATIO: Double = 1.0 // output (wheel) speed / input (encoder) speed
 
-        var LATERAL_DISTANCE: Double = 8.8125 // in; distance between the left and right wheels
+        var LATERAL_DISTANCE: Double = 8.6918432 // in; distance between the left and right wheels
         var FORWARD_OFFSET: Double = -6.625 // in; offset of the lateral wheel
 
         fun encoderTicksToInches(ticks: Double): Double {
