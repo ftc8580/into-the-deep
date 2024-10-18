@@ -33,9 +33,22 @@ class ViperArmSubsystem(
         rotationMotorGroup?.set(getBoundedPower(power))
     }
 
-    fun getExtensionMotorGroupPosition(): Double = extensionMotorGroup?.get() ?: 0.0
+    fun getExtensionMotorGroupSpeed(): Double = extensionMotorGroup?.get() ?: 0.0
 
-    fun getRotationMotorGroupPosition(): Double = rotationMotorGroup?.get() ?: 0.0
+    fun getRotationMotorGroupSpeed(): Double = rotationMotorGroup?.get() ?: 0.0
+
+    //Redefined to position instead of speed. MotorGroup only has function to get complete list of positions for all motors. First motor in list is "leader".
+    fun getExtensionMotorGroupPosition(): Double {
+        val extensionMotorGroupPosList = extensionMotorGroup?.positions ?: listOf()
+        val extensionMotorGroupPosListFirst =  extensionMotorGroupPosList.first()
+        return extensionMotorGroupPosListFirst
+    }
+
+    fun getRotationMotorGroupPosition(): Double {
+        val rotationMotorGroupPosList = rotationMotorGroup?.positions ?: listOf()
+        val rotationMotorGroupPosListFirst = rotationMotorGroupPosList.first()
+        return rotationMotorGroupPosListFirst
+    }
 
     fun extendToPosition(position: Int) {
         val safePosition = getBoundedPosition(position, EXTENSION_MIN_POSITION, EXTENSION_MAX_POSITION)

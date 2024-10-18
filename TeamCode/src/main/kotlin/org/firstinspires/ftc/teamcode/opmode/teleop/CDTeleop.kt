@@ -122,17 +122,19 @@ class CDTeleop : OpModeBase() {
         telemetry.addLine()
 
         hardware.viperExtensionMotorGroup?.let {
-            telemetry.addLine("viperExtensionPosition: ${hardware.viperExtensionMotorGroup?.get() ?: "null"}")
+            telemetry.addLine("viperExtensionPos: ${viperArmSubsystem.getExtensionMotorGroupPosition()}")
         } ?: telemetry.addLine("[WARNING] viperExtensionGroup not found")
 
         hardware.viperRotationMotorGroup?.let {
-            telemetry.addLine("viperRotationPosition: ${hardware.viperRotationMotorGroup?.get() ?: "null"}")
+            telemetry.addLine("viperRotationPos: ${viperArmSubsystem.getRotationMotorGroupPosition()}")
         } ?: telemetry.addLine("[WARNING] viperRotationGroup not found")
 
         hardware.intakeRotateServo?.let {
             telemetry.addLine("intakeRotationPosition: ${hardware.intakeRotateServo?.position ?: "null"}")
         } ?: telemetry.addLine("[WARNING] wrist servo not found")
 
+//        telemetry.addLine("viperRotationPosition: ${hardware.viperRotationMotorGroup?.get() ?: "null"}")
+//        telemetry.addLine("viperExtensionPosition: ${hardware.viperExtensionMotorGroup?.get() ?: "null"}")
 //        telemetry.addLine("viperExtensionPos: ${viperArmSubsystem.getExtensionMotorGroupPosition()}")
 //        telemetry.addLine("viperRotationPos: ${viperArmSubsystem.getRotationMotorGroupPosition()}")
 //        telemetry.addLine()
