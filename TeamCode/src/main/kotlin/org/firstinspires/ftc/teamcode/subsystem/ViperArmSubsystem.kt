@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystem
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.util.MotorGroup
 
@@ -14,15 +15,35 @@ class ViperArmSubsystem(
     private val rotationMotorGroup = hardware.viperRotationMotorGroup
 
     init {
-        extensionMotorGroup?.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         extensionMotorGroup?.resetEncoder()
-        extensionMotorGroup?.setRunMode(Motor.RunMode.RawPower)
-//        extensionMotorGroup?.positionCoefficient = EXTENSION_KP
+        extensionMotorGroup?.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
+        extensionMotorGroup?.setRunMode(Motor.RunMode.PositionControl)
+        rotationMotorGroup?.positionCoefficient = 0.1
+        rotationMotorGroup?.setPositionTolerance(5.0)
 
-        rotationMotorGroup?.setRunMode(Motor.RunMode.RawPower)
         rotationMotorGroup?.resetEncoder()
         rotationMotorGroup?.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
-//        rotationMotorGroup?.positionCoefficient = ROTATION_KP
+        rotationMotorGroup?.setRunMode(Motor.RunMode.PositionControl)
+        rotationMotorGroup?.positionCoefficient = 0.1
+        rotationMotorGroup?.setPositionTolerance(5.0)
+    }
+
+    fun setMotorGroupsRawPower() {
+        extensionMotorGroup?.setRunMode(Motor.RunMode.RawPower)
+        rotationMotorGroup?.setRunMode(Motor.RunMode.RawPower)
+    }
+
+    fun setMotorGroupsPositionControl() {
+        extensionMotorGroup?.setRunMode(Motor.RunMode.PositionControl)
+        rotationMotorGroup?.setRunMode(Motor.RunMode.PositionControl)
+    }
+
+    fun correctExtensionGroupFollower() {
+        extensionMotorGroup?.correctFollower(Motor.RunMode.RawPower)
+    }
+
+    fun correctRotationGroupFollower() {
+        rotationMotorGroup?.correctFollower(Motor.RunMode.RawPower)
     }
 
     fun setExtensionMotorGroupPower(power: Double) {
@@ -125,25 +146,11 @@ class ViperArmSubsystem(
         it.set(motorSpeed)
     }
 
-    private fun getBoundedPosition(position: Int, min: Int, max: Int): Int {
-        return if (position > max) {
-            max
-        } else if (position < min) {
-            min
-        } else {
-            position
-        }
-    }
+    private fun getBoundedPosition(position: Int, min: Int, max: Int): Int =
+        Range.clip(position, min, max)
 
-    private fun getBoundedPower(power: Double, min: Double = -1.0, max: Double = 1.0): Double {
-        return if (power > max) {
-            max
-        } else if (power < min) {
-            min
-        } else {
-            power
-        }
-    }
+    private fun getBoundedPower(power: Double, min: Double = -1.0, max: Double = 1.0): Double =
+        Range.clip(power, min, max)
 
     companion object {
         private const val EXTENSION_SPEED = 1.0

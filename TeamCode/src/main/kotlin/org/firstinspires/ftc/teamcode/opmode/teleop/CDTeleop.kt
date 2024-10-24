@@ -18,6 +18,8 @@ class CDTeleop : OpModeBase() {
         initHardware()
         initializeDriverGamepad(driverGamepad)
         initializeCoDriverGamepad(accessoryGamepad)
+
+        viperArmSubsystem.setMotorGroupsRawPower()
     }
 
     @SuppressLint("UseValueOf")
@@ -68,6 +70,7 @@ class CDTeleop : OpModeBase() {
             viperArmSubsystem.setExtensionMotorGroupPower((-accessoryGamepad.rightY).pow(3.0) * 0.5)
         } else {
             viperArmSubsystem.setExtensionMotorGroupPower(0.0)
+            viperArmSubsystem.correctExtensionGroupFollower()
         }
 
         if (accessoryGamepad.leftY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.leftY < -VARIABLE_INPUT_DEAD_ZONE) {
@@ -75,26 +78,7 @@ class CDTeleop : OpModeBase() {
             viperArmSubsystem.setRotationMotorGroupPower((-accessoryGamepad.leftY).pow(3.0) * 0.3)
         } else {
             viperArmSubsystem.setRotationMotorGroupPower(0.0)
-        }
-
-        // Correct Drift
-        // TODO: Is this actually necessary at all with the updated MotorGroup?
-        // TODO: This seems to be working really well. Do we need to set RUN_TO_POSITION? We can also look into PID tuning,
-        //  test with another motor, or ... so we do not need to rely on autocorrection here as much.
-        val rotMotorLeadPos = viperArmSubsystem.getRotationMotorGroupPosition()
-        val rotMotorFollowPos = viperArmSubsystem.getRotationMotorGroupPositionLast()
-        val rotMotorDrift = abs(rotMotorLeadPos-rotMotorFollowPos)
-        val rotMotorRightBusyCheck = abs(viperArmSubsystem.getRotationMotorGroupSpeed())
-
-        if ((rotMotorDrift > ROTATION_DRIFT_ALLOWED) && (rotMotorRightBusyCheck < VARIABLE_INPUT_DEAD_ZONE)) {
-            hardware.viperRotationMotorLeft?.setTargetPosition(viperArmSubsystem.getRotationMotorGroupPosition().toInt())
-            if (rotMotorLeadPos > rotMotorFollowPos) {
-                hardware.viperRotationMotorLeft?.set(0.15)
-            } else if (rotMotorLeadPos < rotMotorFollowPos) {
-                hardware.viperRotationMotorLeft?.set(-0.15)
-            } else {
-                viperArmSubsystem.setRotationMotorGroupPower(0.0)
-            }
+            viperArmSubsystem.correctRotationGroupFollower()
         }
 
         writeTelemetry()
@@ -180,39 +164,11 @@ class CDTeleop : OpModeBase() {
 //        telemetry.addLine("viperRotationPos: ${viperArmSubsystem.getRotationMotorGroupPosition()}")
 //        telemetry.addLine()
 
-        // TODO: Position is meaningless for continuous servos, we need some way to measure position without an encoder in the servo
-
-//        hardware.suspendMotor?.let {
-//            telemetry.addLine("suspend motor pos: ${it.currentPosition}")
-//        } ?: telemetry.addLine("[WARNING] Suspend motor not found")
-//
-//        hardware.viperAngleServo?.let {
-//            telemetry.addLine("viper angle pos: ${it.position}")
-//        } ?: telemetry.addLine("[WARNING] Viper angle servo not found")
-//
-//        hardware.viperPot?.let {
-//            telemetry.addLine("pot voltage: ${it.voltage}")
-//        } ?: telemetry.addLine("[WARNING] Viper potentiometer not found")
-//
-//        hardware.viperMotor?.let {
-//            telemetry.addLine("viper motor pos: ${it.currentPosition}")
-//        } ?: telemetry.addLine("[WARNING] Viper motor not found")
-//
-//        hardware.droneServo?.let {
-//            telemetry.addLine("drone pos: ${it.position}")
-//        } ?: telemetry.addLine("[WARNING] Drone servo not found")
-//
-//        hardware.suspendServo?.let {
-//            telemetry.addLine("suspendServo pos: ${it.position}")
-//        } ?: telemetry.addLine("[WARNING] suspendServo not found")
-
         telemetry.update()
     }
 
     companion object {
         private const val VARIABLE_INPUT_DEAD_ZONE = 0.05
-        // 43rpm motor has 3892cpr. This is approximately 10 counts per degree.
-        private const val ROTATION_DRIFT_ALLOWED = 20
 
         private const val DRIVE_SPEED_FAST = 0.9
         private const val DRIVE_SPEED_NORMAL = 0.75

@@ -4,11 +4,15 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 
 class MotorGroup(
     private val leader: Motor,
-    vararg followers: Motor
+    private val follower: Motor
 ) : Motor(), Iterable<Motor> {
-    private val group: List<Motor> = listOf(leader, *followers)
+    private val group: List<Motor> = listOf(leader, follower)
+    private var isFollowerCorrected = true
 
-    override fun set(output: Double) = group.forEach { it.set(output) }
+    override fun set(output: Double) {
+        isFollowerCorrected = false
+        group.forEach { it.set(output) }
+    }
 
     override fun get(): Double = leader.get()
 
@@ -111,6 +115,22 @@ class MotorGroup(
      */
     override fun stopMotor() {
         group.forEach { it.stopMotor() }
+        correctFollower()
+    }
+
+    fun correctFollower(resetRunMode: RunMode? = null) {
+        if (isFollowerCorrected) return
+
+        follower.setRunMode(RunMode.PositionControl)
+        follower.setTargetPosition(leader.currentPosition)
+        while (!follower.atTargetPosition()) {
+            follower.set(0.1)
+        }
+        follower.stopMotor()
+        isFollowerCorrected = true
+        if (resetRunMode != null) {
+            follower.setRunMode(resetRunMode)
+        }
     }
 
     override fun iterator(): Iterator<Motor> = group.iterator()
