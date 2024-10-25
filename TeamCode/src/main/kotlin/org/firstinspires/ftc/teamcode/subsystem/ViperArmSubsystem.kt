@@ -13,13 +13,14 @@ class ViperArmSubsystem(
 ) : SubsystemBase() {
     private val extensionMotorGroup = hardware.viperExtensionMotorGroup
     private val rotationMotorGroup = hardware.viperRotationMotorGroup
+    private val extensionHomeSensor = hardware.extensionHomeSensor
 
     init {
         extensionMotorGroup?.resetEncoder()
         extensionMotorGroup?.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
         extensionMotorGroup?.setRunMode(Motor.RunMode.PositionControl)
-        rotationMotorGroup?.positionCoefficient = 0.1
-        rotationMotorGroup?.setPositionTolerance(5.0)
+        extensionMotorGroup?.positionCoefficient = 0.1
+        extensionMotorGroup?.setPositionTolerance(5.0)
 
         rotationMotorGroup?.resetEncoder()
         rotationMotorGroup?.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
@@ -47,11 +48,45 @@ class ViperArmSubsystem(
     }
 
     fun setExtensionMotorGroupPower(power: Double) {
-        extensionMotorGroup?.set(getBoundedPower(power))
+        if (extensionMotorGroup == null) return
+
+        if (power == 0.0) {
+            extensionMotorGroup.set(0.0)
+            return
+        }
+
+        if (extensionHomeSensor?.isPressed == true && power < 0) {
+            extensionMotorGroup.setWithoutCorrection(0.0)
+            extensionMotorGroup.resetEncoder()
+            return
+        }
+
+        val currentPosition = extensionMotorGroup.getPositions().first()
+        if (currentPosition <= EXTENSION_MIN_POSITION && power < 0) {
+            extensionMotorGroup.setWithoutCorrection(0.0)
+        } else if (currentPosition >= EXTENSION_MAX_POSITION && power > 0) {
+            extensionMotorGroup.setWithoutCorrection(0.0)
+        } else {
+            extensionMotorGroup.set(getBoundedPower(power))
+        }
     }
 
     fun setRotationMotorGroupPower(power: Double) {
-        rotationMotorGroup?.set(getBoundedPower(power))
+        if (rotationMotorGroup == null) return
+
+        if (power == 0.0) {
+            rotationMotorGroup.set(0.0)
+            return
+        }
+
+        val currentPosition = -rotationMotorGroup.getPositions().first()
+        if (currentPosition <= ROTATION_MIN_POSITION && power > 0) {
+            rotationMotorGroup.setWithoutCorrection(0.0)
+        } else if (currentPosition >= ROTATION_MAX_POSITION && power < 0) {
+            rotationMotorGroup.setWithoutCorrection(0.0)
+        } else {
+            rotationMotorGroup.set(getBoundedPower(power))
+        }
     }
 
     fun getExtensionMotorGroupSpeed(): Double = extensionMotorGroup?.get() ?: 0.0
@@ -64,12 +99,6 @@ class ViperArmSubsystem(
         val extensionMotorGroupPosList = extensionMotorGroup?.getPositions() ?: listOf()
         val extensionMotorGroupPosListFirst =  extensionMotorGroupPosList.first()
         return extensionMotorGroupPosListFirst
-    }
-    // The follower will be the second (last in this case) in the list
-    fun getExtensionMotorGroupPositionLast(): Double {
-        val extensionMotorGroupPosList = extensionMotorGroup?.getPositions() ?: listOf()
-        val extensionMotorGroupPosListLast = extensionMotorGroupPosList.last()
-        return extensionMotorGroupPosListLast
     }
 
     //Added for testing
@@ -84,13 +113,6 @@ class ViperArmSubsystem(
         val rotationMotorGroupPosList = rotationMotorGroup?.getPositions() ?: listOf()
         val rotationMotorGroupPosListFirst = rotationMotorGroupPosList.first()
         return rotationMotorGroupPosListFirst
-    }
-
-    // The follower will be the second (last in this case) in the list
-    fun getRotationMotorGroupPositionLast(): Double {
-        val rotationMotorGroupPosList = rotationMotorGroup?.getPositions() ?: listOf()
-        val rotationMotorGroupPosListLast = rotationMotorGroupPosList.last()
-        return rotationMotorGroupPosListLast
     }
 
     //Added for testing
@@ -109,7 +131,7 @@ class ViperArmSubsystem(
     fun rotateToPosition(position: Int) {
         val safePosition = getBoundedPosition(position, ROTATION_MIN_POSITION, ROTATION_MAX_POSITION)
 
-        safelyGoToPosition(rotationMotorGroup, safePosition, ROTATION_SPEED)
+        safelyGoToPosition(rotationMotorGroup, -safePosition, ROTATION_SPEED)
     }
 
     fun extendLowerBasket() = extendToPosition(EXTENSION_LOWER_BASKET_POSITION)
@@ -121,6 +143,16 @@ class ViperArmSubsystem(
     fun rotateHome() = rotateToPosition(ROTATION_MIN_POSITION)
 
     fun rotateTop() = rotateToPosition(ROTATION_MAX_POSITION)
+
+    fun drivePosition() {
+        retract()
+        rotateToPosition(ROTATION_DRIVE_POSITION)
+    }
+
+    fun pickupPosition() {
+        rotateToPosition(ROTATION_PICKUP_POSITION)
+        extendToPosition(EXTENSION_PICKUP_POSITION)
+    }
 
     fun deliverTopBasket() {
         rotateTop()
@@ -136,6 +168,32 @@ class ViperArmSubsystem(
         retract()
         rotateHome()
     }
+
+    fun resetExtensionHome(resetRunMode: Motor.RunMode? = null) {
+        // Already home
+        if (extensionHomeSensor?.isPressed == true) {
+            extensionMotorGroup?.resetEncoder()
+            return
+        }
+
+        extensionMotorGroup?.setRunMode(Motor.RunMode.RawPower)
+        while (extensionHomeSensor?.isPressed != true) {
+            extensionMotorGroup?.setWithoutCorrection(-0.2)
+        }
+        extensionMotorGroup?.stopMotor()
+        extensionMotorGroup?.resetEncoder()
+
+        resetRunMode?.let {
+            extensionMotorGroup?.setRunMode(resetRunMode)
+        }
+    }
+
+    fun resetExtensionEncoder() {
+        extensionMotorGroup?.resetEncoder()
+    }
+
+    val isExtensionHome: Boolean
+        get() = extensionHomeSensor?.isPressed == true
 
     private fun safelyGoToPosition(
         motorGroup: MotorGroup?,
@@ -153,16 +211,16 @@ class ViperArmSubsystem(
         Range.clip(power, min, max)
 
     companion object {
-        private const val EXTENSION_SPEED = 1.0
+        private const val EXTENSION_SPEED = 0.6
         private const val EXTENSION_MIN_POSITION = 0
-        private const val EXTENSION_LOWER_BASKET_POSITION = 5
-        private const val EXTENSION_MAX_POSITION = 10
+        private const val EXTENSION_PICKUP_POSITION = 500
+        private const val EXTENSION_LOWER_BASKET_POSITION = 1000
+        private const val EXTENSION_MAX_POSITION = 2250
 
-        private const val ROTATION_SPEED = 0.1
+        private const val ROTATION_SPEED = 0.3
         private const val ROTATION_MIN_POSITION = 0
-        private const val ROTATION_MAX_POSITION = 10
-
-        private const val EXTENSION_KP = 0.0
-        private const val ROTATION_KP = 0.0
+        private const val ROTATION_DRIVE_POSITION = 500
+        private const val ROTATION_PICKUP_POSITION = 1000
+        private const val ROTATION_MAX_POSITION = 4550
     }
 }

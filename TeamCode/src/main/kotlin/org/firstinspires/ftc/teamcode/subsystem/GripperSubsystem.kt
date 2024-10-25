@@ -8,12 +8,26 @@ class GripperSubsystem(
     private val hardware: HardwareManager,
     private val telemetry: MultipleTelemetry? = null
 ) : SubsystemBase() {
-    fun setPickupHeight() {
-        // On a continuous servo, position of 0.0 is running reverse.
-        // We want to start reversing until we hit the home sensor.
-        if (hardware.gripperHomeSensor?.isPressed == true) return
+    fun incrementUp() {
+        val currentPosition = hardware.gripperServo?.position
 
-        hardware.gripperServo?.power = 0.0
+        currentPosition?.let {
+            val newPosition = currentPosition + 0.1
+            hardware.gripperServo?.position = newPosition
+        }
+    }
+
+    fun incrementDown() {
+        val currentPosition = hardware.gripperServo?.position
+
+        currentPosition?.let {
+            val newPosition = currentPosition - 0.1
+            hardware.gripperServo?.position = newPosition
+        }
+    }
+
+    fun setPickupHeight() {
+        hardware.gripperServo?.position = 0.0
 
         // TODO: How do we stop this in the right position?
     }
@@ -21,7 +35,7 @@ class GripperSubsystem(
     fun setHighChamberHeight() {
         // On a continuous servo, position of 0.1 is running forward.
         // We want to start running until we reach the delivery height.
-        hardware.gripperServo?.power = 0.0
+        hardware.gripperServo?.position = 0.0
 
         // TODO: How do we stop this in the right position?
     }
@@ -29,7 +43,7 @@ class GripperSubsystem(
     fun setLowChamberHeight() {
         // On a continuous servo, position of 0.1 is running forward.
         // We want to start running until we reach the delivery height.
-        hardware.gripperServo?.power = 0.0
+        hardware.gripperServo?.position = 0.0
 
         // TODO: How do we stop this in the right position?
     }

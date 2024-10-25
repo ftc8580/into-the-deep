@@ -11,6 +11,10 @@ class MotorGroup(
 
     override fun set(output: Double) {
         isFollowerCorrected = false
+        setWithoutCorrection(output)
+    }
+
+    fun setWithoutCorrection(output: Double) {
         group.forEach { it.set(output) }
     }
 

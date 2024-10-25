@@ -33,13 +33,13 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
     var rearEncoder: DeadWheelEncoder? = null
 
     // Sensors
-    var gripperHomeSensor: TouchSensor? = null
+    var extensionHomeSensor: TouchSensor? = null
 
     // Servos
     var intakeWheelServoRear: CRServo? = null
     var intakeWheelServoFront: CRServo? = null
     var intakeRotateServo: Servo? = null
-    var gripperServo: CRServo? = null
+    var gripperServo: Servo? = null
 
     // Accessory  motors
     var viperExtensionMotorLeft: Motor? = null
@@ -117,22 +117,21 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
     }
 
     private fun initializeSensors(hardware: HardwareMap) {
-        gripperHomeSensor = safelyGetHardware<TouchSensor>(hardware, "gripperHomeSensor")
+        extensionHomeSensor = safelyGetHardware<TouchSensor>(hardware, "extensionHomeSensor")
     }
 
     private fun initializeServos(hardware: HardwareMap) {
         intakeWheelServoRear = safelyGetHardware<CRServo>(hardware, "intakeWheelServo")
         intakeWheelServoFront = safelyGetHardware<CRServo>(hardware, "intakeWheelServoFront")
         intakeRotateServo = safelyGetHardware<Servo>(hardware, "intakeRotateServo")
-        gripperServo = safelyGetHardware<CRServo>(hardware, "gripperServo")
+        gripperServo = safelyGetHardware<Servo>(hardware, "gripperServo")
 
-        // TODO: Not sure if we actually need this or not
-        // intakeRotateServo?.direction = Servo.Direction.REVERSE
+        gripperServo?.direction = Servo.Direction.REVERSE
 
         // TODO: Decide if we need scale range for any servos
         // Scale range sets a 180 degree servo to limit the range between 0 and 1.
         // This is configuring a 90 degree range, starting from the 0 position.
-//        intakeRotateServo?.scaleRange(0.0, 0.5)
+        // intakeRotateServo?.scaleRange(0.0, 0.5)
 
         // Set the position to pickup position
         intakeRotateServo?.position = 0.0
