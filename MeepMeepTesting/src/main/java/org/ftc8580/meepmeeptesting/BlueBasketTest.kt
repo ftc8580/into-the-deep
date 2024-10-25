@@ -21,22 +21,22 @@ fun main(args: Array<String>) {
                     Pose2d(
                         30.0,
                         63.25,
-                        Math.toRadians(-90.0)
+                        Math.toRadians(270.0)
                     )
                 )
-                    .lineToLinearHeading(Pose2d(30.0, 26.75, Math.toRadians(0.0)))
+                    .lineToLinearHeading(Pose2d(30.0, 26.75, Math.toRadians(0.0))) // Pickup first sample
                     .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(52.0, 52.0, Math.toRadians(45.0)))
+                    .lineToLinearHeading(Pose2d(52.0, 52.0, Math.toRadians(45.0))) // Deliver to basket
                     .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(42.0, 26.75, Math.toRadians(0.0)))
+                    .lineToLinearHeading(Pose2d(42.0, 26.75, Math.toRadians(0.0))) // Pickup second sample
                     .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(52.0, 52.0, Math.toRadians(45.0)))
+                    .lineToLinearHeading(Pose2d(52.0, 52.0, Math.toRadians(45.0))) // Deliver to basket
                     .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(54.0, 26.75, Math.toRadians(0.0)))
+                    .lineToLinearHeading(Pose2d(54.0, 26.75, Math.toRadians(0.0))) // Pickup third sample
                     .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(52.0, 52.0, Math.toRadians(45.0)))
+                    .lineToLinearHeading(Pose2d(52.0, 52.0, Math.toRadians(45.0))) // Deliver to basket
                     .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(24.0, 14.0, Math.toRadians(180.0)))
+                    .lineToLinearHeading(Pose2d(24.0, 14.0, Math.toRadians(180.0))) // Park
                     .build()
             }
 

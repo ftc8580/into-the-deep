@@ -6,14 +6,14 @@ import org.firstinspires.ftc.teamcode.command.transfer.ExtendOut
 import org.firstinspires.ftc.teamcode.command.transfer.RotateUp
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
-class StarterAuton : OpModeBase() {
+class ObservationZoneAuton : OpModeBase() {
     override fun initialize() {
         initHardware()
 
         // Start Pose
         val startingPose = Pose2d(
-            12.0,
-            63.5,
+            -30.0,
+            63.25,
             Math.toRadians(270.0)
         )
 
