@@ -39,18 +39,18 @@ class ActiveIntakeSubsystem(
     }
 
     fun runIntake() {
-        // On a continuous servo, position of 1.0 is running forward
-        hardware.intakeRotateServo?.position = 1.0
+        hardware.intakeWheelServoRear?.power = -1.0
+        hardware.intakeWheelServoFront?.power = 1.0
     }
 
     fun runEject() {
-        // On a continuous servo, position of 0.0 is running reverse
-        hardware.intakeRotateServo?.position = 0.0
+        hardware.intakeWheelServoRear?.power = 1.0
+        hardware.intakeWheelServoFront?.power = -1.0
     }
 
     fun stopIntake() {
-        // On a continuous servo, position of 0.5 is stopped
-        hardware.intakeRotateServo?.position = 0.5
+        hardware.intakeWheelServoRear?.power = 0.0
+        hardware.intakeWheelServoFront?.power = 0.0
     }
 
     companion object {

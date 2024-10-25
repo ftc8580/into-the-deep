@@ -1,29 +1,35 @@
 package org.firstinspires.ftc.teamcode.opmode.auton
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.arcrobotics.ftclib.command.ParallelCommandGroup
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
-import org.firstinspires.ftc.teamcode.command.transfer.ExtendOut
-import org.firstinspires.ftc.teamcode.command.transfer.RotateUp
+import org.firstinspires.ftc.teamcode.command.transfer.EjectSample
+import org.firstinspires.ftc.teamcode.command.transfer.IntakeSample
+import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToUpperBasket
+import org.firstinspires.ftc.teamcode.command.transfer.PositionHome
+import org.firstinspires.ftc.teamcode.command.transfer.PositionPickup
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence
 
 @Autonomous(group = "CyberDragons")
 class NetZoneAuton : OpModeBase() {
+    private val startingX = 34.5
+    private val spikeY = 25.75
+
     override fun initialize() {
         initHardware()
 
         // Start Pose
-        val startingPose = Pose2d(30.0, 63.25, Math.toRadians(270.0))
+        val startingPose = Pose2d(startingX, 63.25, Math.toRadians(270.0))
 
         mecanumDrive.poseEstimate = startingPose
 
-        val pickupFirstSamplePose = Pose2d(30.0, 26.75, Math.toRadians(0.0))
-        val pickupSecondSamplePose = Pose2d(42.0, 26.75, Math.toRadians(0.0))
-        val pickupThirdSamplePose = Pose2d(54.0, 26.75, Math.toRadians(0.0))
+        val pickupFirstSamplePose = Pose2d(startingX, spikeY, Math.toRadians(0.0))
+        val pickupSecondSamplePose = Pose2d(44.5, spikeY, Math.toRadians(0.0))
+        val pickupThirdSamplePose = Pose2d(54.5, spikeY, Math.toRadians(0.0))
 
-        val deliveryPose = Pose2d(52.0, 52.0, Math.toRadians(45.0))
+        val deliveryPose = Pose2d(60.0, 60.0, Math.toRadians(45.0))
         val parkPose = Pose2d(24.0, 14.0, Math.toRadians(180.0))
 
         val pickupFirstSampleTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(startingPose)
@@ -51,19 +57,46 @@ class NetZoneAuton : OpModeBase() {
             .build()
 
         val parkTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
-            .lineToLinearHeading(parkPose)
+            .splineToLinearHeading(parkPose, Math.toRadians(180.0))
             .build()
 
-        // TODO: All of the pickup and deliver actions. This is just the driving part.
         schedule(
             SequentialCommandGroup(
-                FollowTrajectorySequence(mecanumDrive, pickupFirstSampleTrajectorySequence),
-                FollowTrajectorySequence(mecanumDrive, deliverFirstTrajectorySequence),
-                FollowTrajectorySequence(mecanumDrive, pickupSecondSampleTrajectorySequence),
-                FollowTrajectorySequence(mecanumDrive, deliverSecondTrajectorySequence),
-                FollowTrajectorySequence(mecanumDrive, pickupThirdSampleTrajectorySequence),
-                FollowTrajectorySequence(mecanumDrive, deliverThirdTrajectorySequence),
-                FollowTrajectorySequence(mecanumDrive, parkTrajectorySequence),
+                IntakeSample(activeIntakeSubsystem)
+//                ParallelCommandGroup(
+//                    FollowTrajectorySequence(mecanumDrive, pickupFirstSampleTrajectorySequence),
+//                    PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
+//                ),
+//                IntakeSample(activeIntakeSubsystem),
+//                ParallelCommandGroup(
+//                    FollowTrajectorySequence(mecanumDrive, deliverFirstTrajectorySequence),
+//                    PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
+//                ),
+//                EjectSample(activeIntakeSubsystem),
+//                ParallelCommandGroup(
+//                    FollowTrajectorySequence(mecanumDrive, pickupSecondSampleTrajectorySequence),
+//                    PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
+//                ),
+//                IntakeSample(activeIntakeSubsystem),
+//                ParallelCommandGroup(
+//                    FollowTrajectorySequence(mecanumDrive, deliverSecondTrajectorySequence),
+//                    PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
+//                ),
+//                EjectSample(activeIntakeSubsystem),
+//                ParallelCommandGroup(
+//                    FollowTrajectorySequence(mecanumDrive, pickupThirdSampleTrajectorySequence),
+//                    PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
+//                ),
+//                IntakeSample(activeIntakeSubsystem),
+//                ParallelCommandGroup(
+//                    FollowTrajectorySequence(mecanumDrive, deliverThirdTrajectorySequence),
+//                    PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
+//                ),
+//                EjectSample(activeIntakeSubsystem),
+//                ParallelCommandGroup(
+//                    FollowTrajectorySequence(mecanumDrive, parkTrajectorySequence),
+//                    PositionHome(viperArmSubsystem, activeIntakeSubsystem)
+//                )
             )
         )
     }

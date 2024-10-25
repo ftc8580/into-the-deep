@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.opmode.auton
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
-import org.firstinspires.ftc.teamcode.command.transfer.ExtendOut
-import org.firstinspires.ftc.teamcode.command.transfer.RotateUp
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
 class ObservationZoneAuton : OpModeBase() {
@@ -28,9 +26,7 @@ class ObservationZoneAuton : OpModeBase() {
             .build()
 
         schedule(
-            RotateUp(viperArmSubsystem),
             FollowTrajectorySequence(mecanumDrive, sampleTrajectorySequence),
-            ExtendOut(viperArmSubsystem)
         )
     }
 }

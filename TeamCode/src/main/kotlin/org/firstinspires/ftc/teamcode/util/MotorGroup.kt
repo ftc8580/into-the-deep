@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util
 
 import com.arcrobotics.ftclib.hardware.motors.Motor
+import kotlin.math.abs
 
 class MotorGroup(
     private val leader: Motor,
@@ -122,20 +123,37 @@ class MotorGroup(
         correctFollower()
     }
 
-    fun correctFollower(resetRunMode: RunMode? = null) {
+    fun correctFollower() {
         if (isFollowerCorrected) return
 
-        follower.setRunMode(RunMode.PositionControl)
-        follower.setTargetPosition(leader.currentPosition)
-        while (!follower.atTargetPosition()) {
-            follower.set(0.1)
+        val drift = followerDrift()
+
+        if (abs(drift) > MAX_DRIFT) {
+            val power = if (drift > 0) {
+                -0.1
+            } else {
+                0.1
+            }
+
+            while (abs(followerDrift()) > MAX_DRIFT) {
+                follower.set(power)
+            }
+            follower.stopMotor()
         }
-        follower.stopMotor()
+
         isFollowerCorrected = true
-        if (resetRunMode != null) {
-            follower.setRunMode(resetRunMode)
-        }
+    }
+
+    private fun followerDrift(): Double {
+        val leaderPosition = leader.distance
+        val followerPosition = follower.distance
+
+        return followerPosition - leaderPosition
     }
 
     override fun iterator(): Iterator<Motor> = group.iterator()
+
+    companion object {
+        private const val MAX_DRIFT = 20
+    }
 }

@@ -18,13 +18,13 @@ class ViperArmSubsystem(
     init {
         extensionMotorGroup?.resetEncoder()
         extensionMotorGroup?.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
-        extensionMotorGroup?.setRunMode(Motor.RunMode.PositionControl)
+        extensionMotorGroup?.setRunMode(Motor.RunMode.RawPower)
         extensionMotorGroup?.positionCoefficient = 0.1
         extensionMotorGroup?.setPositionTolerance(5.0)
 
         rotationMotorGroup?.resetEncoder()
         rotationMotorGroup?.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE)
-        rotationMotorGroup?.setRunMode(Motor.RunMode.PositionControl)
+        rotationMotorGroup?.setRunMode(Motor.RunMode.RawPower)
         rotationMotorGroup?.positionCoefficient = 0.1
         rotationMotorGroup?.setPositionTolerance(5.0)
     }
@@ -40,11 +40,11 @@ class ViperArmSubsystem(
     }
 
     fun correctExtensionGroupFollower() {
-        extensionMotorGroup?.correctFollower(Motor.RunMode.RawPower)
+        extensionMotorGroup?.correctFollower()
     }
 
     fun correctRotationGroupFollower() {
-        rotationMotorGroup?.correctFollower(Motor.RunMode.RawPower)
+        rotationMotorGroup?.correctFollower()
     }
 
     fun setExtensionMotorGroupPower(power: Double) {
@@ -211,16 +211,16 @@ class ViperArmSubsystem(
         Range.clip(power, min, max)
 
     companion object {
-        private const val EXTENSION_SPEED = 0.6
-        private const val EXTENSION_MIN_POSITION = 0
-        private const val EXTENSION_PICKUP_POSITION = 500
-        private const val EXTENSION_LOWER_BASKET_POSITION = 1000
-        private const val EXTENSION_MAX_POSITION = 2250
+        const val EXTENSION_SPEED = 1.0
+        const val EXTENSION_MIN_POSITION = 0
+        const val EXTENSION_PICKUP_POSITION = 500
+        const val EXTENSION_LOWER_BASKET_POSITION = 1162
+        const val EXTENSION_MAX_POSITION = 6180
 
-        private const val ROTATION_SPEED = 0.3
-        private const val ROTATION_MIN_POSITION = 0
-        private const val ROTATION_DRIVE_POSITION = 500
-        private const val ROTATION_PICKUP_POSITION = 1000
-        private const val ROTATION_MAX_POSITION = 4550
+        const val ROTATION_SPEED = 0.4
+        const val ROTATION_MIN_POSITION = 0
+        const val ROTATION_DRIVE_POSITION = 500
+        const val ROTATION_PICKUP_POSITION = 1000
+        const val ROTATION_MAX_POSITION = 4550
     }
 }
