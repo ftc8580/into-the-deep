@@ -25,6 +25,6 @@ class TurnTest : LinearOpMode() {
     }
 
     companion object {
-        var ANGLE: Double = 90.0 // deg
+        var ANGLE: Double = 180.0 // deg
     }
 }

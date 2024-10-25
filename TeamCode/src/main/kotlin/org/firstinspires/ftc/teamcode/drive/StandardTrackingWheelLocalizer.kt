@@ -35,8 +35,8 @@ class StandardTrackingWheelLocalizer(
     private val rightEncoder = hardware.rightEncoder!!
     private val rearEncoder = hardware.rearEncoder!!
 
-    private var xMultiplier = 0.97637657
-    private var yMultiplier = 1.02772238
+    private var xMultiplier = 0.99131476
+    private var yMultiplier = 1.00650504
 
     override fun getWheelPositions(): List<Double> {
         val leftPos = leftEncoder.currentPosition
@@ -77,11 +77,14 @@ class StandardTrackingWheelLocalizer(
         var WHEEL_RADIUS: Double = 0.6299213 // in
         var GEAR_RATIO: Double = 1.0 // output (wheel) speed / input (encoder) speed
 
-        var LATERAL_DISTANCE: Double = 8.6918432 // in; distance between the left and right wheels
-        var FORWARD_OFFSET: Double = -6.625 // in; offset of the lateral wheel
+        var LATERAL_DISTANCE: Double = 3.451 // in; distance between the left and right wheels
+        var FORWARD_OFFSET: Double = -6.875 // in; offset of the lateral wheel
 
         fun encoderTicksToInches(ticks: Double): Double {
             return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV
         }
     }
 }
+
+// 100.9024, 100.8452, 100.8808 -> avg. 100.876133
+// 98.2152, 99.2541, 100.5918 -> avg. 99.3537

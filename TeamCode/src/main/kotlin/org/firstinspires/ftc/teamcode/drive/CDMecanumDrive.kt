@@ -196,8 +196,10 @@ open class CDMecanumDrive(private val hardware: HardwareManager) :
         get() = hardware.externalHeadingVelocity
 
     companion object {
-        var TRANSLATIONAL_PID: PIDCoefficients = PIDCoefficients(0.0, 0.0, 0.0)
-        var HEADING_PID: PIDCoefficients = PIDCoefficients(8.0, 0.0, 0.0)
+        @JvmField
+        var HEADING_PID: PIDCoefficients = PIDCoefficients(7.5, 0.0, 0.0)
+        @JvmField
+        var TRANSLATIONAL_PID: PIDCoefficients = PIDCoefficients(0.0, 0.05, 0.0)
 
         var LATERAL_MULTIPLIER: Double = 1.31868
 

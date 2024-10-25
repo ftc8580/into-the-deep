@@ -75,8 +75,8 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
     }
 
     private fun initializeWheelLocalizers(hardware: HardwareMap) {
-        val leftEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.rightRear)
-        val rightEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.rightFront)
+        val leftEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.rightFront)
+        val rightEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.rightRear)
         val rearEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.leftRear)
 
         // If any of the encoders are missing, don't initialize any of them
@@ -85,9 +85,6 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
         leftEncoder = DeadWheelEncoder(leftEncoderMotor)
         rightEncoder = DeadWheelEncoder(rightEncoderMotor)
         rearEncoder = DeadWheelEncoder(rearEncoderMotor)
-
-        leftEncoder!!.direction = Encoder.Direction.REVERSE
-        rightEncoder!!.direction = Encoder.Direction.REVERSE
     }
 
     private fun initializeDriveMotors(hardware: HardwareMap) {

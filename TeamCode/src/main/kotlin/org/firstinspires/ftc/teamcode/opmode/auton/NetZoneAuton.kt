@@ -1,18 +1,23 @@
 package org.firstinspires.ftc.teamcode.opmode.auton
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.arcrobotics.ftclib.command.SequentialCommandGroup
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
 import org.firstinspires.ftc.teamcode.command.transfer.ExtendOut
 import org.firstinspires.ftc.teamcode.command.transfer.RotateUp
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence
 
+@Autonomous(group = "CyberDragons")
 class NetZoneAuton : OpModeBase() {
     override fun initialize() {
         initHardware()
 
         // Start Pose
         val startingPose = Pose2d(30.0, 63.25, Math.toRadians(270.0))
+
+        mecanumDrive.poseEstimate = startingPose
 
         val pickupFirstSamplePose = Pose2d(30.0, 26.75, Math.toRadians(0.0))
         val pickupSecondSamplePose = Pose2d(42.0, 26.75, Math.toRadians(0.0))
@@ -25,17 +30,25 @@ class NetZoneAuton : OpModeBase() {
             .lineToLinearHeading(pickupFirstSamplePose)
             .build()
 
-        val deliverTrajectorySequences = listOf(pickupFirstSamplePose, pickupSecondSamplePose, pickupThirdSamplePose).map {
-            mecanumDrive.trajectorySequenceBuilder(it)
-                .lineToLinearHeading(deliveryPose)
-                .build()
-        }
+        val pickupSecondSampleTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
+            .lineToLinearHeading(pickupSecondSamplePose)
+            .build()
 
-        val pickupTrajectorySequences = listOf(pickupFirstSampleTrajectorySequence) + listOf(pickupSecondSamplePose, pickupThirdSamplePose).map {
-            mecanumDrive.trajectorySequenceBuilder(deliveryPose)
-                .lineToLinearHeading(it)
-                .build()
-        }
+        val pickupThirdSampleTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
+            .lineToLinearHeading(pickupThirdSamplePose)
+            .build()
+
+        val deliverFirstTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupFirstSamplePose)
+            .lineToLinearHeading(deliveryPose)
+            .build()
+
+        val deliverSecondTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupSecondSamplePose)
+            .lineToLinearHeading(deliveryPose)
+            .build()
+
+        val deliverThirdTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupThirdSamplePose)
+            .lineToLinearHeading(deliveryPose)
+            .build()
 
         val parkTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
             .lineToLinearHeading(parkPose)
@@ -43,13 +56,15 @@ class NetZoneAuton : OpModeBase() {
 
         // TODO: All of the pickup and deliver actions. This is just the driving part.
         schedule(
-            FollowTrajectorySequence(mecanumDrive, pickupTrajectorySequences[0]),
-            FollowTrajectorySequence(mecanumDrive, deliverTrajectorySequences[0]),
-            FollowTrajectorySequence(mecanumDrive, pickupTrajectorySequences[1]),
-            FollowTrajectorySequence(mecanumDrive, deliverTrajectorySequences[1]),
-            FollowTrajectorySequence(mecanumDrive, pickupTrajectorySequences[2]),
-            FollowTrajectorySequence(mecanumDrive, deliverTrajectorySequences[2]),
-            FollowTrajectorySequence(mecanumDrive, parkTrajectorySequence),
+            SequentialCommandGroup(
+                FollowTrajectorySequence(mecanumDrive, pickupFirstSampleTrajectorySequence),
+                FollowTrajectorySequence(mecanumDrive, deliverFirstTrajectorySequence),
+                FollowTrajectorySequence(mecanumDrive, pickupSecondSampleTrajectorySequence),
+                FollowTrajectorySequence(mecanumDrive, deliverSecondTrajectorySequence),
+                FollowTrajectorySequence(mecanumDrive, pickupThirdSampleTrajectorySequence),
+                FollowTrajectorySequence(mecanumDrive, deliverThirdTrajectorySequence),
+                FollowTrajectorySequence(mecanumDrive, parkTrajectorySequence),
+            )
         )
     }
 }

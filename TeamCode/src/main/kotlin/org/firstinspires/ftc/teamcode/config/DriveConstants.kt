@@ -47,7 +47,7 @@ object DriveConstants {
      */
     var WHEEL_RADIUS: Double = 1.8898 // in
     var GEAR_RATIO: Double = 1.0 // output (wheel) speed / input (motor) speed
-    var TRACK_WIDTH: Double = 13.5 // in
+    var TRACK_WIDTH: Double = 12.95 // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using

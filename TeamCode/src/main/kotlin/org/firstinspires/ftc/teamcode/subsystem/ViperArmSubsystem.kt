@@ -67,7 +67,7 @@ class ViperArmSubsystem(
         } else if (currentPosition >= EXTENSION_MAX_POSITION && power > 0) {
             extensionMotorGroup.setWithoutCorrection(0.0)
         } else {
-            extensionMotorGroup.set(getBoundedPower(power))
+            extensionMotorGroup.setWithoutCorrection(getBoundedPower(power))
         }
     }
 
@@ -85,7 +85,7 @@ class ViperArmSubsystem(
         } else if (currentPosition >= ROTATION_MAX_POSITION && power < 0) {
             rotationMotorGroup.setWithoutCorrection(0.0)
         } else {
-            rotationMotorGroup.set(getBoundedPower(power))
+            rotationMotorGroup.setWithoutCorrection(getBoundedPower(power))
         }
     }
 
