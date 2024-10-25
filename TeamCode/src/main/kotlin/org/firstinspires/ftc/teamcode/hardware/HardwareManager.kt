@@ -135,8 +135,8 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
     }
 
     private fun initializeAccessoryMotors(hardware: HardwareMap) {
-        viperExtensionMotorRight = safelyGetMotor(hardware, "viperExtensionRight", GoBILDA.RPM_312)
-        viperExtensionMotorLeft = safelyGetMotor(hardware, "viperExtensionLeft", GoBILDA.RPM_312)
+        viperExtensionMotorRight = safelyGetMotor(hardware, "viperExtensionRight", GoBILDA.RPM_117)
+        viperExtensionMotorLeft = safelyGetMotor(hardware, "viperExtensionLeft", GoBILDA.RPM_117)
         viperRotationMotorRight = safelyGetMotor(hardware, "viperRotationRight", GoBILDA.RPM_43)
         viperRotationMotorLeft = safelyGetMotor(hardware, "viperRotationLeft", GoBILDA.RPM_43)
 
