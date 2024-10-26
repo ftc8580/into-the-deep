@@ -51,6 +51,7 @@ class TurtleFullAuton : OpModeBase() {
                     FollowTrajectorySequence(mecanumDrive, initialDeliveryTrajectorySequence),
                     HighChamberPosition(gripperSubsystem)
                 ),
+                PickupPosition(gripperSubsystem),
                 ParallelCommandGroup(
                     FollowTrajectorySequence(mecanumDrive, pushSampleTrajectorySequence),
                     PickupPosition(gripperSubsystem)
