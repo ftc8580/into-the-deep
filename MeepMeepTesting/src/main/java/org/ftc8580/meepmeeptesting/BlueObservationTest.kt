@@ -58,14 +58,7 @@ fun main(args: Array<String>) {
                     .lineToLinearHeading(Pose2d(deliveryStartingX + 6.0, deliveryY, rotationDelivery)) // Deliver specimen
                     .waitSeconds(1.0)
                     .lineToLinearHeading(Pose2d(deliveryStartingX, deliveryY + 4.0, rotationDelivery))
-                    .lineToLinearHeading(Pose2d(-36.0, deliveryY + 4.0, rotationPickup))
-                    .lineToLinearHeading(Pose2d(-36.0, pushY, rotationPickup))
-                    .lineToLinearHeading(Pose2d(-48.0, pushY, rotationPickup))
-                    .lineToLinearHeading(Pose2d(-58.0, pushY, rotationPickup))
-//                    .lineToLinearHeading(Pose2d(-58.0, 54.0, rotationPickup))
-//                    .lineToLinearHeading(Pose2d(-58.0, pushY, rotationPickup))
-//                    .lineToLinearHeading(Pose2d(-63.0, pushY, rotationPickup))
-//                    .lineToLinearHeading(Pose2d(-63.0, 54.0, rotationPickup))
+                    .lineToLinearHeading(Pose2d(-40.0, 60.0, rotationPickup))
                     .build()
             }
 
