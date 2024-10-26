@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.command.transfer.PositionAutoRung
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
 @Autonomous(group = "CyberDragons")
-class NarwhalAuton : OpModeBase() {
+class NarwhalFullAuton : OpModeBase() {
     private val startingX = 8.0
     private val startingY = 63.25
     private val spikeY = 25.75

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence
 
 @Autonomous(group = "CyberDragons")
-class TurtleAuton : OpModeBase() {
+class TurtleFullAuton : OpModeBase() {
     private val rotationPickup = Math.toRadians(270.0)
     private val rotationDelivery = Math.toRadians(90.0)
     private val pickupY = 63.5
