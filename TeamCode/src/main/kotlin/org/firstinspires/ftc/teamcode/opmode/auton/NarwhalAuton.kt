@@ -5,6 +5,8 @@ import com.arcrobotics.ftclib.command.ParallelCommandGroup
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
+import org.firstinspires.ftc.teamcode.command.specimen.HighChamberPosition
+import org.firstinspires.ftc.teamcode.command.specimen.PickupPosition
 import org.firstinspires.ftc.teamcode.command.transfer.EjectSample
 import org.firstinspires.ftc.teamcode.command.transfer.IntakeSample
 import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToUpperBasket
@@ -98,10 +100,10 @@ class NarwhalAuton : OpModeBase() {
             SequentialCommandGroup(
 
                 ParallelCommandGroup(
-                    //TODO: Move Gripper to deliver high position
+                    HighChamberPosition(gripperSubsystem),
                     FollowTrajectorySequence(mecanumDrive, deliverPreLoadSpecimenTrajectorySequence)
                 ),
-                //TODO: Move gripper down to pickup position. This should put it on the chamber.
+                PickupPosition(gripperSubsystem),
                 FollowTrajectorySequence(mecanumDrive, clearSubmersibleTrajectorySequence),
                 ParallelCommandGroup(
                     FollowTrajectorySequence(mecanumDrive, pickupFirstSampleTrajectorySequence),
