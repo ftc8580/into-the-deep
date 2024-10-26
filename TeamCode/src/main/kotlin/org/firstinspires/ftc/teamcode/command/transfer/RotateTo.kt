@@ -18,14 +18,14 @@ class RotateTo(private val viperArmSubsystem: ViperArmSubsystem, private val tar
     override fun execute() {
         when (currentState) {
             RotateState.STARTED -> {
-                if (target < viperArmSubsystem.getRotationMotorGroupPosition()) {
+                if (-target > viperArmSubsystem.getRotationMotorGroupPosition()) {
                     rotationDirection = RotationDirection.DOWN
                 }
 
                 val power = if (rotationDirection == RotationDirection.UP) {
-                    -0.5
+                    -0.6
                 } else {
-                    0.5
+                    0.6
                 }
 
                 println("RotateState.STARTED")

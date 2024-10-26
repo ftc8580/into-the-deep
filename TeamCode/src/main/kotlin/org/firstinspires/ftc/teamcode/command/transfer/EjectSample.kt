@@ -38,11 +38,11 @@ class EjectSample(private val activeIntakeSubsystem: ActiveIntakeSubsystem) : Co
     }
 
     override fun isFinished(): Boolean {
-        activeIntakeSubsystem.stopIntake()
         return currentState == IntakeState.FINISHED
     }
 
     override fun end(interrupted: Boolean) {
+        activeIntakeSubsystem.stopIntake()
         currentState = IntakeState.IDLE
     }
 

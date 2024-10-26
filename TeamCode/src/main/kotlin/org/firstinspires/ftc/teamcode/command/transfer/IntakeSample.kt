@@ -15,19 +15,22 @@ class IntakeSample(private val activeIntakeSubsystem: ActiveIntakeSubsystem) : C
     private val runtime = ElapsedTime()
 
     override fun initialize() {
+        runtime.reset()
         targetTimeMs = 1000.0
+
+        activeIntakeSubsystem.runIntake()
+
         currentState = IntakeState.STARTED
     }
 
     override fun execute() {
         when (currentState) {
             IntakeState.STARTED -> {
-                runtime.reset()
-                activeIntakeSubsystem.runIntake()
                 currentState = IntakeState.RUNNING
             }
             IntakeState.RUNNING -> {
                 if (runtime.isTimedOut(targetTimeMs)) {
+                    println("intake is timed out")
                     currentState = IntakeState.FINISHED
                 }
             }
@@ -38,11 +41,11 @@ class IntakeSample(private val activeIntakeSubsystem: ActiveIntakeSubsystem) : C
     }
 
     override fun isFinished(): Boolean {
-        activeIntakeSubsystem.stopIntake()
         return currentState == IntakeState.FINISHED
     }
 
     override fun end(interrupted: Boolean) {
+        activeIntakeSubsystem.stopIntake()
         currentState = IntakeState.IDLE
     }
 

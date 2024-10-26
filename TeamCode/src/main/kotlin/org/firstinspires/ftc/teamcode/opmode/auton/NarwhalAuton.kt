@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.command.transfer.PositionPickup
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
 @Autonomous(group = "CyberDragons")
-class NetZoneAuton : OpModeBase() {
+class NarwhalAuton : OpModeBase() {
     private val startingX = 34.5
     private val spikeY = 25.75
 
@@ -62,41 +62,40 @@ class NetZoneAuton : OpModeBase() {
 
         schedule(
             SequentialCommandGroup(
-                IntakeSample(activeIntakeSubsystem)
-//                ParallelCommandGroup(
-//                    FollowTrajectorySequence(mecanumDrive, pickupFirstSampleTrajectorySequence),
-//                    PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
-//                ),
-//                IntakeSample(activeIntakeSubsystem),
-//                ParallelCommandGroup(
-//                    FollowTrajectorySequence(mecanumDrive, deliverFirstTrajectorySequence),
-//                    PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
-//                ),
-//                EjectSample(activeIntakeSubsystem),
-//                ParallelCommandGroup(
-//                    FollowTrajectorySequence(mecanumDrive, pickupSecondSampleTrajectorySequence),
-//                    PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
-//                ),
-//                IntakeSample(activeIntakeSubsystem),
-//                ParallelCommandGroup(
-//                    FollowTrajectorySequence(mecanumDrive, deliverSecondTrajectorySequence),
-//                    PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
-//                ),
-//                EjectSample(activeIntakeSubsystem),
-//                ParallelCommandGroup(
-//                    FollowTrajectorySequence(mecanumDrive, pickupThirdSampleTrajectorySequence),
-//                    PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
-//                ),
-//                IntakeSample(activeIntakeSubsystem),
-//                ParallelCommandGroup(
-//                    FollowTrajectorySequence(mecanumDrive, deliverThirdTrajectorySequence),
-//                    PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
-//                ),
-//                EjectSample(activeIntakeSubsystem),
-//                ParallelCommandGroup(
-//                    FollowTrajectorySequence(mecanumDrive, parkTrajectorySequence),
-//                    PositionHome(viperArmSubsystem, activeIntakeSubsystem)
-//                )
+                ParallelCommandGroup(
+                    FollowTrajectorySequence(mecanumDrive, pickupFirstSampleTrajectorySequence),
+                    PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
+                ),
+                IntakeSample(activeIntakeSubsystem),
+                ParallelCommandGroup(
+                    FollowTrajectorySequence(mecanumDrive, deliverFirstTrajectorySequence),
+                    PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
+                ),
+                EjectSample(activeIntakeSubsystem),
+                ParallelCommandGroup(
+                    FollowTrajectorySequence(mecanumDrive, pickupSecondSampleTrajectorySequence),
+                    PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
+                ),
+                IntakeSample(activeIntakeSubsystem),
+                ParallelCommandGroup(
+                    FollowTrajectorySequence(mecanumDrive, deliverSecondTrajectorySequence),
+                    PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
+                ),
+                EjectSample(activeIntakeSubsystem),
+                ParallelCommandGroup(
+                    FollowTrajectorySequence(mecanumDrive, pickupThirdSampleTrajectorySequence),
+                    PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
+                ),
+                IntakeSample(activeIntakeSubsystem),
+                ParallelCommandGroup(
+                    FollowTrajectorySequence(mecanumDrive, deliverThirdTrajectorySequence),
+                    PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
+                ),
+                EjectSample(activeIntakeSubsystem),
+                ParallelCommandGroup(
+                    FollowTrajectorySequence(mecanumDrive, parkTrajectorySequence),
+                    PositionHome(viperArmSubsystem, activeIntakeSubsystem)
+                )
             )
         )
     }

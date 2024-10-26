@@ -4,7 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
-class ObservationZoneAuton : OpModeBase() {
+class TurtleAuton : OpModeBase() {
     override fun initialize() {
         initHardware()
 

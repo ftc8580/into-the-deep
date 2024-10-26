@@ -57,15 +57,5 @@ class ActiveIntakeSubsystem(
         private const val WRIST_MIN = 0.0
         private const val WRIST_MAX = 1.0
         private const val WRIST_STEP = 0.01
-        //private const val EXTENSION_MIN_POSITION = 0
-        //private const val EXTENSION_LOWER_BASKET_POSITION = 5
-        //private const val EXTENSION_MAX_POSITION = 10
-
-        //private const val ROTATION_SPEED = 1.0
-        //private const val ROTATION_MIN_POSITION = 0
-        //private const val ROTATION_MAX_POSITION = 10
-
-        //private const val EXTENSION_KP = 0.0
-        //private const val ROTATION_KP = 0.0
     }
 }
