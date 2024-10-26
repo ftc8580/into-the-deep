@@ -14,16 +14,19 @@ import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
 @Autonomous(group = "CyberDragons")
 class NarwhalAuton : OpModeBase() {
-    private val startingX = 34.5
+    private val startingX = 8.0
+    private val startingY = 63.25
     private val spikeY = 25.75
 
     override fun initialize() {
         initHardware()
 
         // Start Pose
-        val startingPose = Pose2d(startingX, 63.25, Math.toRadians(270.0))
+        val startingPose = Pose2d(startingX, startingY, Math.toRadians(90.0))
 
         mecanumDrive.poseEstimate = startingPose
+
+        val deliverPreloadSpecimenPose = Pose2d (startingX, 34.0, Math.toRadians(90.0))
 
         val pickupFirstSamplePose = Pose2d(startingX, spikeY, Math.toRadians(0.0))
         val pickupSecondSamplePose = Pose2d(44.5, spikeY, Math.toRadians(0.0))
@@ -31,6 +34,8 @@ class NarwhalAuton : OpModeBase() {
 
         val deliveryPose = Pose2d(60.0, 60.0, Math.toRadians(45.0))
         val parkPose = Pose2d(24.0, 14.0, Math.toRadians(180.0))
+
+        val deliverPreLoadSpecimenTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(startingPose).lineToLinearHeading(deliverPreloadSpecimenPose).build()
 
         val pickupFirstSampleTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(startingPose)
             .lineToLinearHeading(pickupFirstSamplePose)
