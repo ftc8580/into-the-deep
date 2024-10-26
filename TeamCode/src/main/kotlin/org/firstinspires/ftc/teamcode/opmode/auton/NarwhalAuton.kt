@@ -8,8 +8,10 @@ import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
 import org.firstinspires.ftc.teamcode.command.transfer.EjectSample
 import org.firstinspires.ftc.teamcode.command.transfer.IntakeSample
 import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToUpperBasket
-import org.firstinspires.ftc.teamcode.command.transfer.PositionHome
+import org.firstinspires.ftc.teamcode.command.transfer.PositionDrive
 import org.firstinspires.ftc.teamcode.command.transfer.PositionPickup
+import org.firstinspires.ftc.teamcode.command.transfer.PositionPickupGround
+import org.firstinspires.ftc.teamcode.command.transfer.PositionAutoRung
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
 @Autonomous(group = "CyberDragons")
@@ -27,17 +29,28 @@ class NarwhalAuton : OpModeBase() {
         mecanumDrive.poseEstimate = startingPose
 
         val deliverPreloadSpecimenPose = Pose2d (startingX, 34.0, Math.toRadians(90.0))
+        val clearSubmersiblePose = Pose2d (startingX, 44.0, Math.toRadians(90.0) )
 
-        val pickupFirstSamplePose = Pose2d(startingX, spikeY, Math.toRadians(0.0))
-        val pickupSecondSamplePose = Pose2d(44.5, spikeY, Math.toRadians(0.0))
-        val pickupThirdSamplePose = Pose2d(54.5, spikeY, Math.toRadians(0.0))
+        val pickupFirstSamplePose = Pose2d(48.0, 34.0, Math.toRadians(270.0))
+        val pickupFirstSamplePoseIntake = Pose2d(48.0, 40.0, Math.toRadians(270.0))
+        val pickupSecondSamplePose = Pose2d(58.0, 34.0, Math.toRadians(270.0))
+        val pickupSecondSamplePoseIntake = Pose2d(58.0, 40.0, Math.toRadians(270.0))
+        val pickupThirdSamplePose = Pose2d(53.0, spikeY, Math.toRadians(0.0))
+        val pickupThirdSamplePoseIntake = Pose2d(47.0, 24.0, Math.toRadians(0.0))
 
-        val deliveryPose = Pose2d(60.0, 60.0, Math.toRadians(45.0))
+        val deliveryPose = Pose2d(60.0, 60.0, Math.toRadians(225.0))
+        val preParkPose = Pose2d(36.0, 14.0, Math.toRadians(180.0))
         val parkPose = Pose2d(24.0, 14.0, Math.toRadians(180.0))
 
-        val deliverPreLoadSpecimenTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(startingPose).lineToLinearHeading(deliverPreloadSpecimenPose).build()
+        val deliverPreLoadSpecimenTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(startingPose)
+            .lineToLinearHeading(deliverPreloadSpecimenPose)
+            .build()
 
-        val pickupFirstSampleTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(startingPose)
+        val clearSubmersibleTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(deliverPreloadSpecimenPose)
+            .lineToLinearHeading(clearSubmersiblePose)
+            .build()
+
+        val pickupFirstSampleTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(clearSubmersiblePose)
             .lineToLinearHeading(pickupFirstSamplePose)
             .build()
 
@@ -49,29 +62,56 @@ class NarwhalAuton : OpModeBase() {
             .lineToLinearHeading(pickupThirdSamplePose)
             .build()
 
-        val deliverFirstTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupFirstSamplePose)
+        val intakeFirstTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupFirstSamplePose)
+            .lineToLinearHeading(pickupFirstSamplePoseIntake)
+            .build()
+
+        val deliverFirstTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupFirstSamplePoseIntake)
             .lineToLinearHeading(deliveryPose)
             .build()
 
-        val deliverSecondTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupSecondSamplePose)
+        val intakeSecondTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupSecondSamplePose)
+            .lineToLinearHeading(pickupSecondSamplePoseIntake)
+            .build()
+
+        val deliverSecondTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupSecondSamplePoseIntake)
             .lineToLinearHeading(deliveryPose)
             .build()
 
-        val deliverThirdTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupThirdSamplePose)
+        val intakeThirdTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupThirdSamplePose)
+            .lineToLinearHeading(pickupThirdSamplePoseIntake)
+            .build()
+
+        val deliverThirdTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(pickupThirdSamplePoseIntake)
             .lineToLinearHeading(deliveryPose)
+            .build()
+
+        val preParkTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
+            .splineToLinearHeading(preParkPose, Math.toRadians(180.0))
             .build()
 
         val parkTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(deliveryPose)
-            .splineToLinearHeading(parkPose, Math.toRadians(180.0))
+            .lineToLinearHeading(parkPose)
             .build()
 
         schedule(
             SequentialCommandGroup(
+
+                ParallelCommandGroup(
+                    //TODO: Move Gripper to deliver high position
+                    FollowTrajectorySequence(mecanumDrive, deliverPreLoadSpecimenTrajectorySequence)
+                ),
+                //TODO: Move gripper down to pickup position. This should put it on the chamber.
+                FollowTrajectorySequence(mecanumDrive, clearSubmersibleTrajectorySequence),
                 ParallelCommandGroup(
                     FollowTrajectorySequence(mecanumDrive, pickupFirstSampleTrajectorySequence),
                     PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
                 ),
-                IntakeSample(activeIntakeSubsystem),
+                PositionPickupGround(viperArmSubsystem, activeIntakeSubsystem),
+                ParallelCommandGroup(
+                    IntakeSample(activeIntakeSubsystem),
+                    FollowTrajectorySequence(mecanumDrive, intakeFirstTrajectorySequence)
+                ),
                 ParallelCommandGroup(
                     FollowTrajectorySequence(mecanumDrive, deliverFirstTrajectorySequence),
                     PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
@@ -81,7 +121,11 @@ class NarwhalAuton : OpModeBase() {
                     FollowTrajectorySequence(mecanumDrive, pickupSecondSampleTrajectorySequence),
                     PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
                 ),
-                IntakeSample(activeIntakeSubsystem),
+                PositionPickupGround(viperArmSubsystem, activeIntakeSubsystem),
+                ParallelCommandGroup(
+                    IntakeSample(activeIntakeSubsystem),
+                    FollowTrajectorySequence(mecanumDrive, intakeSecondTrajectorySequence)
+                ),
                 ParallelCommandGroup(
                     FollowTrajectorySequence(mecanumDrive, deliverSecondTrajectorySequence),
                     PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
@@ -91,15 +135,23 @@ class NarwhalAuton : OpModeBase() {
                     FollowTrajectorySequence(mecanumDrive, pickupThirdSampleTrajectorySequence),
                     PositionPickup(viperArmSubsystem, activeIntakeSubsystem)
                 ),
-                IntakeSample(activeIntakeSubsystem),
+                PositionPickupGround(viperArmSubsystem, activeIntakeSubsystem),
+                ParallelCommandGroup(
+                    IntakeSample(activeIntakeSubsystem),
+                    FollowTrajectorySequence(mecanumDrive, intakeThirdTrajectorySequence)
+                ),
                 ParallelCommandGroup(
                     FollowTrajectorySequence(mecanumDrive, deliverThirdTrajectorySequence),
                     PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem)
                 ),
                 EjectSample(activeIntakeSubsystem),
                 ParallelCommandGroup(
+                    FollowTrajectorySequence(mecanumDrive, preParkTrajectorySequence),
+                    PositionDrive(viperArmSubsystem, activeIntakeSubsystem)
+                ),
+                ParallelCommandGroup(
                     FollowTrajectorySequence(mecanumDrive, parkTrajectorySequence),
-                    PositionHome(viperArmSubsystem, activeIntakeSubsystem)
+                    PositionAutoRung(viperArmSubsystem, activeIntakeSubsystem)
                 )
             )
         )
