@@ -34,6 +34,7 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
 
     // Sensors
     var extensionHomeSensor: TouchSensor? = null
+    var rotationHomeSensor: TouchSensor? = null
 
     // Servos
     var intakeWheelServoRear: CRServo? = null
@@ -115,6 +116,7 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
 
     private fun initializeSensors(hardware: HardwareMap) {
         extensionHomeSensor = safelyGetHardware<TouchSensor>(hardware, "extensionHomeSensor")
+        rotationHomeSensor = safelyGetHardware<TouchSensor>(hardware, "rotationHomeSensor")
     }
 
     private fun initializeServos(hardware: HardwareMap) {
