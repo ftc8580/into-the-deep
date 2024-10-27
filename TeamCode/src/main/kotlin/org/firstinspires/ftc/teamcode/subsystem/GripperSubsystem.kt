@@ -27,24 +27,14 @@ class GripperSubsystem(
     }
 
     fun setPickupHeight() {
-        hardware.gripperServo?.position = 0.0
-
-        // TODO: How do we stop this in the right position?
+        hardware.gripperServo?.position = 0.005
     }
 
     fun setHighChamberHeight() {
-        // On a continuous servo, position of 0.1 is running forward.
-        // We want to start running until we reach the delivery height.
-        hardware.gripperServo?.position = 0.0
-
-        // TODO: How do we stop this in the right position?
+        hardware.gripperServo?.position = 1.0
     }
 
     fun setLowChamberHeight() {
-        // On a continuous servo, position of 0.1 is running forward.
-        // We want to start running until we reach the delivery height.
-        hardware.gripperServo?.position = 0.0
-
-        // TODO: How do we stop this in the right position?
+        hardware.gripperServo?.position = 0.3
     }
 }

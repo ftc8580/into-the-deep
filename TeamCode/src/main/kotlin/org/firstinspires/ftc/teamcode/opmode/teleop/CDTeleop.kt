@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.command.transfer.PositionHome
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 import kotlin.math.pow
 
@@ -39,6 +40,26 @@ class CDTeleop : OpModeBase() {
             viperArmSubsystem.resetExtensionEncoder()
         }
 
+        // Driver controls
+        val driverLeftTriggerValue = driverGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)
+        val driverRightTriggerValue = driverGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)
+
+        if (driverLeftTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
+            hardware.gripperServo?.let {
+                if (it.position > 0.0) {
+                    it.position -= 0.01
+                }
+            }
+        }
+
+        if (driverRightTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
+            hardware.gripperServo?.let {
+                if (it.position < 1.0) {
+                    it.position += 0.01
+                }
+            }
+        }
+
         // Accessory controls
         val accessoryLeftTriggerValue = accessoryGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)
         val accessoryRightTriggerValue = accessoryGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)
@@ -56,15 +77,15 @@ class CDTeleop : OpModeBase() {
 
         if (accessoryGamepad.rightY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.rightY < -VARIABLE_INPUT_DEAD_ZONE) {
             // TODO: Fix multiplier later
-            viperArmSubsystem.setExtensionMotorGroupPower((-accessoryGamepad.rightY).pow(3.0) * 0.75)
+            viperArmSubsystem.setExtensionMotorGroupPower((-accessoryGamepad.rightY).pow(3.0) * 0.9)
         } else {
             viperArmSubsystem.setExtensionMotorGroupPower(0.0)
-            viperArmSubsystem.correctExtensionGroupFollower()
+//            viperArmSubsystem.correctExtensionGroupFollower()
         }
 
         if (accessoryGamepad.leftY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.leftY < -VARIABLE_INPUT_DEAD_ZONE) {
             // TODO: Fix multiplier later
-            viperArmSubsystem.setRotationMotorGroupPower((-accessoryGamepad.leftY).pow(3.0) * 0.5)
+            viperArmSubsystem.setRotationMotorGroupPower((-accessoryGamepad.leftY).pow(3.0) * 0.6)
         } else {
             viperArmSubsystem.setRotationMotorGroupPower(0.0)
             viperArmSubsystem.correctRotationGroupFollower()
@@ -77,28 +98,28 @@ class CDTeleop : OpModeBase() {
         val speedFastButton = gamepad.getGamepadButton(GamepadKeys.Button.Y)
         val speedSlowButton = gamepad.getGamepadButton(GamepadKeys.Button.A)
         val normalDriveButton = gamepad.getGamepadButton(GamepadKeys.Button.B)
-        val gripperUpButton = gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-        val gripperDownButton = gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-        gripperUpButton.whenPressed(Runnable { gripperSubsystem.incrementUp() })
-        gripperDownButton.whenPressed(Runnable { gripperSubsystem.incrementDown() })
-//        val gripperPickupButton = gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-//        val gripperLowDeliveryButton = gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-//        val gripperHighDeliveryButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+        val gripperPickupButton = gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+        val gripperLowDeliveryButton = gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+        val gripperHighDeliveryButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
 
-        val retractForClimbButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-        val ratchetClimbButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+//        val retractForClimbButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+//        val ratchetClimbButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
 
         speedFastButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_FAST })
         speedSlowButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_SLOW })
         normalDriveButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_NORMAL})
 
+        gripperPickupButton.whenPressed(Runnable { gripperSubsystem.setPickupHeight() })
+        gripperLowDeliveryButton.whenPressed(Runnable { gripperSubsystem.setLowChamberHeight() })
+        gripperHighDeliveryButton.whenPressed(Runnable { gripperSubsystem.setHighChamberHeight() })
+
         // TODO: Set correct numbers from telemetry
-        retractForClimbButton.whenPressed(Runnable { viperArmSubsystem.extendToPosition(0) })
-        ratchetClimbButton.whenPressed(Runnable {
-            viperArmSubsystem.rotateToPosition(0)
-            viperArmSubsystem.extendToPosition(0)
-            viperArmSubsystem.rotateToPosition(200)
-        })
+//        retractForClimbButton.whenPressed(Runnable { viperArmSubsystem.extendToPosition(0) })
+//        ratchetClimbButton.whenPressed(Runnable {
+//            viperArmSubsystem.rotateToPosition(0)
+//            viperArmSubsystem.extendToPosition(0)
+//            viperArmSubsystem.rotateToPosition(200)
+//        })
     }
 
     private fun initializeCoDriverGamepad(gamepad: GamepadEx) {
@@ -112,10 +133,10 @@ class CDTeleop : OpModeBase() {
         val viperLowPositionButton = gamepad.getGamepadButton(GamepadKeys.Button.X)
         val viperHighPositionButton = gamepad.getGamepadButton(GamepadKeys.Button.Y)
 
+        val homeButton = gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+
         wristForwardButton.whenPressed(Runnable { activeIntakeSubsystem.rotateHome() })
         wristReverseButton.whenPressed(Runnable { activeIntakeSubsystem.rotateToBasket() })
-//        wristLeftButton.whenPressed(Runnable { activeIntakeSubsystem.rotateLeft() })
-//        wristRightButton.whenPressed(Runnable { activeIntakeSubsystem.rotateRight() })
 
         wristLeftButton.whileHeld(Runnable { activeIntakeSubsystem.rotateIncrementDown() })
         wristRightButton.whileHeld(Runnable { activeIntakeSubsystem.rotateIncrementUp() })
@@ -124,6 +145,8 @@ class CDTeleop : OpModeBase() {
         viperPickupPositionButton.whenPressed(Runnable { viperArmSubsystem.pickupPosition() })
         viperLowPositionButton.whenPressed(Runnable { viperArmSubsystem.deliverLowerBasket() })
         viperHighPositionButton.whenPressed(Runnable { viperArmSubsystem.deliverTopBasket() })
+
+        homeButton.whenPressed(PositionHome(viperArmSubsystem, activeIntakeSubsystem))
     }
 
     private fun writeTelemetry() {
@@ -173,7 +196,7 @@ class CDTeleop : OpModeBase() {
     }
 
     companion object {
-        private const val VARIABLE_INPUT_DEAD_ZONE = 0.05
+        private const val VARIABLE_INPUT_DEAD_ZONE = 0.1
 
         private const val DRIVE_SPEED_FAST = 0.9
         private const val DRIVE_SPEED_NORMAL = 0.75

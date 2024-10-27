@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.config.CDConfig
+import org.firstinspires.ftc.teamcode.subsystem.ActiveIntakeSubsystem
 import org.firstinspires.ftc.teamcode.util.DeadWheelEncoder
-import org.firstinspires.ftc.teamcode.util.Encoder
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil
 import org.firstinspires.ftc.teamcode.util.MotorGroup
 
@@ -122,14 +122,13 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
         intakeWheelServoFront = safelyGetHardware<CRServo>(hardware, "intakeWheelServoFront")
         intakeRotateServo = safelyGetHardware<Servo>(hardware, "intakeRotateServo")
         gripperServo = safelyGetHardware<Servo>(hardware, "gripperServo")
-        
-        // TODO: Decide if we need scale range for any servos
-        // Scale range sets a 180 degree servo to limit the range between 0 and 1.
-        // This is configuring a 90 degree range, starting from the 0 position.
-        // intakeRotateServo?.scaleRange(0.0, 0.5)
 
-        // Set the position to pickup position
-        intakeRotateServo?.position = 0.0
+        // Set ranges
+        gripperServo?.scaleRange(0.0, 0.2)
+
+        // Initialize servo positions
+        // intakeRotateServo?.position = ActiveIntakeSubsystem.
+        gripperServo?.position = 0.0
     }
 
     private fun initializeAccessoryMotors(hardware: HardwareMap) {

@@ -215,7 +215,7 @@ class ViperArmSubsystem(
         const val EXTENSION_MIN_POSITION = 0
         const val EXTENSION_PICKUP_POSITION = 500
         const val EXTENSION_LOWER_BASKET_POSITION = 1162
-        const val EXTENSION_MAX_POSITION = 6180
+        const val EXTENSION_MAX_POSITION = 6100
 
         const val ROTATION_SPEED = 0.4
         const val ROTATION_MIN_POSITION = 0
@@ -223,6 +223,6 @@ class ViperArmSubsystem(
         const val ROTATION_PICKUP_POSITION = 1100
         const val ROTATION_DRIVE_POSITION = 1200
         const val ROTATION_AUTORUNG_POSITION = 2265
-        const val ROTATION_MAX_POSITION = 4550
+        const val ROTATION_MAX_POSITION = 4465
     }
 }
