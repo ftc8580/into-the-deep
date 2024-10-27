@@ -221,7 +221,7 @@ class ViperArmSubsystem(
         const val ROTATION_MIN_POSITION = 0
         const val ROTATION_PICKUP_POSITION_GROUND = 1000
         const val ROTATION_PICKUP_POSITION = 1100
-        const val ROTATION_DRIVE_POSITION = 1200
+        const val ROTATION_DRIVE_POSITION = 1300
         const val ROTATION_AUTORUNG_POSITION = 2265
         const val ROTATION_MAX_POSITION = 4465
     }
