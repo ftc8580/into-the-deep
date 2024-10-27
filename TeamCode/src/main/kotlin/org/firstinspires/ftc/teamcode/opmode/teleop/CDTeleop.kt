@@ -56,7 +56,7 @@ class CDTeleop : OpModeBase() {
 
         if (accessoryGamepad.rightY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.rightY < -VARIABLE_INPUT_DEAD_ZONE) {
             // TODO: Fix multiplier later
-            viperArmSubsystem.setExtensionMotorGroupPower((-accessoryGamepad.rightY).pow(3.0) * 0.5)
+            viperArmSubsystem.setExtensionMotorGroupPower((-accessoryGamepad.rightY).pow(3.0) * 0.75)
         } else {
             viperArmSubsystem.setExtensionMotorGroupPower(0.0)
             viperArmSubsystem.correctExtensionGroupFollower()
@@ -64,7 +64,7 @@ class CDTeleop : OpModeBase() {
 
         if (accessoryGamepad.leftY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.leftY < -VARIABLE_INPUT_DEAD_ZONE) {
             // TODO: Fix multiplier later
-            viperArmSubsystem.setRotationMotorGroupPower((-accessoryGamepad.leftY).pow(3.0) * 0.3)
+            viperArmSubsystem.setRotationMotorGroupPower((-accessoryGamepad.leftY).pow(3.0) * 0.5)
         } else {
             viperArmSubsystem.setRotationMotorGroupPower(0.0)
             viperArmSubsystem.correctRotationGroupFollower()
