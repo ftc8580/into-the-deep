@@ -12,7 +12,7 @@ class GripperSubsystem(
         val currentPosition = hardware.gripperServo?.position
 
         currentPosition?.let {
-            val newPosition = currentPosition + 0.1
+            val newPosition = currentPosition + 0.01
             hardware.gripperServo?.position = newPosition
         }
     }
@@ -21,7 +21,7 @@ class GripperSubsystem(
         val currentPosition = hardware.gripperServo?.position
 
         currentPosition?.let {
-            val newPosition = currentPosition - 0.1
+            val newPosition = currentPosition - 0.01
             hardware.gripperServo?.position = newPosition
         }
     }
