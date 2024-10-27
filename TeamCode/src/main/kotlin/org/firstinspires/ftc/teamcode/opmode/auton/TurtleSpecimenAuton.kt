@@ -14,11 +14,11 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence
 class TurtleSpecimenAuton : OpModeBase() {
     private val heading = Math.toRadians(90.0)
     private val pickupY = 63.5
-    private val deliveryY = 33.5
+    private val deliveryY = 37.5
     private val deliveryX = -16.0
 
-    private val parkX = -48.0
-    private val parkY = 60.0
+    private val parkX = -60.0
+    private val parkY = 62.0
 
     override fun initialize() {
         initHardware()
@@ -40,9 +40,9 @@ class TurtleSpecimenAuton : OpModeBase() {
             SequentialCommandGroup(
                 ParallelCommandGroup(
                     FollowTrajectorySequence(mecanumDrive, initialDeliveryTrajectorySequence),
-                    HighChamberPosition(gripperSubsystem)
+//                    HighChamberPosition(gripperSubsystem)
                 ),
-                PickupPosition(gripperSubsystem),
+//                PickupPosition(gripperSubsystem),
                 FollowTrajectorySequence(mecanumDrive, parkTrajectorySequence)
             )
         )

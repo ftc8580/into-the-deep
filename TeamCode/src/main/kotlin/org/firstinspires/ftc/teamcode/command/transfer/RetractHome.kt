@@ -17,11 +17,15 @@ class RetractHome(private val viperArmSubsystem: ViperArmSubsystem) : CommandBas
     override fun execute() {
         when (currentState) {
             RetractState.STARTED -> {
-                viperArmSubsystem.setExtensionMotorGroupPower(-1.0)
-                currentState = RetractState.RETRACTING
+                if (viperArmSubsystem.isExtensionHome) {
+                    viperArmSubsystem.resetExtensionEncoder()
+                    currentState = RetractState.FINISHED
+                } else {
+                    currentState = RetractState.RETRACTING
+                    viperArmSubsystem.setExtensionMotorGroupPower(-1.0)
+                }
             }
             RetractState.RETRACTING -> {
-                // TODO Adjust target rotation position
                 if (viperArmSubsystem.isExtensionHome) {
                     viperArmSubsystem.setExtensionMotorGroupPower(0.0)
                     viperArmSubsystem.resetExtensionEncoder()

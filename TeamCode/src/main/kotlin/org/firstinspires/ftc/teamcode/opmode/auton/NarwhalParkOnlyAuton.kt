@@ -19,12 +19,12 @@ import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 @Autonomous(group = "CyberDragons")
 class NarwhalParkOnlyAuton : OpModeBase() {
     private val startHeading = Math.toRadians(90.0)
-    private val startingX = 36.0
-    private val startingY = 63.25
+    private val startingX = 40.0
+    private val startingY = 63.5
 
     private val parkHeading = Math.toRadians(180.0)
-    private val parkX = 24.0
-    private val parkY = 14.0
+    private val parkX = 23.25
+    private val parkY = 7.5
 
     override fun initialize() {
         initHardware()
@@ -42,8 +42,10 @@ class NarwhalParkOnlyAuton : OpModeBase() {
 
         schedule(
             SequentialCommandGroup(
-                PositionDrive(viperArmSubsystem, activeIntakeSubsystem),
-                FollowTrajectorySequence(mecanumDrive, parkTrajectorySequence),
+                ParallelCommandGroup(
+                    PositionDrive(viperArmSubsystem, activeIntakeSubsystem),
+                    FollowTrajectorySequence(mecanumDrive, parkTrajectorySequence)
+                ),
                 PositionAutoRung(viperArmSubsystem, activeIntakeSubsystem)
             )
         )

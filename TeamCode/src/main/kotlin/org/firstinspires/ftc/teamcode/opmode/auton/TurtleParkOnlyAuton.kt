@@ -17,7 +17,7 @@ class TurtleParkOnlyAuton : OpModeBase() {
     private val startingX = -16.0
     private val startingY = 63.5
 
-    private val parkX = -48.0
+    private val parkX = -60.0
     private val parkY = 60.0
 
     override fun initialize() {
@@ -33,7 +33,6 @@ class TurtleParkOnlyAuton : OpModeBase() {
 
         schedule(
             SequentialCommandGroup(
-                PositionDrive(viperArmSubsystem, activeIntakeSubsystem),
                 FollowTrajectorySequence(mecanumDrive, parkTrajectorySequence)
             )
         )
