@@ -133,6 +133,6 @@ class TrackingWheelLateralDistanceTuner : LinearOpMode() {
     }
 
     companion object {
-        var NUM_TURNS: Int = 10
+        @JvmField var NUM_TURNS: Int = 10
     }
 }

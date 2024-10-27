@@ -201,10 +201,14 @@ open class CDMecanumDrive(private val hardware: HardwareManager) :
         @JvmField
         var TRANSLATIONAL_PID: PIDCoefficients = PIDCoefficients(0.0, 0.05, 0.0)
 
+        @JvmField
         var LATERAL_MULTIPLIER: Double = 1.31868
 
+        @JvmField
         var VX_WEIGHT: Double = 1.0
+        @JvmField
         var VY_WEIGHT: Double = 1.0
+        @JvmField
         var OMEGA_WEIGHT: Double = 1.0
 
         private val VEL_CONSTRAINT: TrajectoryVelocityConstraint =

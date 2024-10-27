@@ -46,6 +46,6 @@ class StrafeTest : LinearOpMode() {
     }
 
     companion object {
-        var DISTANCE: Double = 60.0 // in
+        @JvmField var DISTANCE: Double = 60.0 // in
     }
 }

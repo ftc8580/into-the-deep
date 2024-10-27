@@ -19,8 +19,8 @@ object DriveConstants {
     /*
      * These are motor constants that should be listed online for your motors.
      */
-    const val TICKS_PER_REV: Double = 537.6
-    const val MAX_RPM: Double = 312.0
+    @JvmField val TICKS_PER_REV: Double = 537.6
+    @JvmField val MAX_RPM: Double = 312.0
 
     /*
      * Set RUN_USING_ENCODER to true to enable built-in hub velocity control using drive encoders.
@@ -30,9 +30,8 @@ object DriveConstants {
      * If using the built-in motor velocity PID, update MOTOR_VELO_PID with the tuned coefficients
      * from DriveVelocityPIDTuner.
      */
-    const val RUN_USING_ENCODER: Boolean = false
-    @JvmStatic
-    var MOTOR_VELO_PID: PIDFCoefficients = PIDFCoefficients(
+    @JvmField val RUN_USING_ENCODER: Boolean = false
+    @JvmField val MOTOR_VELO_PID: PIDFCoefficients = PIDFCoefficients(
         0.0, 0.0, 0.0,
         getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV)
     )
@@ -45,9 +44,9 @@ object DriveConstants {
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
-    var WHEEL_RADIUS: Double = 1.8898 // in
-    var GEAR_RATIO: Double = 1.0 // output (wheel) speed / input (motor) speed
-    var TRACK_WIDTH: Double = 12.95 // in
+    @JvmField var WHEEL_RADIUS: Double = 1.8898 // in
+    @JvmField var GEAR_RATIO: Double = 1.0 // output (wheel) speed / input (motor) speed
+    @JvmField var TRACK_WIDTH: Double = 12.95 // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -55,12 +54,9 @@ object DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    @JvmStatic
-    var kV: Double = (1.0 / rpmToVelocity(MAX_RPM)) * 1.05
-    @JvmStatic
-    var kA: Double = 0.003
-    @JvmStatic
-    var kStatic: Double = 0.01
+    @JvmField var kV: Double = (1.0 / rpmToVelocity(MAX_RPM)) * 1.05
+    @JvmField var kA: Double = 0.003
+    @JvmField var kStatic: Double = 0.01
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -69,10 +65,10 @@ object DriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    var MAX_VEL: Double = 52.48291908330528
-    var MAX_ACCEL: Double = 52.48291908330528
-    var MAX_ANG_VEL: Double = Math.toRadians(247.6056)
-    var MAX_ANG_ACCEL: Double = Math.toRadians(231.31152000000003)
+    @JvmField var MAX_VEL: Double = 52.48291908330528
+    @JvmField var MAX_ACCEL: Double = 52.48291908330528
+    @JvmField var MAX_ANG_VEL: Double = Math.toRadians(247.6056)
+    @JvmField var MAX_ANG_ACCEL: Double = Math.toRadians(231.31152000000003)
 
     fun encoderTicksToInches(ticks: Double): Double {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV

@@ -68,6 +68,6 @@ class MaxAngularVeloTuner : LinearOpMode() {
     }
 
     companion object {
-        var RUNTIME: Double = 4.0
+        @JvmField var RUNTIME: Double = 4.0
     }
 }

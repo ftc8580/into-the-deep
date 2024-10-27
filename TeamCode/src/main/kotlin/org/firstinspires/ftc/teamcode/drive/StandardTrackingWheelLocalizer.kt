@@ -35,9 +35,6 @@ class StandardTrackingWheelLocalizer(
     private val rightEncoder = hardware.rightEncoder!!
     private val rearEncoder = hardware.rearEncoder!!
 
-    private var xMultiplier = 0.99131476
-    private var yMultiplier = 1.00650504
-
     override fun getWheelPositions(): List<Double> {
         val leftPos = leftEncoder.currentPosition
         val rightPos = rightEncoder.currentPosition
@@ -49,9 +46,9 @@ class StandardTrackingWheelLocalizer(
         lastEncPositions.add(frontPos.toInt())
 
         return listOf(
-            encoderTicksToInches(leftPos * xMultiplier),
-            encoderTicksToInches(rightPos * xMultiplier),
-            encoderTicksToInches(frontPos * yMultiplier)
+            encoderTicksToInches(leftPos * X_MULTIPLIER),
+            encoderTicksToInches(rightPos * X_MULTIPLIER),
+            encoderTicksToInches(frontPos * Y_MULTIPLIER)
         )
     }
 
@@ -66,19 +63,22 @@ class StandardTrackingWheelLocalizer(
         lastEncVels.add(frontVel)
 
         return listOf(
-            encoderTicksToInches(leftVel.toDouble() * xMultiplier),
-            encoderTicksToInches(rightVel.toDouble() * xMultiplier),
-            encoderTicksToInches(frontVel.toDouble() * yMultiplier)
+            encoderTicksToInches(leftVel.toDouble() * X_MULTIPLIER),
+            encoderTicksToInches(rightVel.toDouble() * X_MULTIPLIER),
+            encoderTicksToInches(frontVel.toDouble() * Y_MULTIPLIER)
         )
     }
 
     companion object {
-        var TICKS_PER_REV: Double = 2000.0
-        var WHEEL_RADIUS: Double = 0.6299213 // in
-        var GEAR_RATIO: Double = 1.0 // output (wheel) speed / input (encoder) speed
+        @JvmField var TICKS_PER_REV: Double = 2000.0
+        @JvmField var WHEEL_RADIUS: Double = 0.6299213 // in
+        @JvmField var GEAR_RATIO: Double = 1.0 // output (wheel) speed / input (encoder) speed
 
-        var LATERAL_DISTANCE: Double = 3.451 // in; distance between the left and right wheels
-        var FORWARD_OFFSET: Double = -6.875 // in; offset of the lateral wheel
+        @JvmField var LATERAL_DISTANCE: Double = 3.451 // in; distance between the left and right wheels
+        @JvmField var FORWARD_OFFSET: Double = -6.875 // in; offset of the lateral wheel
+
+        @JvmField var X_MULTIPLIER = 0.99131476
+        @JvmField var Y_MULTIPLIER = 1.00650504
 
         fun encoderTicksToInches(ticks: Double): Double {
             return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV

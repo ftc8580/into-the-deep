@@ -49,6 +49,6 @@ class BackAndForth : LinearOpMode() {
     }
 
     companion object {
-        var DISTANCE: Double = 50.0
+        @JvmField var DISTANCE: Double = 50.0
     }
 }

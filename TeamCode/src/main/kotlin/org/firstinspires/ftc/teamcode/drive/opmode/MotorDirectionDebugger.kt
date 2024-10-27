@@ -91,6 +91,6 @@ class MotorDirectionDebugger : LinearOpMode() {
     }
 
     companion object {
-        var MOTOR_POWER: Double = 0.7
+        @JvmField var MOTOR_POWER: Double = 0.7
     }
 }

@@ -111,7 +111,7 @@ class ManualFeedforwardTuner : LinearOpMode() {
     }
 
     companion object {
-        private var DISTANCE: Double = 72.0 // in
+        @JvmField var DISTANCE: Double = 72.0 // in
 
         private fun generateProfile(movingForward: Boolean): MotionProfile {
             val start = MotionState(if (movingForward) 0.0 else DISTANCE, 0.0, 0.0, 0.0)

@@ -82,6 +82,6 @@ class MaxVelocityTuner : LinearOpMode() {
     }
 
     companion object {
-        var RUNTIME: Double = 2.0
+        @JvmField var RUNTIME: Double = 2.0
     }
 }

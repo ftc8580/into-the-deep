@@ -22,7 +22,6 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.WaitSeg
 import org.firstinspires.ftc.teamcode.util.DashboardUtil
 import org.firstinspires.ftc.teamcode.util.LogFiles
 
-@Config
 class TrajectorySequenceRunner(
     private val follower: TrajectoryFollower,
     headingPIDCoefficients: PIDCoefficients,

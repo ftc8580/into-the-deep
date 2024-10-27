@@ -122,9 +122,7 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
         intakeWheelServoFront = safelyGetHardware<CRServo>(hardware, "intakeWheelServoFront")
         intakeRotateServo = safelyGetHardware<Servo>(hardware, "intakeRotateServo")
         gripperServo = safelyGetHardware<Servo>(hardware, "gripperServo")
-
-        gripperServo?.direction = Servo.Direction.REVERSE
-
+        
         // TODO: Decide if we need scale range for any servos
         // Scale range sets a 180 degree servo to limit the range between 0 and 1.
         // This is configuring a 90 degree range, starting from the 0 position.

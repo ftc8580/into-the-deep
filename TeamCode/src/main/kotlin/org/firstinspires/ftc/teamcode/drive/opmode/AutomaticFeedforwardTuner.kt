@@ -240,7 +240,7 @@ class AutomaticFeedforwardTuner : LinearOpMode() {
     }
 
     companion object {
-        var MAX_POWER: Double = 0.7
-        var DISTANCE: Double = 100.0 // in
+        @JvmField var MAX_POWER: Double = 0.7
+        @JvmField var DISTANCE: Double = 100.0 // in
     }
 }

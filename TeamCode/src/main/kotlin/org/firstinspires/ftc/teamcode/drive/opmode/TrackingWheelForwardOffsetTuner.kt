@@ -107,8 +107,8 @@ class TrackingWheelForwardOffsetTuner : LinearOpMode() {
     }
 
     companion object {
-        var ANGLE: Double = 180.0 // deg
-        var NUM_TRIALS: Int = 5
-        var DELAY: Int = 1000 // ms
+        @JvmField var ANGLE: Double = 180.0 // deg
+        @JvmField var NUM_TRIALS: Int = 5
+        @JvmField var DELAY: Int = 1000 // ms
     }
 }
