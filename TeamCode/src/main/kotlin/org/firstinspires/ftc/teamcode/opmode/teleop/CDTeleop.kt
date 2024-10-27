@@ -98,9 +98,9 @@ class CDTeleop : OpModeBase() {
         val speedFastButton = gamepad.getGamepadButton(GamepadKeys.Button.Y)
         val speedSlowButton = gamepad.getGamepadButton(GamepadKeys.Button.A)
         val normalDriveButton = gamepad.getGamepadButton(GamepadKeys.Button.B)
-        val gripperPickupButton = gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-        val gripperLowDeliveryButton = gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-        val gripperHighDeliveryButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+        val gripperPickupButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+        val gripperLowDeliveryButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+        val gripperHighDeliveryButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
 
 //        val retractForClimbButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
 //        val ratchetClimbButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
