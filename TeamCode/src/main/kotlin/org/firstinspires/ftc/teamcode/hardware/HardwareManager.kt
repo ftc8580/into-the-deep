@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.CRServo
+import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior
 import com.qualcomm.robotcore.hardware.DcMotorEx
@@ -34,6 +35,7 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
     // Sensors
     var extensionHomeSensor: TouchSensor? = null
     var rotationHomeSensor: TouchSensor? = null
+    var intakeColorSensor: ColorSensor? = null
 
     // Servos
     var intakeWheelServoRear: CRServo? = null
@@ -49,6 +51,9 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
     var viperExtensionMotorGroup: MotorGroup? = null
     var viperRotationMotorGroup: MotorGroup? = null
 
+    // LED Lights
+    var intakeIndicatorLight: Servo? = null
+
     init {
         systemCheck(hardware)
         initializeBatteryVoltageSensor(hardware)
@@ -58,6 +63,7 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
         initializeSensors(hardware)
         initializeServos(hardware)
         initializeAccessoryMotors(hardware)
+        initializeLights(hardware)
     }
 
     private fun systemCheck(hardware: HardwareMap)  {
@@ -116,6 +122,7 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
     private fun initializeSensors(hardware: HardwareMap) {
         extensionHomeSensor = safelyGetHardware<TouchSensor>(hardware, "extensionHomeSensor")
         rotationHomeSensor = safelyGetHardware<TouchSensor>(hardware, "rotationHomeSensor")
+        intakeColorSensor = safelyGetHardware<ColorSensor>(hardware, "intakeColorSensor")
     }
 
     private fun initializeServos(hardware: HardwareMap) {
@@ -128,8 +135,12 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
         gripperServo?.scaleRange(0.0, 0.2)
 
         // Initialize servo positions
-        // intakeRotateServo?.position = ActiveIntakeSubsystem.
+        intakeRotateServo?.position = 0.0
         gripperServo?.position = 0.0
+    }
+
+    private fun initializeLights(hardware: HardwareMap) {
+        intakeIndicatorLight = safelyGetHardware<Servo>(hardware, "intakeIndicatorLight")
     }
 
     private fun initializeAccessoryMotors(hardware: HardwareMap) {

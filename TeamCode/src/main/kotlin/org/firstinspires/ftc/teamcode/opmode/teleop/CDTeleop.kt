@@ -7,12 +7,14 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.transfer.PositionHome
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
+import org.firstinspires.ftc.teamcode.util.RevColor
 import kotlin.math.pow
 
 @Suppress("UNUSED")
 @TeleOp(name="CDTeleop")
 class CDTeleop : OpModeBase() {
     private var driveSpeedScale = DRIVE_SPEED_NORMAL
+    private var revColorSensor: RevColor? = null
 
     override fun initialize() {
         initHardware()
@@ -20,6 +22,10 @@ class CDTeleop : OpModeBase() {
         initializeCoDriverGamepad(accessoryGamepad)
 
         viperArmSubsystem.setMotorGroupsRawPower()
+
+        hardware.intakeColorSensor?.let {
+            revColorSensor = RevColor(it)
+        }
     }
 
     @SuppressLint("UseValueOf")
@@ -38,6 +44,18 @@ class CDTeleop : OpModeBase() {
 
         if (viperArmSubsystem.isExtensionHome) {
             viperArmSubsystem.resetExtensionEncoder()
+        }
+
+        revColorSensor?.let {
+            hardware.intakeIndicatorLight?.position = if (it.isBlue) {
+                0.645
+            } else if (it.isRed) {
+                0.278
+            } else if (it.isYellow) {
+                0.388
+            } else {
+                0.0
+            }
         }
 
         // Driver controls
@@ -90,6 +108,9 @@ class CDTeleop : OpModeBase() {
             viperArmSubsystem.setRotationMotorGroupPower(0.0)
             viperArmSubsystem.correctRotationGroupFollower()
         }
+
+        // LED Light
+        hardware.intakeColorSensor?.argb()
 
         writeTelemetry()
     }
