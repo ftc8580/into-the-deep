@@ -74,17 +74,14 @@ class StandardTrackingWheelLocalizer(
         @JvmField var WHEEL_RADIUS: Double = 0.6299213 // in
         @JvmField var GEAR_RATIO: Double = 1.0 // output (wheel) speed / input (encoder) speed
 
-        @JvmField var LATERAL_DISTANCE: Double = 3.451 // in; distance between the left and right wheels
+        @JvmField var LATERAL_DISTANCE: Double = 3.525 // in; distance between the left and right wheels
         @JvmField var FORWARD_OFFSET: Double = -6.875 // in; offset of the lateral wheel
 
-        @JvmField var X_MULTIPLIER = 0.99131476
-        @JvmField var Y_MULTIPLIER = 1.00650504
+        @JvmField var X_MULTIPLIER = 0.99483386 // 0.99131476
+        @JvmField var Y_MULTIPLIER = 0.99889456 // 1.00650504
 
         fun encoderTicksToInches(ticks: Double): Double {
             return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV
         }
     }
 }
-
-// 100.9024, 100.8452, 100.8808 -> avg. 100.876133
-// 98.2152, 99.2541, 100.5918 -> avg. 99.3537

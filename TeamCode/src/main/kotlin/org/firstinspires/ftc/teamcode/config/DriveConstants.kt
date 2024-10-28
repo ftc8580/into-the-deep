@@ -19,7 +19,7 @@ object DriveConstants {
     /*
      * These are motor constants that should be listed online for your motors.
      */
-    @JvmField val TICKS_PER_REV: Double = 537.6
+    @JvmField val TICKS_PER_REV: Double = 537.7
     @JvmField val MAX_RPM: Double = 312.0
 
     /*
@@ -44,7 +44,7 @@ object DriveConstants {
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
-    @JvmField var WHEEL_RADIUS: Double = 1.8898 // in
+    @JvmField var WHEEL_RADIUS: Double = 1.889764 // in
     @JvmField var GEAR_RATIO: Double = 1.0 // output (wheel) speed / input (motor) speed
     @JvmField var TRACK_WIDTH: Double = 12.95 // in
 
@@ -54,9 +54,9 @@ object DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    @JvmField var kV: Double = (1.0 / rpmToVelocity(MAX_RPM)) * 1.05
-    @JvmField var kA: Double = 0.003
-    @JvmField var kStatic: Double = 0.01
+    @JvmField var kV: Double = 0.017
+    @JvmField var kA: Double = 0.0035
+    @JvmField var kStatic: Double = 0.005
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -65,10 +65,10 @@ object DriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    @JvmField var MAX_VEL: Double = 52.48291908330528
-    @JvmField var MAX_ACCEL: Double = 52.48291908330528
-    @JvmField var MAX_ANG_VEL: Double = Math.toRadians(247.6056)
-    @JvmField var MAX_ANG_ACCEL: Double = Math.toRadians(231.31152000000003)
+    @JvmField var MAX_VEL: Double = 52.4819193 //62.7329126
+    @JvmField var MAX_ACCEL: Double = 45.0
+    @JvmField var MAX_ANG_VEL: Double = 3.3775712427578997
+    @JvmField var MAX_ANG_ACCEL: Double = 3.211860967940206
 
     fun encoderTicksToInches(ticks: Double): Double {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV

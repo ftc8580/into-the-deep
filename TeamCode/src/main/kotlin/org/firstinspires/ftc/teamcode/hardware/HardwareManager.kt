@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.config.CDConfig
-import org.firstinspires.ftc.teamcode.subsystem.ActiveIntakeSubsystem
 import org.firstinspires.ftc.teamcode.util.DeadWheelEncoder
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil
 import org.firstinspires.ftc.teamcode.util.MotorGroup

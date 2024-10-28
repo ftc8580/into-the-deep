@@ -197,12 +197,12 @@ open class CDMecanumDrive(private val hardware: HardwareManager) :
 
     companion object {
         @JvmField
-        var HEADING_PID: PIDCoefficients = PIDCoefficients(7.5, 0.0, 0.0)
+        var HEADING_PID: PIDCoefficients = PIDCoefficients(7.75, 0.0, 0.0)
         @JvmField
-        var TRANSLATIONAL_PID: PIDCoefficients = PIDCoefficients(0.0, 0.05, 0.0)
+        var TRANSLATIONAL_PID: PIDCoefficients = PIDCoefficients(0.002, 0.05, 0.0)
 
         @JvmField
-        var LATERAL_MULTIPLIER: Double = 1.31868
+        var LATERAL_MULTIPLIER: Double = 1.7
 
         @JvmField
         var VX_WEIGHT: Double = 1.0
