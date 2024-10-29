@@ -14,6 +14,7 @@ class ViperArmSubsystem(
     private val extensionMotorGroup = hardware.viperExtensionMotorGroup
     private val rotationMotorGroup = hardware.viperRotationMotorGroup
     private val extensionHomeSensor = hardware.extensionHomeSensor
+    private val rotationHomeSensor = hardware.rotationHomeSensor
 
     init {
         extensionMotorGroup?.resetEncoder()
@@ -62,9 +63,7 @@ class ViperArmSubsystem(
         }
 
         val currentPosition = extensionMotorGroup.getPositions().first()
-        if (currentPosition <= EXTENSION_MIN_POSITION && power < 0) {
-            extensionMotorGroup.setWithoutCorrection(0.0)
-        } else if (currentPosition >= EXTENSION_MAX_POSITION && power > 0) {
+        if (currentPosition >= EXTENSION_MAX_POSITION && power > 0) {
             extensionMotorGroup.setWithoutCorrection(0.0)
         } else {
             extensionMotorGroup.setWithoutCorrection(getBoundedPower(power))
@@ -74,17 +73,27 @@ class ViperArmSubsystem(
     fun setRotationMotorGroupPower(power: Double) {
         if (rotationMotorGroup == null) return
 
+        println("setRotationMotorGroupPower input power = $power")
+
         if (power == 0.0) {
+            println("rotationMotorGroup power is zero")
             rotationMotorGroup.set(0.0)
             return
         }
 
-        val currentPosition = -rotationMotorGroup.getPositions().first()
-        if (currentPosition <= ROTATION_MIN_POSITION && power > 0) {
+        if (rotationHomeSensor?.isPressed == true && power > 0) {
+            println("rotationHomeSensor is pressed")
             rotationMotorGroup.setWithoutCorrection(0.0)
-        } else if (currentPosition >= ROTATION_MAX_POSITION && power < 0) {
+            rotationMotorGroup.resetEncoder()
+            return
+        }
+
+        val currentPosition = -rotationMotorGroup.getPositions().first()
+        if (currentPosition >= ROTATION_MAX_POSITION && power < 0) {
+            println("rotationMotorGroup current position $currentPosition is >= $ROTATION_MAX_POSITION")
             rotationMotorGroup.setWithoutCorrection(0.0)
         } else {
+            println("rotationMotorGroup setting power to $power")
             rotationMotorGroup.setWithoutCorrection(getBoundedPower(power))
         }
     }

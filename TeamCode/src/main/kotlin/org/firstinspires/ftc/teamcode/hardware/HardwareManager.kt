@@ -135,7 +135,6 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
         gripperServo?.scaleRange(0.0, 0.2)
 
         // Initialize servo positions
-        intakeRotateServo?.position = 0.0
         gripperServo?.position = 0.0
     }
 

@@ -8,20 +8,12 @@ class ActiveIntakeSubsystem(
     private val hardware: HardwareManager,
     private val telemetry: MultipleTelemetry? = null
 ) : SubsystemBase() {
-    fun rotateLeft() {
-        hardware.intakeRotateServo?.position = 0.0
-    }
-
     fun rotateHome() {
-        hardware.intakeRotateServo?.position = 0.0
+        hardware.intakeRotateServo?.position = WRIST_MIN
     }
 
     fun rotateToBasket() {
-        hardware.intakeRotateServo?.position = 0.66
-    }
-
-    fun rotateRight() {
-        hardware.intakeRotateServo?.position = 1.0
+        hardware.intakeRotateServo?.position = WRIST_DELIVER
     }
 
     fun rotateIncrementDown() {
@@ -55,6 +47,7 @@ class ActiveIntakeSubsystem(
 
     companion object {
         private const val WRIST_MIN = 0.0
+        const val WRIST_DELIVER = 0.66
         private const val WRIST_MAX = 1.0
         private const val WRIST_STEP = 0.01
     }

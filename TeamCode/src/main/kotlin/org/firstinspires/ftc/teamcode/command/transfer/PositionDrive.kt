@@ -9,8 +9,8 @@ class PositionDrive(viperArmSubsystem: ViperArmSubsystem, activeIntakeSubsystem:
     init {
         addCommands(
             ParallelCommandGroup(
+                RetractHome(viperArmSubsystem),
                 WristToPickup(activeIntakeSubsystem),
-                RetractHome(viperArmSubsystem)
             ),
             RotateTo(viperArmSubsystem, ViperArmSubsystem.ROTATION_DRIVE_POSITION)
         )

@@ -11,8 +11,8 @@ class PositionDeliveryToUpperBasket(viperArmSubsystem: ViperArmSubsystem, active
             SequentialCommandGroup(
                 RotateTo(viperArmSubsystem, ViperArmSubsystem.ROTATION_MAX_POSITION),
                 ParallelCommandGroup(
+                    ExtendTo(viperArmSubsystem, ViperArmSubsystem.EXTENSION_MAX_POSITION),
                     WristToDeliver(activeIntakeSubsystem),
-                    ExtendTo(viperArmSubsystem, ViperArmSubsystem.EXTENSION_MAX_POSITION)
                 )
             )
         )

@@ -5,7 +5,11 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToLowerBasket
+import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToUpperBasket
+import org.firstinspires.ftc.teamcode.command.transfer.PositionDrive
 import org.firstinspires.ftc.teamcode.command.transfer.PositionHome
+import org.firstinspires.ftc.teamcode.command.transfer.PositionPickup
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 import org.firstinspires.ftc.teamcode.util.RevColor
 import kotlin.math.pow
@@ -15,6 +19,9 @@ import kotlin.math.pow
 class CDTeleop : OpModeBase() {
     private var driveSpeedScale = DRIVE_SPEED_NORMAL
     private var revColorSensor: RevColor? = null
+
+    private var extensionGroupState = MotorGroupState.STOPPED
+    private var rotationGroupState = MotorGroupState.STOPPED
 
     override fun initialize() {
         initHardware()
@@ -94,23 +101,25 @@ class CDTeleop : OpModeBase() {
         }
 
         if (accessoryGamepad.rightY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.rightY < -VARIABLE_INPUT_DEAD_ZONE) {
-            // TODO: Fix multiplier later
-            viperArmSubsystem.setExtensionMotorGroupPower((-accessoryGamepad.rightY).pow(3.0) * 0.9)
-        } else {
+            extensionGroupState = MotorGroupState.ACTIVE
+            viperArmSubsystem.setExtensionMotorGroupPower((-accessoryGamepad.rightY).pow(3.0))
+        } else if (extensionGroupState == MotorGroupState.ACTIVE) {
+            extensionGroupState = MotorGroupState.STOPPED
             viperArmSubsystem.setExtensionMotorGroupPower(0.0)
 //            viperArmSubsystem.correctExtensionGroupFollower()
         }
 
         if (accessoryGamepad.leftY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.leftY < -VARIABLE_INPUT_DEAD_ZONE) {
-            // TODO: Fix multiplier later
+            rotationGroupState = MotorGroupState.ACTIVE
             viperArmSubsystem.setRotationMotorGroupPower((-accessoryGamepad.leftY).pow(3.0) * 0.6)
-        } else {
+        } else if (rotationGroupState == MotorGroupState.ACTIVE) {
+            rotationGroupState = MotorGroupState.STOPPED
             viperArmSubsystem.setRotationMotorGroupPower(0.0)
             viperArmSubsystem.correctRotationGroupFollower()
         }
 
         // LED Light
-        hardware.intakeColorSensor?.argb()
+        // hardware.intakeColorSensor?.argb()
 
         writeTelemetry()
     }
@@ -162,10 +171,10 @@ class CDTeleop : OpModeBase() {
         wristLeftButton.whileHeld(Runnable { activeIntakeSubsystem.rotateIncrementDown() })
         wristRightButton.whileHeld(Runnable { activeIntakeSubsystem.rotateIncrementUp() })
 
-        viperDrivePositionButton.whenPressed(Runnable { viperArmSubsystem.drivePosition() })
-        viperPickupPositionButton.whenPressed(Runnable { viperArmSubsystem.pickupPosition() })
-        viperLowPositionButton.whenPressed(Runnable { viperArmSubsystem.deliverLowerBasket() })
-        viperHighPositionButton.whenPressed(Runnable { viperArmSubsystem.deliverTopBasket() })
+        viperDrivePositionButton.whenPressed(PositionDrive(viperArmSubsystem, activeIntakeSubsystem))
+        viperPickupPositionButton.whenPressed(PositionPickup(viperArmSubsystem, activeIntakeSubsystem))
+        viperLowPositionButton.whenPressed(PositionDeliveryToLowerBasket(viperArmSubsystem, activeIntakeSubsystem))
+        viperHighPositionButton.whenPressed(PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem))
 
         homeButton.whenPressed(PositionHome(viperArmSubsystem, activeIntakeSubsystem))
     }
@@ -199,10 +208,9 @@ class CDTeleop : OpModeBase() {
             telemetry.addLine("viperRotationPos: ${viperArmSubsystem.getRotationMotorGroupPosition()}")
             telemetry.addLine("viperRotationPosList: ${viperArmSubsystem.getRotationMotorGroupPositionList()}")
         } ?: telemetry.addLine("[WARNING] viperRotationGroup not found")
-        telemetry.addLine("inputPower: ${(-accessoryGamepad.leftY).pow(3.0) * 0.3}")
 
         hardware.intakeRotateServo?.let {
-            telemetry.addLine("intakeRotationPosition: ${it.position ?: "null"}")
+            telemetry.addLine("intakeRotationPosition: ${it.position}")
         } ?: telemetry.addLine("[WARNING] wrist servo not found")
 
         hardware.extensionHomeSensor?.let {
@@ -222,5 +230,10 @@ class CDTeleop : OpModeBase() {
         private const val DRIVE_SPEED_FAST = 0.9
         private const val DRIVE_SPEED_NORMAL = 0.75
         private const val DRIVE_SPEED_SLOW = 0.5
+
+        enum class MotorGroupState {
+            ACTIVE,
+            STOPPED
+        }
     }
 }
