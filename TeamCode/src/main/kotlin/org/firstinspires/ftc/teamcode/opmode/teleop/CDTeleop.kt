@@ -217,6 +217,10 @@ class CDTeleop : OpModeBase() {
             telemetry.addLine("extensionHomeSensor pressed?: ${it.isPressed}")
         } ?: telemetry.addLine("[WARNING] extension home sensor not found")
 
+        hardware.rotationHomeSensor?.let {
+            telemetry.addLine("rotationHomeSensor pressed?: ${it.isPressed}")
+        } ?: telemetry.addLine("[WARNING] rotation home sensor not found")
+
         hardware.gripperServo?.let {
             telemetry.addLine("gripperServo position: ${it.position}")
         } ?: telemetry.addLine("[WARNING] gripper servo not found")
