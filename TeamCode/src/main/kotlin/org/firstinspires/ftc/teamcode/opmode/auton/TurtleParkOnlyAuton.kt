@@ -21,7 +21,7 @@ class TurtleParkOnlyAuton : OpModeBase() {
     private val parkY = 60.0
 
     override fun initialize() {
-        initHardware()
+        initHardware(true)
 
         val startingPose = Pose2d(startingX, startingY, heading)
         val parkPose = Pose2d(parkX, parkY, heading)

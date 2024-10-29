@@ -8,11 +8,11 @@ import org.firstinspires.ftc.teamcode.subsystem.ViperArmSubsystem
 class PositionDrive(viperArmSubsystem: ViperArmSubsystem, activeIntakeSubsystem: ActiveIntakeSubsystem) : SequentialCommandGroup() {
     init {
         addCommands(
+            RotateTo(viperArmSubsystem, ViperArmSubsystem.ROTATION_DRIVE_POSITION),
             ParallelCommandGroup(
                 RetractHome(viperArmSubsystem),
                 WristToPickup(activeIntakeSubsystem),
-            ),
-            RotateTo(viperArmSubsystem, ViperArmSubsystem.ROTATION_DRIVE_POSITION)
+            )
         )
         addRequirements(viperArmSubsystem, activeIntakeSubsystem)
     }

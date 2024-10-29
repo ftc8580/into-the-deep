@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.command.transfer.PositionPickupGround
 import org.firstinspires.ftc.teamcode.command.transfer.PositionAutoRung
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
+@Suppress("UNUSED")
 @Autonomous(group = "CyberDragons")
 class NarwhalParkOnlyAuton : OpModeBase() {
     private val startHeading = Math.toRadians(90.0)
@@ -27,7 +28,7 @@ class NarwhalParkOnlyAuton : OpModeBase() {
     private val parkY = 7.5
 
     override fun initialize() {
-        initHardware()
+        initHardware(true)
 
         val startingPose = Pose2d(startingX, startingY, startHeading)
         val preParkPose = Pose2d(startingX, parkY, parkHeading)

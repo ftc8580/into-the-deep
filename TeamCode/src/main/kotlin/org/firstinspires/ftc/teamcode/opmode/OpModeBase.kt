@@ -23,7 +23,7 @@ abstract class OpModeBase : CommandOpMode() {
     lateinit var gripperSubsystem: GripperSubsystem
     lateinit var viperArmSubsystem: ViperArmSubsystem
 
-    fun initHardware() {
+    fun initHardware(isAuto: Boolean) {
         hardware = HardwareManager(CDConfig(), hardwareMap)
         mecanumDrive = CDMecanumDrive(hardware)
         multiTelemetry = MultipleTelemetry(telemetry)

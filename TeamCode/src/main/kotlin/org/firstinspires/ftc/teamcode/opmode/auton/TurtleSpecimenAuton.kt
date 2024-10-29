@@ -21,7 +21,7 @@ class TurtleSpecimenAuton : OpModeBase() {
     private val parkY = 62.0
 
     override fun initialize() {
-        initHardware()
+        initHardware(true)
 
         val startingPose = Pose2d(deliveryX, pickupY, heading)
         val initialDeliveryPose = Pose2d(deliveryX, deliveryY, heading)

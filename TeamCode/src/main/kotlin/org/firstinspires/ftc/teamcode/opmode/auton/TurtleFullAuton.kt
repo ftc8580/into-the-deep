@@ -24,7 +24,7 @@ class TurtleFullAuton : OpModeBase() {
     private val deliveryStartingX = -16.0
 
     override fun initialize() {
-        initHardware()
+        initHardware(true)
 
         var deliveryX = deliveryStartingX
 

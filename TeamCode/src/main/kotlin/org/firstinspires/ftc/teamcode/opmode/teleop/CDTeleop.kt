@@ -24,7 +24,7 @@ class CDTeleop : OpModeBase() {
     private var rotationGroupState = MotorGroupState.STOPPED
 
     override fun initialize() {
-        initHardware()
+        initHardware(false)
         initializeDriverGamepad(driverGamepad)
         initializeCoDriverGamepad(accessoryGamepad)
 
