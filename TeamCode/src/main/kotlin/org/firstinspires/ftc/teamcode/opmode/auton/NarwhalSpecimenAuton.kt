@@ -33,7 +33,7 @@ class NarwhalSpecimenAuton : OpModeBase() {
 
         mecanumDrive.poseEstimate = startingPose
 
-        val deliverPreloadSpecimenPose = Pose2d (4.0, 32.0, startingHeading)
+        val deliverPreloadSpecimenPose = Pose2d (4.0, 33.0, startingHeading)
         val deliverPreloadSpecimenPoseClose = Pose2d (4.0, 30.0, startingHeading)
 
         //Trajectories
@@ -51,9 +51,9 @@ class NarwhalSpecimenAuton : OpModeBase() {
 
         val parkTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(deliverPreloadSpecimenPose)
             .lineToLinearHeading(Pose2d(startingX, 44.0, parkHeading))
-            .lineToLinearHeading(Pose2d(36.0, 44.0, parkHeading))
-            .lineToLinearHeading(Pose2d(36.0, 14.0, parkHeading))
-            .lineToLinearHeading(Pose2d(24.0, 14.0, parkHeading))
+            .lineToLinearHeading(Pose2d(30.0, 44.0, parkHeading))
+            .lineToLinearHeading(Pose2d(30.0, 14.0, parkHeading))
+            .lineToLinearHeading(Pose2d(14.0, 12.0, parkHeading))
             .build()
 
         schedule(

@@ -31,7 +31,7 @@ class NarwhalParkOnlyAuton : OpModeBase() {
         initHardware(true)
 
         val startingPose = Pose2d(startingX, startingY, startHeading)
-        val preParkPose = Pose2d(startingX, parkY, parkHeading)
+        val preParkPose = Pose2d(44.0, parkY, parkHeading)
         val parkPose = Pose2d(parkX, parkY, parkHeading)
 
         mecanumDrive.poseEstimate = startingPose
