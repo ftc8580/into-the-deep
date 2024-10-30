@@ -8,13 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.command.FollowTrajectorySequence
 import org.firstinspires.ftc.teamcode.command.specimen.HighChamberPosition
 import org.firstinspires.ftc.teamcode.command.specimen.PickupPosition
-import org.firstinspires.ftc.teamcode.command.transfer.EjectSample
-import org.firstinspires.ftc.teamcode.command.transfer.IntakeSample
-import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToUpperBasket
-import org.firstinspires.ftc.teamcode.command.transfer.PositionDrive
-import org.firstinspires.ftc.teamcode.command.transfer.PositionPickup
-import org.firstinspires.ftc.teamcode.command.transfer.PositionPickupGround
 import org.firstinspires.ftc.teamcode.command.transfer.PositionAutoRung
+import org.firstinspires.ftc.teamcode.config.DriveConstants.MAX_ACCEL
+import org.firstinspires.ftc.teamcode.config.DriveConstants.MAX_ANG_VEL
+import org.firstinspires.ftc.teamcode.config.DriveConstants.MAX_VEL
+import org.firstinspires.ftc.teamcode.config.DriveConstants.TRACK_WIDTH
+import org.firstinspires.ftc.teamcode.drive.CDMecanumDrive
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 
 @Suppress("UNUSED")
@@ -43,7 +42,11 @@ class NarwhalSpecimenAuton : OpModeBase() {
             .build()
 
         val deliverPreLoadSpecimenTrajectorySequenceClose = mecanumDrive.trajectorySequenceBuilder(deliverPreloadSpecimenPose)
-            .lineToLinearHeading(deliverPreloadSpecimenPoseClose)
+            .lineToLinearHeading(
+                deliverPreloadSpecimenPoseClose,
+                CDMecanumDrive.getVelocityConstraint(MAX_VEL * 0.6, MAX_ANG_VEL * 0.6, TRACK_WIDTH),
+                CDMecanumDrive.getAccelerationConstraint(MAX_ACCEL * 0.6)
+            )
             .build()
 
         val parkTrajectorySequence = mecanumDrive.trajectorySequenceBuilder(deliverPreloadSpecimenPose)

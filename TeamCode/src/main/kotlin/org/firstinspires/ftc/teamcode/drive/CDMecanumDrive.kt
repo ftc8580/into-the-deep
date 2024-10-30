@@ -215,7 +215,7 @@ open class CDMecanumDrive(private val hardware: HardwareManager) :
             getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH)
         private val ACCEL_CONSTRAINT: TrajectoryAccelerationConstraint = getAccelerationConstraint(MAX_ACCEL)
 
-        private fun getVelocityConstraint(
+        fun getVelocityConstraint(
             maxVel: Double,
             maxAngularVel: Double,
             trackWidth: Double
@@ -228,7 +228,7 @@ open class CDMecanumDrive(private val hardware: HardwareManager) :
             )
         }
 
-        private fun getAccelerationConstraint(maxAccel: Double): TrajectoryAccelerationConstraint {
+        fun getAccelerationConstraint(maxAccel: Double): TrajectoryAccelerationConstraint {
             return ProfileAccelerationConstraint(maxAccel)
         }
     }
