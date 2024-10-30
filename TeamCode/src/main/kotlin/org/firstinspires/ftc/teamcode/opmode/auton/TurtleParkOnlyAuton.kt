@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence
 
 @Autonomous(group = "CyberDragons")
 class TurtleParkOnlyAuton : OpModeBase() {
-    private val heading = Math.toRadians(270.0)
+    private val heading = Math.toRadians(90.0)
     private val startingX = -16.0
     private val startingY = 63.5
 
