@@ -30,7 +30,7 @@ class RotateTo(private val viperArmSubsystem: ViperArmSubsystem, private val tar
                     rotationDirection = RotationDirection.DOWN
                 }
 
-                power = if (rotationDirection == RotationDirection.DOWN) {
+                power = if (rotationDirection == RotationDirection.UP) {
                     -MAX_POWER
                 } else {
                     MAX_POWER
@@ -55,9 +55,11 @@ class RotateTo(private val viperArmSubsystem: ViperArmSubsystem, private val tar
                 }
                 if (rotationDirection == RotationDirection.UP && currentPosition <= -target) {
                     println("rotation up reached target")
+                    viperArmSubsystem.setRotationMotorGroupPower(0.0)
                     currentState = RotateState.FINISHED
                 } else if (rotationDirection == RotationDirection.DOWN && currentPosition >= -target) {
                     println("rotation down reached target")
+                    viperArmSubsystem.setRotationMotorGroupPower(0.0)
                     currentState = RotateState.FINISHED
                 }
             }
