@@ -201,8 +201,15 @@ class ViperArmSubsystem(
         extensionMotorGroup?.resetEncoder()
     }
 
+    fun resetRotationEncoder() {
+        rotationMotorGroup?.resetEncoder()
+    }
+
     val isExtensionHome: Boolean
         get() = extensionHomeSensor?.isPressed == true
+
+    val isRotationHome: Boolean
+        get() = rotationHomeSensor?.isPressed == true
 
     private fun safelyGoToPosition(
         motorGroup: MotorGroup?,
