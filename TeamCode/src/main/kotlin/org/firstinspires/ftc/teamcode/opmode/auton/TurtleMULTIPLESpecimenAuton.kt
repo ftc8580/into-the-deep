@@ -40,6 +40,7 @@ class TurtleMULTIPLESpecimenAuton : OpModeBase() {
         val startingPose = Pose2d(startingX, startingY, startingHeading)
         val deliverPreloadSpecimenPose = Pose2d(startingX, 34.0, startingHeading)
         val deliverPreloadSpecimenPoseClose = Pose2d (startingX, deliveryY, Math.toRadians(80.0))
+        val deliverPreloadSpecimenPoseClose1 = Pose2d (startingX, deliveryY - 6.0, Math.toRadians(75.0))
         val parkPose = Pose2d(parkX, parkY, startingHeading)
         val alignForPickup = Pose2d(alignPickupSpecimenX, alignPickupSpecimenY, pickupHeading)
         val pickupPose = Pose2d(pickupSpecimenX, pickupSpecimenY, pickupHeading)
@@ -57,7 +58,20 @@ class TurtleMULTIPLESpecimenAuton : OpModeBase() {
             )
             .build()
 
+        val deliverPreLoadSpecimenTrajectorySequenceClose1 = mecanumDrive.trajectorySequenceBuilder(deliverPreloadSpecimenPose)
+            .lineToLinearHeading(
+                deliverPreloadSpecimenPoseClose1,
+                CDMecanumDrive.getVelocityConstraint(MAX_VEL * 0.4, MAX_ANG_VEL * 0.4, TRACK_WIDTH),
+                CDMecanumDrive.getAccelerationConstraint(MAX_ACCEL * 0.4)
+            )
+            .build()
+
         val deliverToAlign = mecanumDrive.trajectorySequenceBuilder(deliverPreloadSpecimenPoseClose)
+            .lineToLinearHeading(deliverPreloadSpecimenPose)
+            .lineToLinearHeading(alignForPickup)
+            .build()
+
+        val deliverToAlign1 = mecanumDrive.trajectorySequenceBuilder(deliverPreloadSpecimenPoseClose1)
             .lineToLinearHeading(deliverPreloadSpecimenPose)
             .lineToLinearHeading(alignForPickup)
             .build()
@@ -109,13 +123,13 @@ class TurtleMULTIPLESpecimenAuton : OpModeBase() {
                 WaitCommand(500),
                 FollowTrajectorySequence(mecanumDrive, pickupToDeliver),
                 WaitCommand(500),
-                FollowTrajectorySequence(mecanumDrive, deliverPreLoadSpecimenTrajectorySequenceClose),
+                FollowTrajectorySequence(mecanumDrive, deliverPreLoadSpecimenTrajectorySequenceClose1),
                 PickupPosition(gripperSubsystem),
                 WaitCommand(1000),
 
                 //Pickup Specimen 2 from Observation Zone
-                FollowTrajectorySequence(mecanumDrive, deliverToAlign),
-                WaitCommand(1000),
+                FollowTrajectorySequence(mecanumDrive, deliverToAlign1),
+                WaitCommand(500),
                 FollowTrajectorySequence(mecanumDrive, alignToPickup),
                 WaitCommand(500),
                 FollowTrajectorySequence(mecanumDrive, pickupClose),
