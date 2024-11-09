@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.hardware
 
+import com.acmerobotics.roadrunner.ftc.LazyImu
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.qualcomm.hardware.lynx.LynxModule
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.DcMotor
@@ -13,24 +16,33 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
-import org.firstinspires.ftc.teamcode.config.CDConfig
-import org.firstinspires.ftc.teamcode.util.DeadWheelEncoder
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil
 import org.firstinspires.ftc.teamcode.util.MotorGroup
 
-class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
+class HardwareManager(hardware: HardwareMap) {
+    class Params {
+        // IMU orientation
+        // TODO: fill in these values based on
+        //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
+        var logoFacingDirection: RevHubOrientationOnRobot.LogoFacingDirection =
+            RevHubOrientationOnRobot.LogoFacingDirection.UP
+        var usbFacingDirection: UsbFacingDirection = UsbFacingDirection.BACKWARD
+    }
+
     lateinit var batteryVoltageSensor: VoltageSensor
-    private lateinit var leftFrontMotor: DcMotorEx
-    private lateinit var leftRearMotor: DcMotorEx
-    private lateinit var rightRearMotor: DcMotorEx
-    private lateinit var rightFrontMotor: DcMotorEx
+    lateinit var leftFrontMotor: DcMotorEx
+    lateinit var leftRearMotor: DcMotorEx
+    lateinit var rightRearMotor: DcMotorEx
+    lateinit var rightFrontMotor: DcMotorEx
 
     lateinit var driveMotors: List<DcMotorEx>
 
+    lateinit var lazyImu: LazyImu
+
     // Dead wheels
-    var leftEncoder: DeadWheelEncoder? = null
-    var rightEncoder: DeadWheelEncoder? = null
-    var rearEncoder: DeadWheelEncoder? = null
+    var leftEncoder: DcMotorEx? = null
+    var rightEncoder: DcMotorEx? = null
+    var rearEncoder: DcMotorEx? = null
 
     // Sensors
     var extensionHomeSensor: TouchSensor? = null
@@ -56,6 +68,7 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
 
     init {
         systemCheck(hardware)
+        initializeImu(hardware)
         initializeBatteryVoltageSensor(hardware)
         initializeLynxModules(hardware)
         initializeWheelLocalizers(hardware)
@@ -70,6 +83,14 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardware)
     }
 
+    private fun initializeImu(hardware: HardwareMap) {
+        lazyImu = LazyImu(
+            hardware, "imu", RevHubOrientationOnRobot(
+                PARAMS.logoFacingDirection, PARAMS.usbFacingDirection
+            )
+        )
+    }
+
     private fun initializeBatteryVoltageSensor(hardware: HardwareMap) {
         batteryVoltageSensor = hardware.voltageSensor.iterator().next()
     }
@@ -81,23 +102,21 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
     }
 
     private fun initializeWheelLocalizers(hardware: HardwareMap) {
-        val leftEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.rightFront)
-        val rightEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.rightRear)
-        val rearEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, config.driveMotors.leftRear)
-
-        // If any of the encoders are missing, don't initialize any of them
-        if (leftEncoderMotor == null || rightEncoderMotor == null || rearEncoderMotor == null) return
-
-        leftEncoder = DeadWheelEncoder(leftEncoderMotor)
-        rightEncoder = DeadWheelEncoder(rightEncoderMotor)
-        rearEncoder = DeadWheelEncoder(rearEncoderMotor)
+        leftEncoder = safelyGetHardware<DcMotorEx>(hardware, "rightFront")
+        rightEncoder = safelyGetHardware<DcMotorEx>(hardware, "rightRear")
+        rearEncoder = safelyGetHardware<DcMotorEx>(hardware, "leftRear")
     }
 
     private fun initializeDriveMotors(hardware: HardwareMap) {
-        leftFrontMotor = hardware.get(DcMotorEx::class.java, config.driveMotors.leftFront)
-        leftRearMotor = hardware.get(DcMotorEx::class.java, config.driveMotors.leftRear)
-        rightRearMotor = hardware.get(DcMotorEx::class.java, config.driveMotors.rightRear)
-        rightFrontMotor = hardware.get(DcMotorEx::class.java, config.driveMotors.rightFront)
+        leftFrontMotor = hardware.get(DcMotorEx::class.java, "leftFront")
+        leftRearMotor = hardware.get(DcMotorEx::class.java, "leftRear")
+        rightRearMotor = hardware.get(DcMotorEx::class.java, "rightRear")
+        rightFrontMotor = hardware.get(DcMotorEx::class.java, "rightFront")
+
+        leftFrontMotor.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
+        leftRearMotor.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
+        rightRearMotor.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
+        rightFrontMotor.zeroPowerBehavior = ZeroPowerBehavior.BRAKE
 
         leftFrontMotor.direction = DcMotorSimple.Direction.REVERSE
         leftRearMotor.direction = DcMotorSimple.Direction.REVERSE
@@ -197,5 +216,9 @@ class HardwareManager(private val config: CDConfig, hardware: HardwareMap) {
         leftRearMotor.power = rearLeft
         rightRearMotor.power = rearRight
         rightFrontMotor.power = frontRight
+    }
+
+    companion object {
+        var PARAMS: Params = Params()
     }
 }

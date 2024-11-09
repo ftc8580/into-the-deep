@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.command.specimen
 
 import com.arcrobotics.ftclib.command.CommandBase
 import org.firstinspires.ftc.teamcode.subsystem.GripperSubsystem
-import org.firstinspires.ftc.teamcode.util.CDRuntime
 
 class HighChamberPosition(private val gripperSubsystem: GripperSubsystem) : CommandBase() {
     init {
@@ -11,7 +10,6 @@ class HighChamberPosition(private val gripperSubsystem: GripperSubsystem) : Comm
 
     private var currentState = GripperHeightState.IDLE
     private var targetTimeMs = 0.0
-    private val runtime = CDRuntime()
 
     override fun initialize() {
         targetTimeMs = 1000.0
@@ -22,7 +20,6 @@ class HighChamberPosition(private val gripperSubsystem: GripperSubsystem) : Comm
         //State Machine
         when (currentState) {
             GripperHeightState.STARTED -> {
-                runtime.reset()
                 gripperSubsystem.setHighChamberHeight()
                 currentState = GripperHeightState.RAISING
             }

@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop
 
 import android.annotation.SuppressLint
-import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.acmerobotics.roadrunner.PoseVelocity2d
+import com.acmerobotics.roadrunner.Vector2d
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -39,13 +40,14 @@ class CDTeleop : OpModeBase() {
     override fun run() {
         super.run()
 
-        mecanumDrive.setDrivePower(
-            Pose2d(
-                driverGamepad.leftY * driveSpeedScale,
-                -driverGamepad.leftX * driveSpeedScale,
-                -driverGamepad.rightX * driveSpeedScale
-            )
-        )
+        mecanumDrive.setDrivePowers(
+            PoseVelocity2d(
+                Vector2d(
+                    -driverGamepad.leftY * driveSpeedScale,
+                    -driverGamepad.leftX * driveSpeedScale
+                ),
+            -driverGamepad.rightX * driveSpeedScale
+        ))
 
         mecanumDrive.updatePoseEstimate()
 
