@@ -43,7 +43,7 @@ class CDTeleop : OpModeBase() {
         mecanumDrive.setDrivePowers(
             PoseVelocity2d(
                 Vector2d(
-                    -driverGamepad.leftY * driveSpeedScale,
+                    driverGamepad.leftY * driveSpeedScale,
                     -driverGamepad.leftX * driveSpeedScale
                 ),
             -driverGamepad.rightX * driveSpeedScale
