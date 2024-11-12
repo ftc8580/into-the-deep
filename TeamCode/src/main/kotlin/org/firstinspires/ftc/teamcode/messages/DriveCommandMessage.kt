@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.messages
 import com.acmerobotics.roadrunner.PoseVelocity2dDual
 import com.acmerobotics.roadrunner.Time
 
-class DriveCommandMessage(poseVelocity: PoseVelocity2dDual<Time>) {
+data class DriveCommandMessage(val poseVelocity: PoseVelocity2dDual<Time>) {
     var timestamp: Long = System.nanoTime()
     var forwardVelocity: Double = poseVelocity.linearVel.x[0]
     var forwardAcceleration: Double = poseVelocity.linearVel.x[1]

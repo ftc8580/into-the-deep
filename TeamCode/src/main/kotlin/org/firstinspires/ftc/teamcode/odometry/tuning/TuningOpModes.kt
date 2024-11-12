@@ -25,6 +25,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive
+import org.firstinspires.ftc.teamcode.drive.MecanumDriveParams
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.odometry.ThreeDeadWheelLocalizer
 
@@ -72,10 +73,10 @@ class TuningOpModes {
                         }
                         return DriveView(
                             DriveType.MECANUM,
-                            MecanumDrive.PARAMS.inPerTick,
-                            MecanumDrive.PARAMS.maxWheelVel,
-                            MecanumDrive.PARAMS.minProfileAccel,
-                            MecanumDrive.PARAMS.maxProfileAccel,
+                            MecanumDriveParams.inPerTick,
+                            MecanumDriveParams.maxWheelVel,
+                            MecanumDriveParams.minProfileAccel,
+                            MecanumDriveParams.maxProfileAccel,
                             h.getAll(LynxModule::class.java),
                             listOf(
                                 hardware.leftFrontMotor,
@@ -93,9 +94,9 @@ class TuningOpModes {
                             hardware.batteryVoltageSensor
                         ) {
                             MotorFeedforward(
-                                MecanumDrive.PARAMS.kS,
-                                MecanumDrive.PARAMS.kV / MecanumDrive.PARAMS.inPerTick,
-                                MecanumDrive.PARAMS.kA / MecanumDrive.PARAMS.inPerTick
+                                MecanumDriveParams.kS,
+                                MecanumDriveParams.kV / MecanumDriveParams.inPerTick,
+                                MecanumDriveParams.kA / MecanumDriveParams.inPerTick
                             )
                         }
                     }

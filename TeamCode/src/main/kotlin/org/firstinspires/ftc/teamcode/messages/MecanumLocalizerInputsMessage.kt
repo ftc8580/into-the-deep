@@ -5,12 +5,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles
 
 
-class MecanumLocalizerInputsMessage(
+data class MecanumLocalizerInputsMessage(
     var leftFront: PositionVelocityPair,
     var leftBack: PositionVelocityPair,
     var rightBack: PositionVelocityPair,
     var rightFront: PositionVelocityPair,
-    angles: YawPitchRollAngles
+    var angles: YawPitchRollAngles
 ) {
     var timestamp: Long = System.nanoTime()
     var yaw: Double = 0.0

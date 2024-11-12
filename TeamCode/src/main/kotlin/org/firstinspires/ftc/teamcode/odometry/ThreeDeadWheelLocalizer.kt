@@ -17,13 +17,23 @@ import org.firstinspires.ftc.teamcode.messages.ThreeDeadWheelInputsMessage
 
 class ThreeDeadWheelLocalizer(hardware: HardwareManager, val inPerTick: Double) : Localizer {
     @Config
-    object LocalizerParams {
-        @JvmField var par0YTicks: Double = -3091.9317284303575 // y position of the first parallel encoder (in tick units)
-        @JvmField var par1YTicks: Double = 3083.104672695253 // y position of the second parallel encoder (in tick units)
-        @JvmField var perpXTicks: Double = -2884.4319874095117 // x position of the perpendicular encoder (in tick units)
+    class LocalizerParams {
+        companion object {
+            @JvmField
+            var par0YTicks: Double =
+                -3091.9317284303575 // y position of the first parallel encoder (in tick units)
+            @JvmField
+            var par1YTicks: Double =
+                3083.104672695253 // y position of the second parallel encoder (in tick units)
+            @JvmField
+            var perpXTicks: Double =
+                -2884.4319874095117 // x position of the perpendicular encoder (in tick units)
+        }
     }
 
-    //        write("THREE_DEAD_WHEEL_PARAMS", PARAMS)
+    init {
+//        write("THREE_DEAD_WHEEL_PARAMS", PARAMS)
+    }
 
     // TODO: make sure your config has **motors** with these names (or change them)
     //   the encoders should be plugged into the slot matching the named motor

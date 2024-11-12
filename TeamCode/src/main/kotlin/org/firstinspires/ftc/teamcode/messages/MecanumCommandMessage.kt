@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.messages
 
-class MecanumCommandMessage(
+data class MecanumCommandMessage(
     var voltage: Double,
     var leftFrontPower: Double,
     var leftBackPower: Double,

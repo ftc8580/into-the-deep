@@ -11,10 +11,9 @@ java {
 }
 
 repositories {
-    maven { url = URI.create("https://jitpack.io") }
     maven { url = URI.create("https://maven.brott.dev/") }
 }
 
 dependencies {
-    implementation("com.github.rh-robotics:MeepMeep:v1.0.0")
+    implementation("com.acmerobotics.roadrunner:MeepMeep:0.1.6")
 }

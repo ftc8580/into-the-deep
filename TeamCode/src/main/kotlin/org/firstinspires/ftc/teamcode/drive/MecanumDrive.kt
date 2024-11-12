@@ -42,20 +42,20 @@ import kotlin.math.max
 
 class MecanumDrive(private val hardware: HardwareManager, pose: Pose2d) {
     val kinematics: MecanumKinematics = MecanumKinematics(
-        PARAMS.inPerTick * PARAMS.trackWidthTicks, PARAMS.inPerTick / PARAMS.lateralInPerTick
+        MecanumDriveParams.inPerTick * MecanumDriveParams.trackWidthTicks, MecanumDriveParams.inPerTick / MecanumDriveParams.lateralInPerTick
     )
 
     val defaultTurnConstraints: TurnConstraints = TurnConstraints(
-        PARAMS.maxAngVel, -PARAMS.maxAngAccel, PARAMS.maxAngAccel
+        MecanumDriveParams.maxAngVel, -MecanumDriveParams.maxAngAccel, MecanumDriveParams.maxAngAccel
     )
     val defaultVelConstraint: VelConstraint = MinVelConstraint(
         listOf(
-            kinematics.WheelVelConstraint(PARAMS.maxWheelVel),
-            AngularVelConstraint(PARAMS.maxAngVel)
+            kinematics.WheelVelConstraint(MecanumDriveParams.maxWheelVel),
+            AngularVelConstraint(MecanumDriveParams.maxAngVel)
         )
     )
     val defaultAccelConstraint: AccelConstraint =
-        ProfileAccelConstraint(PARAMS.minProfileAccel, PARAMS.maxProfileAccel)
+        ProfileAccelConstraint(MecanumDriveParams.minProfileAccel, MecanumDriveParams.maxProfileAccel)
 
     val localizer: Localizer
     var pose: Pose2d
@@ -70,9 +70,9 @@ class MecanumDrive(private val hardware: HardwareManager, pose: Pose2d) {
     init {
         this.pose = pose
 
-        localizer = ThreeDeadWheelLocalizer(hardware, PARAMS.inPerTick)
+        localizer = ThreeDeadWheelLocalizer(hardware, MecanumDriveParams.inPerTick)
 
-//        write("MECANUM_PARAMS", PARAMS)
+//        write("MECANUM_MecanumDriveParams", MecanumDriveParams)
     }
 
     fun setDrivePowers(powers: PoseVelocity2d?) {
@@ -100,8 +100,7 @@ class MecanumDrive(private val hardware: HardwareManager, pose: Pose2d) {
         init {
             val disps = range(
                 0.0, timeTrajectory.path.length(),
-                max(2.0, (ceil(timeTrajectory.path.length() / 2).toInt()).toDouble())
-                    .toInt()
+                max(2.0, ceil(timeTrajectory.path.length() / 2.0)).toInt()
             )
             xPoints = DoubleArray(disps.size)
             yPoints = DoubleArray(disps.size)
@@ -136,8 +135,8 @@ class MecanumDrive(private val hardware: HardwareManager, pose: Pose2d) {
             val robotVelRobot = updatePoseEstimate()
 
             val command: PoseVelocity2dDual<Time> = HolonomicController(
-                PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
-                PARAMS.axialVelGain, PARAMS.lateralVelGain, PARAMS.headingVelGain
+                MecanumDriveParams.axialGain, MecanumDriveParams.lateralGain, MecanumDriveParams.headingGain,
+                MecanumDriveParams.axialVelGain, MecanumDriveParams.lateralVelGain, MecanumDriveParams.headingVelGain
             )
                 .compute(txWorldTarget, pose, robotVelRobot)
 //            driveCommandWriter.write(DriveCommandMessage(command))
@@ -146,8 +145,8 @@ class MecanumDrive(private val hardware: HardwareManager, pose: Pose2d) {
             val voltage = hardware.batteryVoltageSensor.voltage
 
             val feedforward = MotorFeedforward(
-                PARAMS.kS,
-                PARAMS.kV / PARAMS.inPerTick, PARAMS.kA / PARAMS.inPerTick
+                MecanumDriveParams.kS,
+                MecanumDriveParams.kV / MecanumDriveParams.inPerTick, MecanumDriveParams.kA / MecanumDriveParams.inPerTick
             )
             val leftFrontPower = feedforward.compute(wheelVels.leftFront) / voltage
             val leftBackPower = feedforward.compute(wheelVels.leftBack) / voltage
@@ -224,8 +223,8 @@ class MecanumDrive(private val hardware: HardwareManager, pose: Pose2d) {
             val robotVelRobot = updatePoseEstimate()
 
             val command: PoseVelocity2dDual<Time> = HolonomicController(
-                PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
-                PARAMS.axialVelGain, PARAMS.lateralVelGain, PARAMS.headingVelGain
+                MecanumDriveParams.axialGain, MecanumDriveParams.lateralGain, MecanumDriveParams.headingGain,
+                MecanumDriveParams.axialVelGain, MecanumDriveParams.lateralVelGain, MecanumDriveParams.headingVelGain
             )
                 .compute(txWorldTarget, pose, robotVelRobot)
 //            driveCommandWriter.write(DriveCommandMessage(command))
@@ -233,8 +232,8 @@ class MecanumDrive(private val hardware: HardwareManager, pose: Pose2d) {
             val wheelVels: WheelVelocities<Time> = kinematics.inverse(command)
             val voltage = hardware.batteryVoltageSensor.voltage
             val feedforward = MotorFeedforward(
-                PARAMS.kS,
-                PARAMS.kV / PARAMS.inPerTick, PARAMS.kA / PARAMS.inPerTick
+                MecanumDriveParams.kS,
+                MecanumDriveParams.kV / MecanumDriveParams.inPerTick, MecanumDriveParams.kA / MecanumDriveParams.inPerTick
             )
             val leftFrontPower = feedforward.compute(wheelVels.leftFront) / voltage
             val leftBackPower = feedforward.compute(wheelVels.leftBack) / voltage
@@ -316,39 +315,37 @@ class MecanumDrive(private val hardware: HardwareManager, pose: Pose2d) {
             defaultVelConstraint, defaultAccelConstraint
         )
     }
-
-    companion object {
-        var PARAMS = MecanumDriveParams
-    }
 }
 
 @Config
-object MecanumDriveParams {
-    // drive model parameters
-    @JvmField var inPerTick: Double = 0.0019725
-    @JvmField var lateralInPerTick: Double = 0.0012526365125091314
-    @JvmField var trackWidthTicks: Double = 6930.281791018224
+class MecanumDriveParams {
+    companion object {
+        // drive model parameters
+        @JvmField var inPerTick: Double = 0.0019725
+        @JvmField var lateralInPerTick: Double = 0.0012526365125091314
+        @JvmField var trackWidthTicks: Double = 6930.281791018224
 
-    // feedforward parameters (in tick units)
-    @JvmField var kS: Double = 1.6138453046169712
-    @JvmField var kV: Double = 0.00036
-    @JvmField var kA: Double = 0.00005
+        // feedforward parameters (in tick units)
+        @JvmField var kS: Double = 1.6138453046169712
+        @JvmField var kV: Double = 0.00036
+        @JvmField var kA: Double = 0.00005
 
-    // path profile parameters (in inches)
-    @JvmField var maxWheelVel: Double = 50.0
-    @JvmField var minProfileAccel: Double = -30.0
-    @JvmField var maxProfileAccel: Double = 50.0
+        // path profile parameters (in inches)
+        @JvmField var maxWheelVel: Double = 50.0
+        @JvmField var minProfileAccel: Double = -30.0
+        @JvmField var maxProfileAccel: Double = 50.0
 
-    // turn profile parameters (in radians)
-    @JvmField var maxAngVel: Double = Math.PI // shared with path
-    @JvmField var maxAngAccel: Double = Math.PI
+        // turn profile parameters (in radians)
+        @JvmField var maxAngVel: Double = Math.PI // shared with path
+        @JvmField var maxAngAccel: Double = Math.PI
 
-    // path controller gains
-    @JvmField var axialGain: Double = 10.0
-    @JvmField var lateralGain: Double = 15.0
-    @JvmField var headingGain: Double = 15.0 // shared with turn
+        // path controller gains
+        @JvmField var axialGain: Double = 10.0
+        @JvmField var lateralGain: Double = 15.0
+        @JvmField var headingGain: Double = 15.0 // shared with turn
 
-    @JvmField var axialVelGain: Double = 0.0
-    @JvmField var lateralVelGain: Double = 0.0
-    @JvmField var headingVelGain: Double = 0.0 // shared with turn
+        @JvmField var axialVelGain: Double = 0.0
+        @JvmField var lateralVelGain: Double = 0.0
+        @JvmField var headingVelGain: Double = 0.0 // shared with turn
+    }
 }

@@ -1,49 +1,32 @@
 package org.ftc8580.meepmeeptesting
 
-import com.acmerobotics.roadrunner.geometry.Pose2d
-import org.rowlandhall.meepmeep.MeepMeep
-import org.rowlandhall.meepmeep.MeepMeep.Background
-import org.rowlandhall.meepmeep.roadrunner.DefaultBotBuilder
-import org.rowlandhall.meepmeep.roadrunner.DriveShim
-import org.rowlandhall.meepmeep.roadrunner.DriveTrainType
+import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.Vector2d
+import com.noahbres.meepmeep.MeepMeep
+import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder
+import com.noahbres.meepmeep.roadrunner.DriveTrainType
 
 fun main(args: Array<String>) {
     System.setProperty("sun.java2d.opengl", "true")
     val meepMeep = MeepMeep(800)
 
-    val myBot =
-        DefaultBotBuilder(meepMeep) // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-            .setDriveTrainType(DriveTrainType.MECANUM)
-            .setDimensions(14.0, 17.0)
-            .setConstraints(60.0, 60.0, Math.toRadians(180.0), Math.toRadians(180.0), 14.0)
-            .followTrajectorySequence { drive: DriveShim ->
-                drive.trajectorySequenceBuilder(
-                    Pose2d(
-                        30.0,
-                        63.25,
-                        Math.toRadians(270.0)
-                    )
-                )
-                    .lineToLinearHeading(Pose2d(30.0, 26.75, Math.toRadians(0.0))) // Pickup first sample
-                    .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(52.0, 52.0, Math.toRadians(45.0))) // Deliver to basket
-                    .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(42.0, 26.75, Math.toRadians(0.0))) // Pickup second sample
-                    .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(52.0, 52.0, Math.toRadians(45.0))) // Deliver to basket
-                    .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(54.0, 26.75, Math.toRadians(0.0))) // Pickup third sample
-                    .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(52.0, 52.0, Math.toRadians(45.0))) // Deliver to basket
-                    .waitSeconds(2.0)
-                    .lineToLinearHeading(Pose2d(24.0, 14.0, Math.toRadians(180.0))) // Park
-                    .build()
-            }
+    val bot = DefaultBotBuilder(meepMeep) // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+        .setDriveTrainType(DriveTrainType.MECANUM)
+        .setDimensions(14.0, 17.0)
+        .setConstraints(60.0, 60.0, Math.toRadians(180.0), Math.toRadians(180.0), 13.0)
+        .build()
 
+    val action = bot.drive.actionBuilder(
+        Pose2d(-8.0, 63.5, Math.toRadians(270.0))
+    )
+        .strafeToConstantHeading(Vector2d(-60.0, 60.0))
+        .build()
 
-    meepMeep.setBackground(Background.FIELD_INTOTHEDEEP_JUICE_DARK)
+    bot.runAction(action)
+
+    meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
         .setDarkMode(true)
         .setBackgroundAlpha(0.95f)
-        .addEntity(myBot)
+        .addEntity(bot)
         .start()
 }
