@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware
 
 import com.acmerobotics.roadrunner.ftc.LazyImu
+import com.acmerobotics.roadrunner.ftc.RawEncoder
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.qualcomm.hardware.lynx.LynxModule
@@ -48,6 +49,7 @@ class HardwareManager(hardware: HardwareMap) {
     var extensionHomeSensor: TouchSensor? = null
     var rotationHomeSensor: TouchSensor? = null
     var intakeColorSensor: ColorSensor? = null
+    var armRotationEncoder: RawEncoder? = null
 
     // Servos
     var intakeWheelServoRear: CRServo? = null
@@ -142,6 +144,15 @@ class HardwareManager(hardware: HardwareMap) {
         extensionHomeSensor = safelyGetHardware<TouchSensor>(hardware, "extensionHomeSensor")
         rotationHomeSensor = safelyGetHardware<TouchSensor>(hardware, "rotationHomeSensor")
         intakeColorSensor = safelyGetHardware<ColorSensor>(hardware, "intakeColorSensor")
+
+        val armRotationEncoderMotor = safelyGetHardware<DcMotorEx>(hardware, "leftFront")
+
+        if (armRotationEncoderMotor != null) {
+            armRotationEncoder = RawEncoder(armRotationEncoderMotor)
+        }
+
+        // TODO: Do we need this?
+        // armRotationEncoder.direction = DcMotorSimple.Direction.REVERSE
     }
 
     private fun initializeServos(hardware: HardwareMap) {

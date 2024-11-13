@@ -194,16 +194,6 @@ class CDTeleop : OpModeBase() {
             telemetry.addLine("viperExtensionPosList: ${viperArmSubsystem.getExtensionMotorGroupPositionList()}")
         } ?: telemetry.addLine("[WARNING] viperExtensionGroup not found")
 
-        //testing added leftspeed
-        hardware.viperRotationMotorLeft?.let {
-            telemetry.addLine("ViperRotationMotorLeftSpeed: ${it.get()}")
-        } ?: telemetry.addLine("[WARNING] viperrotationLEFTspeed not found")
-
-        //testing added rightspeed
-        hardware.viperRotationMotorRight?.let {
-            telemetry.addLine("ViperRotationMotorRightSpeed: ${it.get()}")
-        } ?: telemetry.addLine("[WARNING] viperrotationRIGHTspeed not found")
-
         //testing added groupspeed and poslist
         hardware.viperRotationMotorGroup?.let {
             telemetry.addLine("viperRotationGroupSpeed: ${it.get()}")
@@ -226,6 +216,10 @@ class CDTeleop : OpModeBase() {
         hardware.gripperServo?.let {
             telemetry.addLine("gripperServo position: ${it.position}")
         } ?: telemetry.addLine("[WARNING] gripper servo not found")
+
+        hardware.armRotationEncoder?.let {
+            telemetry.addLine("rotation position: ${it.getPositionAndVelocity().position}")
+        } ?: telemetry.addLine("[WARNING] arm rotation encoder not found")
 
         telemetry.update()
     }
