@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.command.transfer
 
 import com.arcrobotics.ftclib.command.CommandBase
-import org.firstinspires.ftc.teamcode.subsystem.ViperArmSubsystem
+import org.firstinspires.ftc.teamcode.subsystem.ArmRotationSubsystem
 import kotlin.math.abs
 import kotlin.properties.Delegates
 
-class RotateTo(private val viperArmSubsystem: ViperArmSubsystem, private val target: Int) : CommandBase() {
+class RotateTo(private val armRotationSubsystem: ArmRotationSubsystem, private val target: Int) : CommandBase() {
     init {
-        addRequirements(viperArmSubsystem)
+        addRequirements(armRotationSubsystem)
     }
 
     private var currentState = RotateState.IDLE
@@ -19,7 +19,7 @@ class RotateTo(private val viperArmSubsystem: ViperArmSubsystem, private val tar
 
     override fun initialize() {
         currentState = RotateState.STARTED
-        initialPosition = viperArmSubsystem.getRotationMotorGroupPosition()
+        initialPosition = armRotationSubsystem.getRotationMotorGroupPosition()
         positionDelta = abs(target - initialPosition)
     }
 
@@ -36,30 +36,30 @@ class RotateTo(private val viperArmSubsystem: ViperArmSubsystem, private val tar
                     MAX_POWER
                 }
 
-                viperArmSubsystem.setRotationMotorGroupPower(power)
+                armRotationSubsystem.setRotationMotorGroupPower(power)
                 currentState = RotateState.ROTATING
             }
             RotateState.ROTATING -> {
-                val currentPosition = viperArmSubsystem.getRotationMotorGroupPosition()
+                val currentPosition = armRotationSubsystem.getRotationMotorGroupPosition()
 
                 if (rotationDirection == RotationDirection.UP) {
                     val slowTarget = target - (positionDelta * 0.1)
                     if (currentPosition <= -slowTarget) {
-                        viperArmSubsystem.setRotationMotorGroupPower(power * LOW_POWER_MULT)
+                        armRotationSubsystem.setRotationMotorGroupPower(power * LOW_POWER_MULT)
                     }
                 } else if (rotationDirection == RotationDirection.DOWN) {
                     val slowTarget = target + (positionDelta * 0.1)
                     if (currentPosition >= -slowTarget) {
-                        viperArmSubsystem.setRotationMotorGroupPower(power * LOW_POWER_MULT)
+                        armRotationSubsystem.setRotationMotorGroupPower(power * LOW_POWER_MULT)
                     }
                 }
                 if (rotationDirection == RotationDirection.UP && currentPosition <= -target) {
                     println("rotation up reached target")
-                    viperArmSubsystem.setRotationMotorGroupPower(0.0)
+                    armRotationSubsystem.setRotationMotorGroupPower(0.0)
                     currentState = RotateState.FINISHED
                 } else if (rotationDirection == RotationDirection.DOWN && currentPosition >= -target) {
                     println("rotation down reached target")
-                    viperArmSubsystem.setRotationMotorGroupPower(0.0)
+                    armRotationSubsystem.setRotationMotorGroupPower(0.0)
                     currentState = RotateState.FINISHED
                 }
             }
@@ -75,7 +75,7 @@ class RotateTo(private val viperArmSubsystem: ViperArmSubsystem, private val tar
 
     override fun end(interrupted: Boolean) {
         if (interrupted) {
-            viperArmSubsystem.setRotationMotorGroupPower(0.0)
+            armRotationSubsystem.setRotationMotorGroupPower(0.0)
         }
 
         currentState = RotateState.IDLE

@@ -1,39 +1,23 @@
 package org.firstinspires.ftc.teamcode.odometry
 
-import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.DualNum
 import com.acmerobotics.roadrunner.Time
 import com.acmerobotics.roadrunner.Twist2dDual
 import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.Vector2dDual
 import com.acmerobotics.roadrunner.ftc.Encoder
-import com.acmerobotics.roadrunner.ftc.FlightRecorder.write
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder
 import com.acmerobotics.roadrunner.ftc.PositionVelocityPair
 import com.acmerobotics.roadrunner.ftc.RawEncoder
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import org.firstinspires.ftc.teamcode.config.LocalizerParams
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
-import org.firstinspires.ftc.teamcode.messages.ThreeDeadWheelInputsMessage
 
-class ThreeDeadWheelLocalizer(hardware: HardwareManager, val inPerTick: Double) : Localizer {
-    @Config
-    class LocalizerParams {
-        companion object {
-            @JvmField
-            var par0YTicks: Double =
-                -3091.9317284303575 // y position of the first parallel encoder (in tick units)
-            @JvmField
-            var par1YTicks: Double =
-                3083.104672695253 // y position of the second parallel encoder (in tick units)
-            @JvmField
-            var perpXTicks: Double =
-                -2884.4319874095117 // x position of the perpendicular encoder (in tick units)
-        }
-    }
+class ThreeDeadWheelLocalizer(hardware: HardwareManager, private val inPerTick: Double) : Localizer {
 
-    init {
-//        write("THREE_DEAD_WHEEL_PARAMS", PARAMS)
-    }
+//    init {
+//        write("THREE_DEAD_WHEEL_LocalizerParams", LocalizerParams.Companion)
+//    }
 
     // TODO: make sure your config has **motors** with these names (or change them)
     //   the encoders should be plugged into the slot matching the named motor
@@ -82,21 +66,21 @@ class ThreeDeadWheelLocalizer(hardware: HardwareManager, val inPerTick: Double) 
             Vector2dDual(
                 DualNum<Time>(
                     doubleArrayOf(
-                        (PARAMS.par0YTicks * par1PosDelta - PARAMS.par1YTicks * par0PosDelta) / (PARAMS.par0YTicks - PARAMS.par1YTicks),
-                        (PARAMS.par0YTicks * par1PosVel.velocity - PARAMS.par1YTicks * par0PosVel.velocity) / (PARAMS.par0YTicks - PARAMS.par1YTicks),
+                        (LocalizerParams.par0YTicks * par1PosDelta - LocalizerParams.par1YTicks * par0PosDelta) / (LocalizerParams.par0YTicks - LocalizerParams.par1YTicks),
+                        (LocalizerParams.par0YTicks * par1PosVel.velocity - LocalizerParams.par1YTicks * par0PosVel.velocity) / (LocalizerParams.par0YTicks - LocalizerParams.par1YTicks),
                     )
                 ).times(inPerTick),
                 DualNum<Time>(
                     doubleArrayOf(
-                        (PARAMS.perpXTicks / (PARAMS.par0YTicks - PARAMS.par1YTicks) * (par1PosDelta - par0PosDelta) + perpPosDelta),
-                        (PARAMS.perpXTicks / (PARAMS.par0YTicks - PARAMS.par1YTicks) * (par1PosVel.velocity - par0PosVel.velocity) + perpPosVel.velocity),
+                        (LocalizerParams.perpXTicks / (LocalizerParams.par0YTicks - LocalizerParams.par1YTicks) * (par1PosDelta - par0PosDelta) + perpPosDelta),
+                        (LocalizerParams.perpXTicks / (LocalizerParams.par0YTicks - LocalizerParams.par1YTicks) * (par1PosVel.velocity - par0PosVel.velocity) + perpPosVel.velocity),
                     )
                 ).times(inPerTick)
             ),
             DualNum(
                 doubleArrayOf(
-                    (par0PosDelta - par1PosDelta) / (PARAMS.par0YTicks - PARAMS.par1YTicks),
-                    (par0PosVel.velocity - par1PosVel.velocity) / (PARAMS.par0YTicks - PARAMS.par1YTicks),
+                    (par0PosDelta - par1PosDelta) / (LocalizerParams.par0YTicks - LocalizerParams.par1YTicks),
+                    (par0PosVel.velocity - par1PosVel.velocity) / (LocalizerParams.par0YTicks - LocalizerParams.par1YTicks),
                 )
             )
         )
@@ -106,9 +90,5 @@ class ThreeDeadWheelLocalizer(hardware: HardwareManager, val inPerTick: Double) 
         lastPerpPos = perpPosVel.position
 
         return twist
-    }
-
-    companion object {
-        var PARAMS = LocalizerParams
     }
 }

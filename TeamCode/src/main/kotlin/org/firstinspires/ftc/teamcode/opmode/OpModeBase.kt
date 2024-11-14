@@ -8,7 +8,8 @@ import org.firstinspires.ftc.teamcode.drive.MecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.subsystem.ActiveIntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.GripperSubsystem
-import org.firstinspires.ftc.teamcode.subsystem.ViperArmSubsystem
+import org.firstinspires.ftc.teamcode.subsystem.ArmRotationSubsystem
+import org.firstinspires.ftc.teamcode.subsystem.ViperExtensionSubsystem
 
 abstract class OpModeBase : CommandOpMode() {
     lateinit var hardware: HardwareManager
@@ -20,23 +21,19 @@ abstract class OpModeBase : CommandOpMode() {
     // Subsystems
     lateinit var activeIntakeSubsystem: ActiveIntakeSubsystem
     lateinit var gripperSubsystem: GripperSubsystem
-    lateinit var viperArmSubsystem: ViperArmSubsystem
+    lateinit var armRotationSubsystem: ArmRotationSubsystem
+    lateinit var armExtensionSubsystem: ViperExtensionSubsystem
 
-    fun initHardware(isAuto: Boolean) {
+    fun initHardware() {
         hardware = HardwareManager(hardwareMap)
         // TODO: Start position?
         mecanumDrive = MecanumDrive(hardware, Pose2d(0.0, 0.0, 0.0))
         multiTelemetry = MultipleTelemetry(telemetry)
 
-        activeIntakeSubsystem = ActiveIntakeSubsystem(hardware, multiTelemetry)
-        gripperSubsystem = GripperSubsystem(hardware, multiTelemetry)
-        viperArmSubsystem = ViperArmSubsystem(hardware, multiTelemetry)
-
-        register(
-            activeIntakeSubsystem,
-            gripperSubsystem,
-            viperArmSubsystem
-        )
+        activeIntakeSubsystem = ActiveIntakeSubsystem(hardware)
+        gripperSubsystem = GripperSubsystem(hardware)
+        armRotationSubsystem = ArmRotationSubsystem(hardware)
+        armExtensionSubsystem = ViperExtensionSubsystem(hardware)
 
         driverGamepad = GamepadEx(gamepad1)
         accessoryGamepad = GamepadEx(gamepad2)

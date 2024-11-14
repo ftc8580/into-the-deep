@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmode.auton
 
-import com.acmerobotics.roadrunner.ParallelAction
 import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.SequentialAction
 import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import org.firstinspires.ftc.teamcode.actions.specimen.GripperHighChamber
-import org.firstinspires.ftc.teamcode.actions.specimen.GripperHome
+import org.firstinspires.ftc.teamcode.actions.GripperPosition
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
+import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 import org.firstinspires.ftc.teamcode.subsystem.GripperSubsystem
 
 @Suppress("Unused")
@@ -39,11 +38,9 @@ class TurtleSpecimenAuton : LinearOpMode() {
 
         runBlocking(
             SequentialAction(
-                ParallelAction( // Run these actions at the same time
-                    GripperHighChamber(gripperSubsystem), // Raise the gripper to the delivery position
-                    deliveryPositionBuilder.build() // Drive up to the submersible
-                ),
-                GripperHome(gripperSubsystem), // Lower gripper to deliver specimen
+                GripperPosition(gripperSubsystem, GripperHeight.HIGH, 500.0), // Raise the gripper to the delivery position
+                deliveryPositionBuilder.build(), // Drive up to the submersible
+                GripperPosition(gripperSubsystem, GripperHeight.HOME), // Lower gripper to deliver specimen
                 parkPositionBuilder.build() // Drive to park position
             )
         )

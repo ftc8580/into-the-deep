@@ -25,11 +25,9 @@ class CDTeleop : OpModeBase() {
     private var rotationGroupState = MotorGroupState.STOPPED
 
     override fun initialize() {
-        initHardware(false)
+        initHardware()
         initializeDriverGamepad(driverGamepad)
         initializeCoDriverGamepad(accessoryGamepad)
-
-        viperArmSubsystem.setMotorGroupsRawPower()
 
         hardware.intakeColorSensor?.let {
             revColorSensor = RevColor(it)
@@ -51,8 +49,9 @@ class CDTeleop : OpModeBase() {
 
         mecanumDrive.updatePoseEstimate()
 
-        if (viperArmSubsystem.isExtensionHome) {
-            viperArmSubsystem.resetExtensionEncoder()
+        if (armExtensionSubsystem.isExtensionHome) {
+            // TODO: Fix this
+            // armExtensionSubsystem.resetExtensionEncoder()
         }
 
         revColorSensor?.let {
@@ -104,20 +103,20 @@ class CDTeleop : OpModeBase() {
 
         if (accessoryGamepad.rightY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.rightY < -VARIABLE_INPUT_DEAD_ZONE) {
             extensionGroupState = MotorGroupState.ACTIVE
-            viperArmSubsystem.setExtensionMotorGroupPower((-accessoryGamepad.rightY).pow(3.0))
+            armExtensionSubsystem.setExtensionMotorGroupPower((-accessoryGamepad.rightY).pow(3.0))
         } else if (extensionGroupState == MotorGroupState.ACTIVE) {
             extensionGroupState = MotorGroupState.STOPPED
-            viperArmSubsystem.setExtensionMotorGroupPower(0.0)
+            armExtensionSubsystem.setExtensionMotorGroupPower(0.0)
 //            viperArmSubsystem.correctExtensionGroupFollower()
         }
 
         if (accessoryGamepad.leftY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.leftY < -VARIABLE_INPUT_DEAD_ZONE) {
             rotationGroupState = MotorGroupState.ACTIVE
-            viperArmSubsystem.setRotationMotorGroupPower((-accessoryGamepad.leftY).pow(3.0) * 0.6)
+            armRotationSubsystem.setRotationMotorGroupPower((-accessoryGamepad.leftY).pow(3.0) * 0.6)
         } else if (rotationGroupState == MotorGroupState.ACTIVE) {
             rotationGroupState = MotorGroupState.STOPPED
-            viperArmSubsystem.setRotationMotorGroupPower(0.0)
-            viperArmSubsystem.correctRotationGroupFollower()
+            armRotationSubsystem.setRotationMotorGroupPower(0.0)
+            armRotationSubsystem.correctRotationGroupFollower()
         }
 
         // LED Light
@@ -173,12 +172,12 @@ class CDTeleop : OpModeBase() {
         wristLeftButton.whileHeld(Runnable { activeIntakeSubsystem.rotateIncrementDown() })
         wristRightButton.whileHeld(Runnable { activeIntakeSubsystem.rotateIncrementUp() })
 
-        viperDrivePositionButton.whenPressed(PositionDrive(viperArmSubsystem, activeIntakeSubsystem))
-        viperPickupPositionButton.whenPressed(PositionPickup(viperArmSubsystem, activeIntakeSubsystem))
-        viperLowPositionButton.whenPressed(PositionDeliveryToLowerBasket(viperArmSubsystem, activeIntakeSubsystem))
-        viperHighPositionButton.whenPressed(PositionDeliveryToUpperBasket(viperArmSubsystem, activeIntakeSubsystem))
+        viperDrivePositionButton.whenPressed(PositionDrive(armRotationSubsystem, activeIntakeSubsystem))
+        viperPickupPositionButton.whenPressed(PositionPickup(armRotationSubsystem, activeIntakeSubsystem))
+        viperLowPositionButton.whenPressed(PositionDeliveryToLowerBasket(armRotationSubsystem, activeIntakeSubsystem))
+        viperHighPositionButton.whenPressed(PositionDeliveryToUpperBasket(armRotationSubsystem, activeIntakeSubsystem))
 
-        homeButton.whenPressed(PositionHome(viperArmSubsystem, activeIntakeSubsystem))
+        homeButton.whenPressed(PositionHome(armRotationSubsystem, activeIntakeSubsystem))
     }
 
     private fun writeTelemetry() {
@@ -188,18 +187,16 @@ class CDTeleop : OpModeBase() {
 
         // TODO: Comment out telemetry we only need for troubleshooting
 
-        // testing - added poslist
-        hardware.viperExtensionMotorGroup?.let {
-            telemetry.addLine("viperExtensionPos: ${viperArmSubsystem.getExtensionMotorGroupPosition()}")
-            telemetry.addLine("viperExtensionPosList: ${viperArmSubsystem.getExtensionMotorGroupPositionList()}")
-        } ?: telemetry.addLine("[WARNING] viperExtensionGroup not found")
-
-        //testing added groupspeed and poslist
-        hardware.viperRotationMotorGroup?.let {
-            telemetry.addLine("viperRotationGroupSpeed: ${it.get()}")
-            telemetry.addLine("viperRotationPos: ${viperArmSubsystem.getRotationMotorGroupPosition()}")
-            telemetry.addLine("viperRotationPosList: ${viperArmSubsystem.getRotationMotorGroupPositionList()}")
-        } ?: telemetry.addLine("[WARNING] viperRotationGroup not found")
+//        hardware.viperExtensionMotorGroup?.let {
+//            telemetry.addLine("viperExtensionPos: ${armExtensionSubsystem.getExtensionMotorGroupPosition()}")
+//            telemetry.addLine("viperExtensionPosList: ${armExtensionSubsystem.getExtensionMotorGroupPositionList()}")
+//        } ?: telemetry.addLine("[WARNING] viperExtensionGroup not found")
+//
+//        hardware.viperRotationMotorGroup?.let {
+//            telemetry.addLine("viperRotationGroupSpeed: ${it.get()}")
+//            telemetry.addLine("viperRotationPos: ${armRotationSubsystem.getRotationMotorGroupPosition()}")
+//            telemetry.addLine("viperRotationPosList: ${armRotationSubsystem.getRotationMotorGroupPositionList()}")
+//        } ?: telemetry.addLine("[WARNING] viperRotationGroup not found")
 
         hardware.intakeRotateServo?.let {
             telemetry.addLine("intakeRotationPosition: ${it.position}")

@@ -3,17 +3,17 @@ package org.firstinspires.ftc.teamcode.command.transfer
 import com.arcrobotics.ftclib.command.ParallelCommandGroup
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import org.firstinspires.ftc.teamcode.subsystem.ActiveIntakeSubsystem
-import org.firstinspires.ftc.teamcode.subsystem.ViperArmSubsystem
+import org.firstinspires.ftc.teamcode.subsystem.ArmRotationSubsystem
 
-class PositionAutoRung(viperArmSubsystem: ViperArmSubsystem, activeIntakeSubsystem: ActiveIntakeSubsystem) : SequentialCommandGroup() {
+class PositionAutoRung(armRotationSubsystem: ArmRotationSubsystem, activeIntakeSubsystem: ActiveIntakeSubsystem) : SequentialCommandGroup() {
     init {
         addCommands(
             //WristToPickup(activeIntakeSubsystem),
-            RetractHome(viperArmSubsystem),
+            RetractHome(armRotationSubsystem),
             ParallelCommandGroup(
-                RotateTo(viperArmSubsystem, ViperArmSubsystem.ROTATION_AUTORUNG_POSITION),
+                RotateTo(armRotationSubsystem, ArmRotationSubsystem.ROTATION_AUTORUNG_POSITION),
             )
         )
-        addRequirements(viperArmSubsystem, activeIntakeSubsystem)
+        addRequirements(armRotationSubsystem, activeIntakeSubsystem)
     }
 }

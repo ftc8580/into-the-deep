@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.command.transfer
 
 import com.arcrobotics.ftclib.command.CommandBase
-import com.qualcomm.robotcore.util.ElapsedTime
-import org.firstinspires.ftc.teamcode.subsystem.ViperArmSubsystem
-import org.firstinspires.ftc.teamcode.util.isTimedOut
+import org.firstinspires.ftc.teamcode.subsystem.ArmRotationSubsystem
 
-class RetractHome(private val viperArmSubsystem: ViperArmSubsystem) : CommandBase() {
+class RetractHome(private val armRotationSubsystem: ArmRotationSubsystem) : CommandBase() {
     init {
-        addRequirements(viperArmSubsystem)
+        addRequirements(armRotationSubsystem)
     }
 
     private var currentState = RetractState.IDLE
@@ -20,23 +18,23 @@ class RetractHome(private val viperArmSubsystem: ViperArmSubsystem) : CommandBas
     override fun execute() {
         when (currentState) {
             RetractState.STARTED -> {
-                if (viperArmSubsystem.isExtensionHome) {
+                if (armRotationSubsystem.isExtensionHome) {
                     println("RetractHome started - already at home, set to finished")
-                    viperArmSubsystem.setExtensionMotorGroupPower(0.0)
-                    viperArmSubsystem.resetExtensionEncoder()
+                    armRotationSubsystem.setExtensionMotorGroupPower(0.0)
+                    armRotationSubsystem.resetExtensionEncoder()
                     currentState = RetractState.FINISHED
                 } else {
                     println("Retract home started, retracting...")
                     currentState = RetractState.RETRACTING
-                    viperArmSubsystem.setExtensionMotorGroupPower(-1.0)
+                    armRotationSubsystem.setExtensionMotorGroupPower(-1.0)
                 }
             }
             RetractState.RETRACTING -> {
                 println("Still retracting...")
-                if (viperArmSubsystem.isExtensionHome) {
+                if (armRotationSubsystem.isExtensionHome) {
                     println("RetractHome has reached home position, finishing...")
-                    viperArmSubsystem.setExtensionMotorGroupPower(0.0)
-                    viperArmSubsystem.resetExtensionEncoder()
+                    armRotationSubsystem.setExtensionMotorGroupPower(0.0)
+                    armRotationSubsystem.resetExtensionEncoder()
                     currentState = RetractState.FINISHED
                 }
             }
@@ -52,7 +50,7 @@ class RetractHome(private val viperArmSubsystem: ViperArmSubsystem) : CommandBas
 
     override fun end(interrupted: Boolean) {
         if (interrupted) {
-            viperArmSubsystem.setExtensionMotorGroupPower(0.0)
+            armRotationSubsystem.setExtensionMotorGroupPower(0.0)
         }
 
         println("Retract Home ending")

@@ -25,7 +25,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive
-import org.firstinspires.ftc.teamcode.drive.MecanumDriveParams
+import org.firstinspires.ftc.teamcode.config.MecanumDriveParams
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.odometry.ThreeDeadWheelLocalizer
 

@@ -2,11 +2,8 @@ package org.firstinspires.ftc.teamcode.hardware
 
 import com.acmerobotics.roadrunner.ftc.LazyImu
 import com.acmerobotics.roadrunner.ftc.RawEncoder
-import com.arcrobotics.ftclib.hardware.motors.Motor
-import com.arcrobotics.ftclib.hardware.motors.Motor.GoBILDA
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.ColorSensor
 import com.qualcomm.robotcore.hardware.DcMotor
@@ -17,26 +14,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
+import org.firstinspires.ftc.teamcode.config.ImuParams
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil
 import org.firstinspires.ftc.teamcode.util.MotorGroup
 
 class HardwareManager(hardware: HardwareMap) {
-    class Params {
-        // IMU orientation
-        // TODO: fill in these values based on
-        //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
-        var logoFacingDirection: RevHubOrientationOnRobot.LogoFacingDirection =
-            RevHubOrientationOnRobot.LogoFacingDirection.UP
-        var usbFacingDirection: UsbFacingDirection = UsbFacingDirection.BACKWARD
-    }
-
     lateinit var batteryVoltageSensor: VoltageSensor
     lateinit var leftFrontMotor: DcMotorEx
     lateinit var leftRearMotor: DcMotorEx
     lateinit var rightRearMotor: DcMotorEx
     lateinit var rightFrontMotor: DcMotorEx
 
-    lateinit var driveMotors: List<DcMotorEx>
+    private lateinit var driveMotors: List<DcMotorEx>
 
     lateinit var lazyImu: LazyImu
 
@@ -58,10 +47,10 @@ class HardwareManager(hardware: HardwareMap) {
     var gripperServo: Servo? = null
 
     // Accessory  motors
-    var viperExtensionMotorLeft: Motor? = null
-    var viperExtensionMotorRight: Motor? = null
-    var viperRotationMotorLeft: Motor? = null
-    var viperRotationMotorRight: Motor? = null
+    private var viperExtensionMotorLeft: DcMotorEx? = null
+    private var viperExtensionMotorRight: DcMotorEx? = null
+    private var viperRotationMotorLeft: DcMotorEx? = null
+    private var viperRotationMotorRight: DcMotorEx? = null
     var viperExtensionMotorGroup: MotorGroup? = null
     var viperRotationMotorGroup: MotorGroup? = null
 
@@ -88,7 +77,7 @@ class HardwareManager(hardware: HardwareMap) {
     private fun initializeImu(hardware: HardwareMap) {
         lazyImu = LazyImu(
             hardware, "imu", RevHubOrientationOnRobot(
-                PARAMS.logoFacingDirection, PARAMS.usbFacingDirection
+                ImuParams.logoFacingDirection, ImuParams.usbFacingDirection
             )
         )
     }
@@ -173,20 +162,20 @@ class HardwareManager(hardware: HardwareMap) {
     }
 
     private fun initializeAccessoryMotors(hardware: HardwareMap) {
-        viperExtensionMotorRight = safelyGetMotor(hardware, "viperExtensionRight", GoBILDA.RPM_117)
-        viperExtensionMotorLeft = safelyGetMotor(hardware, "viperExtensionLeft", GoBILDA.RPM_117)
-        viperRotationMotorRight = safelyGetMotor(hardware, "viperRotationRight", GoBILDA.RPM_43)
-        viperRotationMotorLeft = safelyGetMotor(hardware, "viperRotationLeft", GoBILDA.RPM_43)
+        viperExtensionMotorRight = safelyGetHardware<DcMotorEx>(hardware, "viperExtensionRight")
+        viperExtensionMotorLeft = safelyGetHardware<DcMotorEx>(hardware, "viperExtensionLeft")
+        viperRotationMotorRight = safelyGetHardware<DcMotorEx>(hardware, "viperRotationRight")
+        viperRotationMotorLeft = safelyGetHardware<DcMotorEx>(hardware, "viperRotationLeft")
 
         // Sync sides
-        viperExtensionMotorRight?.motor?.direction = DcMotorSimple.Direction.REVERSE
-        viperRotationMotorRight?.motor?.direction = DcMotorSimple.Direction.REVERSE
+        viperExtensionMotorRight?.direction = DcMotorSimple.Direction.REVERSE
+        viperRotationMotorRight?.direction = DcMotorSimple.Direction.REVERSE
 
         // Set encoder mode
-        viperExtensionMotorRight?.motor?.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        viperExtensionMotorLeft?.motor?.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        viperRotationMotorRight?.motor?.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        viperRotationMotorLeft?.motor?.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        viperExtensionMotorRight?.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        viperExtensionMotorLeft?.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        viperRotationMotorRight?.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        viperRotationMotorLeft?.mode = DcMotor.RunMode.RUN_USING_ENCODER
 
         if (viperExtensionMotorRight != null && viperExtensionMotorLeft != null) {
             viperExtensionMotorGroup = MotorGroup(viperExtensionMotorRight!!, viperExtensionMotorLeft!!)
@@ -208,14 +197,6 @@ class HardwareManager(hardware: HardwareMap) {
         }
     }
 
-    private fun safelyGetMotor(hardware: HardwareMap, deviceName: String, goBildaType: GoBILDA): Motor? =
-        try {
-            Motor(hardware, deviceName, goBildaType)
-        } catch (e: Exception) {
-            println("Problem getting motor $deviceName")
-            null
-        }
-
     val rawExternalHeading: Double
         get() = 0.0
 
@@ -227,9 +208,5 @@ class HardwareManager(hardware: HardwareMap) {
         leftRearMotor.power = rearLeft
         rightRearMotor.power = rearRight
         rightFrontMotor.power = frontRight
-    }
-
-    companion object {
-        var PARAMS: Params = Params()
     }
 }
