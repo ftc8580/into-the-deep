@@ -19,10 +19,6 @@ class MotorGroup(
     private val group: List<DcMotorEx> = listOf(leader, follower)
     private var isFollowerCorrected = true
 
-    fun setWithoutCorrection(output: Double) {
-        group.forEach { it.power = output }
-    }
-
     override fun getVelocity(): Double = leader.velocity
 
     override fun getVelocity(unit: AngleUnit?): Double = leader.getVelocity(unit)

@@ -35,7 +35,7 @@ fun main(args: Array<String>) {
         .strafeToConstantHeading(Vector2d(-63.0, 48.0))
         .splineToSplineHeading(Pose2d(-40.0, 58.0, Math.toRadians(90.0)), Math.toRadians(0.0))
         .strafeToConstantHeading(Vector2d(-40.0, 63.0))
-        .splineToSplineHeading(Pose2d(-8.0, 33.0, Math.toRadians(270.0)), Math.toRadians(270.0))
+        .strafeToLinearHeading(Vector2d(-8.0, 33.0), Math.toRadians(270.0))
         .build()
 
     bot.runAction(action)

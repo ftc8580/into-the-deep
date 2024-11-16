@@ -25,37 +25,42 @@ class ArmRotationSubsystem(hardware: HardwareManager) : MotorGroupSubsystem() {
             return
         }
 
-        // TODO: Replace with encoder
-//        if (rotationHomeSensor?.isPressed == true && power > 0) {
-//            rotationMotorGroup.setWithoutCorrection(0.0)
-//            return
-//        }
-
-        val currentPosition = -rotationMotorGroup.getPositions().first()
-        if (currentPosition >= ROTATION_MAX_POSITION && power < 0) {
-            rotationMotorGroup.setWithoutCorrection(0.0)
+        if (power < 0 && rotationMotorGroup.currentPosition >= ArmRotationPosition.TOP.position) {
+            rotationMotorGroup.power = 0.0
+        } else if (power > 0 && rotationMotorGroup.currentPosition <= ArmRotationPosition.HOME.position) {
+            rotationMotorGroup.power = 0.0
         } else {
-            rotationMotorGroup.setWithoutCorrection(getBoundedPower(power))
+            rotationMotorGroup.power = getBoundedPower(power)
         }
     }
 
-    fun rotateToPosition(position: Int) {
-        val safePosition = getBoundedPosition(position, ROTATION_MIN_POSITION, ROTATION_MAX_POSITION)
+    fun rotateToPosition(input: ArmRotationPosition) {
+        val safePosition = getBoundedPosition(
+            input.position,
+            ArmRotationPosition.HOME.position,
+            ArmRotationPosition.TOP.position
+        )
 
         rotationMotorGroup?.safelyGoToPosition(-safePosition, ROTATION_SPEED)
     }
 
-    fun rotateHome() = rotateToPosition(ROTATION_MIN_POSITION)
+    fun rotateHome() = rotateToPosition(ArmRotationPosition.HOME)
 
-    fun rotateTop() = rotateToPosition(ROTATION_MAX_POSITION)
+    fun rotateDrive() = rotateToPosition(ArmRotationPosition.DRIVE)
+
+    fun rotateMax() = rotateToPosition(ArmRotationPosition.TOP)
+
+    val currentPosition: Int?
+        get() = rotationEncoder?.getPositionAndVelocity()?.position
 
     companion object {
         const val ROTATION_SPEED = 0.5
-        const val ROTATION_MIN_POSITION = 0
-        const val ROTATION_PICKUP_POSITION_GROUND = 700
-        const val ROTATION_PICKUP_POSITION = 900
-        const val ROTATION_DRIVE_POSITION = 1100
-        const val ROTATION_AUTORUNG_POSITION = 2300
-        const val ROTATION_MAX_POSITION = 4465
     }
+}
+
+enum class ArmRotationPosition(val position: Int) {
+    HOME(0),
+    DRIVE(750),
+    PARK(2300),
+    TOP(3300)
 }

@@ -9,7 +9,12 @@ class ViperExtensionSubsystem(hardware: HardwareManager) : MotorGroupSubsystem()
     private val extensionHomeSensor = hardware.extensionHomeSensor
 
     init {
+        resetMotorEncoders()
         extensionMotorGroup?.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+    }
+
+    fun resetMotorEncoders() {
+        extensionMotorGroup?.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         extensionMotorGroup?.mode = DcMotor.RunMode.RUN_USING_ENCODER
     }
 
@@ -22,38 +27,53 @@ class ViperExtensionSubsystem(hardware: HardwareManager) : MotorGroupSubsystem()
         }
 
         if (extensionHomeSensor?.isPressed == true && power < 0) {
-            extensionMotorGroup.setWithoutCorrection(0.0)
+            extensionMotorGroup.power = 0.0
             return
         }
 
         val currentPosition = extensionMotorGroup.getCurrentPosition()
-        if (currentPosition >= EXTENSION_MAX_POSITION && power > 0) {
-            extensionMotorGroup.setWithoutCorrection(0.0)
+        if (currentPosition >= ArmExtensionPosition.MAX_UP.position && power > 0) {
+            extensionMotorGroup.power = 0.0
         } else {
-            extensionMotorGroup.setWithoutCorrection(getBoundedPower(power))
+            extensionMotorGroup.power = getBoundedPower(power)
         }
     }
 
-    fun extendToPosition(position: Int) {
-        val safePosition = getBoundedPosition(position, EXTENSION_MIN_POSITION, EXTENSION_MAX_POSITION)
+    fun extendToPosition(target: ArmExtensionPosition) {
+        val safePosition = getBoundedPosition(
+            target.position,
+            ArmExtensionPosition.HOME.position,
+            ArmExtensionPosition.MAX_UP.position
+        )
 
         extensionMotorGroup?.safelyGoToPosition(safePosition, EXTENSION_SPEED)
     }
 
-    fun extendLowerBasket() = extendToPosition(EXTENSION_LOWER_BASKET_POSITION)
+    fun extendLowerBasket() = extendToPosition(ArmExtensionPosition.LOW_BASKET)
 
-    fun extendFully() = extendToPosition(EXTENSION_MAX_POSITION)
+    fun extendFully() = extendToPosition(ArmExtensionPosition.MAX_UP)
 
-    fun retract() = extendToPosition(EXTENSION_MIN_POSITION)
+    fun retract() = extendToPosition(ArmExtensionPosition.HOME)
 
     val isExtensionHome: Boolean
         get() = extensionHomeSensor?.isPressed == true
 
+    val currentPosition: Int?
+        get() = extensionMotorGroup?.currentPosition
+
+    val extensionPositions: List<Int>
+        get() = extensionMotorGroup?.getPositions() ?: listOf()
+
     companion object {
         const val EXTENSION_SPEED = 1.0
-        const val EXTENSION_MIN_POSITION = 0
-        const val EXTENSION_PICKUP_POSITION = 500
-        const val EXTENSION_LOWER_BASKET_POSITION = 1162
-        const val EXTENSION_MAX_POSITION = 6100
+
+        // ROTATION value 1850 == max up position crosses plane below this
     }
+}
+
+enum class ArmExtensionPosition(val position: Int) {
+    HOME(0),
+    LOW_BASKET(1162),
+    MAX_DOWN(5100),
+    MAX_UP(6200)
 }

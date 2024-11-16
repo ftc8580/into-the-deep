@@ -2,16 +2,18 @@ package org.firstinspires.ftc.teamcode.opmode.teleop
 
 import android.annotation.SuppressLint
 import com.acmerobotics.roadrunner.PoseVelocity2d
+import com.acmerobotics.roadrunner.SequentialAction
 import com.acmerobotics.roadrunner.Vector2d
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToLowerBasket
-import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToUpperBasket
-import org.firstinspires.ftc.teamcode.command.transfer.PositionDrive
-import org.firstinspires.ftc.teamcode.command.transfer.PositionHome
-import org.firstinspires.ftc.teamcode.command.transfer.PositionPickup
+//import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToLowerBasket
+//import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToUpperBasket
+//import org.firstinspires.ftc.teamcode.command.transfer.PositionDrive
+//import org.firstinspires.ftc.teamcode.command.transfer.PositionHome
+//import org.firstinspires.ftc.teamcode.command.transfer.PositionPickup
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
+import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 import org.firstinspires.ftc.teamcode.util.RevColor
 import kotlin.math.pow
 
@@ -50,8 +52,7 @@ class CDTeleop : OpModeBase() {
         mecanumDrive.updatePoseEstimate()
 
         if (armExtensionSubsystem.isExtensionHome) {
-            // TODO: Fix this
-            // armExtensionSubsystem.resetExtensionEncoder()
+            armExtensionSubsystem.resetMotorEncoders()
         }
 
         revColorSensor?.let {
@@ -140,9 +141,9 @@ class CDTeleop : OpModeBase() {
         speedSlowButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_SLOW })
         normalDriveButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_NORMAL})
 
-        gripperPickupButton.whenPressed(Runnable { gripperSubsystem.setPickupHeight() })
-        gripperLowDeliveryButton.whenPressed(Runnable { gripperSubsystem.setLowChamberHeight() })
-        gripperHighDeliveryButton.whenPressed(Runnable { gripperSubsystem.setHighChamberHeight() })
+        gripperPickupButton.whenPressed(Runnable { gripperSubsystem.set(GripperHeight.HOME) })
+        gripperLowDeliveryButton.whenPressed(Runnable { gripperSubsystem.set(GripperHeight.LOW) })
+        gripperHighDeliveryButton.whenPressed(Runnable { gripperSubsystem.set(GripperHeight.HIGH) })
 
         // TODO: Set correct numbers from telemetry
 //        retractForClimbButton.whenPressed(Runnable { viperArmSubsystem.extendToPosition(0) })
@@ -172,12 +173,12 @@ class CDTeleop : OpModeBase() {
         wristLeftButton.whileHeld(Runnable { activeIntakeSubsystem.rotateIncrementDown() })
         wristRightButton.whileHeld(Runnable { activeIntakeSubsystem.rotateIncrementUp() })
 
-        viperDrivePositionButton.whenPressed(PositionDrive(armRotationSubsystem, activeIntakeSubsystem))
-        viperPickupPositionButton.whenPressed(PositionPickup(armRotationSubsystem, activeIntakeSubsystem))
-        viperLowPositionButton.whenPressed(PositionDeliveryToLowerBasket(armRotationSubsystem, activeIntakeSubsystem))
-        viperHighPositionButton.whenPressed(PositionDeliveryToUpperBasket(armRotationSubsystem, activeIntakeSubsystem))
-
-        homeButton.whenPressed(PositionHome(armRotationSubsystem, activeIntakeSubsystem))
+//        viperDrivePositionButton.whenPressed(PositionDrive(armRotationSubsystem, activeIntakeSubsystem))
+//        viperPickupPositionButton.whenPressed(PositionPickup(armRotationSubsystem, activeIntakeSubsystem))
+//        viperLowPositionButton.whenPressed(PositionDeliveryToLowerBasket(armRotationSubsystem, activeIntakeSubsystem))
+//        viperHighPositionButton.whenPressed(PositionDeliveryToUpperBasket(armRotationSubsystem, activeIntakeSubsystem))
+//
+//        homeButton.whenPressed(PositionHome(armRotationSubsystem, activeIntakeSubsystem))
     }
 
     private fun writeTelemetry() {
@@ -187,16 +188,9 @@ class CDTeleop : OpModeBase() {
 
         // TODO: Comment out telemetry we only need for troubleshooting
 
-//        hardware.viperExtensionMotorGroup?.let {
-//            telemetry.addLine("viperExtensionPos: ${armExtensionSubsystem.getExtensionMotorGroupPosition()}")
-//            telemetry.addLine("viperExtensionPosList: ${armExtensionSubsystem.getExtensionMotorGroupPositionList()}")
-//        } ?: telemetry.addLine("[WARNING] viperExtensionGroup not found")
-//
-//        hardware.viperRotationMotorGroup?.let {
-//            telemetry.addLine("viperRotationGroupSpeed: ${it.get()}")
-//            telemetry.addLine("viperRotationPos: ${armRotationSubsystem.getRotationMotorGroupPosition()}")
-//            telemetry.addLine("viperRotationPosList: ${armRotationSubsystem.getRotationMotorGroupPositionList()}")
-//        } ?: telemetry.addLine("[WARNING] viperRotationGroup not found")
+        hardware.viperExtensionMotorGroup?.let {
+            telemetry.addLine("viperExtensionPos: ${armExtensionSubsystem.extensionPositions}")
+        } ?: telemetry.addLine("[WARNING] viperExtensionGroup not found")
 
         hardware.intakeRotateServo?.let {
             telemetry.addLine("intakeRotationPosition: ${it.position}")
