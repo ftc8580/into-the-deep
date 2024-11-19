@@ -15,9 +15,21 @@ class NarwhalMaxAuton : AutonBase() {
     override fun runOpMode() {
         val initialPose = Pose2d(40.0, 63.5, Math.toRadians(270.0))
 
+        initialize(initialPose)
+
         val action = drive.actionBuilder(initialPose)
+            .lineToY(62.0)
             .afterTime(0.0, RotationPosition(armRotationSubsystem, ArmRotationPosition.DRIVE))
-            .splineTo(Vector2d(44.0, 7.5), Math.toRadians(0.0))
+            .waitSeconds(2.0)
+            .lineToY(60.0)
+            .afterTime(0.0, RotationPosition(armRotationSubsystem, ArmRotationPosition.HOME))
+            .waitSeconds(2.0)
+            .lineToY(58.0)
+            .afterTime(0.0, RotationPosition(armRotationSubsystem, ArmRotationPosition.PARK))
+            .waitSeconds(2.0)
+            .lineToY(56.0)
+            .afterTime(0.0, RotationPosition(armRotationSubsystem, ArmRotationPosition.HOME))
+            .waitSeconds(2.0)
             .build()
 
         waitForStart()

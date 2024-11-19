@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.subsystem.internal.MotorGroupSubsystem
 
 class ViperExtensionSubsystem(hardware: HardwareManager) : MotorGroupSubsystem() {
+    private val rotationEncoder = hardware.armRotationEncoder
     private val extensionMotorGroup = hardware.viperExtensionMotorGroup
     private val extensionHomeSensor = hardware.extensionHomeSensor
 
@@ -31,8 +32,18 @@ class ViperExtensionSubsystem(hardware: HardwareManager) : MotorGroupSubsystem()
             return
         }
 
+        // If encoder is not available, always allow maximum extension
+        val rotationPosition = rotationEncoder?.getPositionAndVelocity()?.position ?: ROTATION_LIMIT_POSITION
+        val maxExtensionPosition = if (rotationPosition < ROTATION_LIMIT_POSITION) {
+            // Arm is below plane where max extension will break 42" limit
+            ArmExtensionPosition.MAX_DOWN.position
+        } else {
+            // Arm is rotated up enough that we can extend to the maximum reach
+            ArmExtensionPosition.MAX_UP.position
+        }
+
         val currentPosition = extensionMotorGroup.getCurrentPosition()
-        if (currentPosition >= ArmExtensionPosition.MAX_UP.position && power > 0) {
+        if (currentPosition >= maxExtensionPosition && power > 0) {
             extensionMotorGroup.power = 0.0
         } else {
             extensionMotorGroup.power = getBoundedPower(power)
@@ -66,14 +77,14 @@ class ViperExtensionSubsystem(hardware: HardwareManager) : MotorGroupSubsystem()
 
     companion object {
         const val EXTENSION_SPEED = 1.0
-
-        // ROTATION value 1850 == max up position crosses plane below this
+        const val ROTATION_LIMIT_POSITION = 1850
     }
 }
 
 enum class ArmExtensionPosition(val position: Int) {
     HOME(0),
     LOW_BASKET(1162),
+    AUTON_PICKUP(2600),
     MAX_DOWN(5100),
     MAX_UP(6200)
 }

@@ -25,9 +25,9 @@ class ArmRotationSubsystem(hardware: HardwareManager) : MotorGroupSubsystem() {
             return
         }
 
-        if (power < 0 && rotationMotorGroup.currentPosition >= ArmRotationPosition.TOP.position) {
+        if (power < 0 && (currentPosition ?: 0) >= ArmRotationPosition.TOP.position) {
             rotationMotorGroup.power = 0.0
-        } else if (power > 0 && rotationMotorGroup.currentPosition <= ArmRotationPosition.HOME.position) {
+        } else if (power > 0 && (currentPosition ?: 1) <= ArmRotationPosition.HOME.position) {
             rotationMotorGroup.power = 0.0
         } else {
             rotationMotorGroup.power = getBoundedPower(power)
@@ -60,7 +60,10 @@ class ArmRotationSubsystem(hardware: HardwareManager) : MotorGroupSubsystem() {
 
 enum class ArmRotationPosition(val position: Int) {
     HOME(0),
+    AUTON_PICKUP(325),
     DRIVE(750),
-    PARK(2300),
+    PARK(1686),
     TOP(3300)
 }
+
+// Pickup position - rotation = 325, extension = 2600

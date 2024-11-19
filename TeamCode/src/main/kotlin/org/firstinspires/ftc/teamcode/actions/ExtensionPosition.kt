@@ -2,17 +2,21 @@ package org.firstinspires.ftc.teamcode.actions
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.Action
+import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.actions.internal.ActionState
 import org.firstinspires.ftc.teamcode.subsystem.ArmExtensionPosition
 import org.firstinspires.ftc.teamcode.subsystem.ViperExtensionSubsystem
+import org.firstinspires.ftc.teamcode.util.isTimedOut
 import kotlin.properties.Delegates
 
 class ExtensionPosition(
     private val armExtensionSubsystem: ViperExtensionSubsystem,
-    private val target: ArmExtensionPosition
+    private val target: ArmExtensionPosition,
+    private val delayMs: Double = 0.0
 ) : Action {
     private var currentState = ActionState.IDLE
     private var extensionDirection = ExtensionDirection.OUT
+    private val elapsedTime = ElapsedTime()
 
     private var power by Delegates.notNull<Double>()
     private var initialPosition by Delegates.notNull<Int>()
@@ -20,6 +24,8 @@ class ExtensionPosition(
     override fun run(p: TelemetryPacket): Boolean {
         when (currentState) {
             ActionState.IDLE -> {
+                if (!elapsedTime.isTimedOut(delayMs)) return false
+
                 currentState = ActionState.STARTED
                 initialPosition = armExtensionSubsystem.currentPosition!!
 

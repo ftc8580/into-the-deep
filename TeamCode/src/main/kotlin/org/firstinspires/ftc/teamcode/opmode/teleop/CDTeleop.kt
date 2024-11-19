@@ -1,19 +1,27 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop
 
 import android.annotation.SuppressLint
+import com.acmerobotics.roadrunner.ParallelAction
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.SequentialAction
 import com.acmerobotics.roadrunner.Vector2d
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.actions.ExtensionPosition
+import org.firstinspires.ftc.teamcode.actions.RotationPosition
+import org.firstinspires.ftc.teamcode.actions.WristPosition
+import org.firstinspires.ftc.teamcode.commands.ActionCommand
 //import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToLowerBasket
 //import org.firstinspires.ftc.teamcode.command.transfer.PositionDeliveryToUpperBasket
 //import org.firstinspires.ftc.teamcode.command.transfer.PositionDrive
 //import org.firstinspires.ftc.teamcode.command.transfer.PositionHome
 //import org.firstinspires.ftc.teamcode.command.transfer.PositionPickup
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
+import org.firstinspires.ftc.teamcode.subsystem.ArmExtensionPosition
+import org.firstinspires.ftc.teamcode.subsystem.ArmRotationPosition
 import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
+import org.firstinspires.ftc.teamcode.subsystem.WristRotationPosition
 import org.firstinspires.ftc.teamcode.util.RevColor
 import kotlin.math.pow
 
@@ -120,9 +128,6 @@ class CDTeleop : OpModeBase() {
             armRotationSubsystem.correctRotationGroupFollower()
         }
 
-        // LED Light
-        // hardware.intakeColorSensor?.argb()
-
         writeTelemetry()
     }
 
@@ -155,30 +160,72 @@ class CDTeleop : OpModeBase() {
     }
 
     private fun initializeCoDriverGamepad(gamepad: GamepadEx) {
-        val wristForwardButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-        val wristReverseButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+        val wristPickupButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+        val wristDeliverButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
         val wristLeftButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
         val wristRightButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
 
-        val viperDrivePositionButton = gamepad.getGamepadButton(GamepadKeys.Button.A)
-        val viperPickupPositionButton = gamepad.getGamepadButton(GamepadKeys.Button.B)
-        val viperLowPositionButton = gamepad.getGamepadButton(GamepadKeys.Button.X)
-        val viperHighPositionButton = gamepad.getGamepadButton(GamepadKeys.Button.Y)
+        val armDrivePositionButton = gamepad.getGamepadButton(GamepadKeys.Button.A)
+        val armPickupPositionButton = gamepad.getGamepadButton(GamepadKeys.Button.B)
+        val armLowPositionButton = gamepad.getGamepadButton(GamepadKeys.Button.X)
+        val armHighPositionButton = gamepad.getGamepadButton(GamepadKeys.Button.Y)
+        val armHomeButton = gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
 
-        val homeButton = gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-
-        wristForwardButton.whenPressed(Runnable { activeIntakeSubsystem.rotateHome() })
-        wristReverseButton.whenPressed(Runnable { activeIntakeSubsystem.rotateToBasket() })
+        wristPickupButton.whenPressed(Runnable { activeIntakeSubsystem.set(WristRotationPosition.PICKUP) })
+        wristDeliverButton.whenPressed(Runnable { activeIntakeSubsystem.set(WristRotationPosition.DELIVER) })
 
         wristLeftButton.whileHeld(Runnable { activeIntakeSubsystem.rotateIncrementDown() })
         wristRightButton.whileHeld(Runnable { activeIntakeSubsystem.rotateIncrementUp() })
 
-//        viperDrivePositionButton.whenPressed(PositionDrive(armRotationSubsystem, activeIntakeSubsystem))
-//        viperPickupPositionButton.whenPressed(PositionPickup(armRotationSubsystem, activeIntakeSubsystem))
-//        viperLowPositionButton.whenPressed(PositionDeliveryToLowerBasket(armRotationSubsystem, activeIntakeSubsystem))
-//        viperHighPositionButton.whenPressed(PositionDeliveryToUpperBasket(armRotationSubsystem, activeIntakeSubsystem))
-//
-//        homeButton.whenPressed(PositionHome(armRotationSubsystem, activeIntakeSubsystem))
+        // TODO: Refactor this to use ArmPosition when ready
+        armDrivePositionButton.whenPressed(
+            ActionCommand(
+                ParallelAction(
+                    ExtensionPosition(armExtensionSubsystem, ArmExtensionPosition.HOME),
+                    RotationPosition(armRotationSubsystem, ArmRotationPosition.DRIVE),
+                    WristPosition(activeIntakeSubsystem, WristRotationPosition.PICKUP, 500.0)
+                )
+            )
+        )
+        armPickupPositionButton.whenPressed(
+            ActionCommand(
+                ParallelAction(
+                    ExtensionPosition(armExtensionSubsystem, ArmExtensionPosition.AUTON_PICKUP),
+                    RotationPosition(armRotationSubsystem, ArmRotationPosition.AUTON_PICKUP, 200.0),
+                    WristPosition(activeIntakeSubsystem, WristRotationPosition.PICKUP)
+                )
+            )
+        )
+        armLowPositionButton.whenPressed(
+            ActionCommand(
+                ParallelAction(
+                    ExtensionPosition(armExtensionSubsystem, ArmExtensionPosition.LOW_BASKET),
+                    RotationPosition(armRotationSubsystem, ArmRotationPosition.TOP),
+                    WristPosition(activeIntakeSubsystem, WristRotationPosition.DELIVER, 200.0)
+                )
+            )
+        )
+        armHighPositionButton.whenPressed(
+            ActionCommand(
+                ParallelAction(
+                    ExtensionPosition(armExtensionSubsystem, ArmExtensionPosition.MAX_UP),
+                    RotationPosition(armRotationSubsystem, ArmRotationPosition.TOP),
+                    WristPosition(activeIntakeSubsystem, WristRotationPosition.DELIVER, 200.0)
+                )
+            )
+        )
+
+        armHomeButton.whenPressed(
+            ActionCommand(
+                SequentialAction(
+                    WristPosition(activeIntakeSubsystem, WristRotationPosition.PICKUP),
+                    ParallelAction(
+                        ExtensionPosition(armExtensionSubsystem, ArmExtensionPosition.HOME),
+                        RotationPosition(armRotationSubsystem, ArmRotationPosition.HOME)
+                    )
+                )
+            )
+        )
     }
 
     private fun writeTelemetry() {

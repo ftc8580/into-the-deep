@@ -139,9 +139,6 @@ class HardwareManager(hardware: HardwareMap) {
         if (armRotationEncoderMotor != null) {
             armRotationEncoder = RawEncoder(armRotationEncoderMotor)
         }
-
-        // TODO: Do we need this?
-        // armRotationEncoder.direction = DcMotorSimple.Direction.REVERSE
     }
 
     private fun initializeServos(hardware: HardwareMap) {

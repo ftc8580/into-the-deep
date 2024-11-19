@@ -17,9 +17,9 @@ class MecanumDriveParams {
         @JvmField var kA: Double = 0.00005
 
         // path profile parameters (in inches)
-        @JvmField var maxWheelVel: Double = 62.0
+        @JvmField var maxWheelVel: Double = 65.0
         @JvmField var minProfileAccel: Double = -30.0
-        @JvmField var maxProfileAccel: Double = 60.0
+        @JvmField var maxProfileAccel: Double = 58.0
 
         // turn profile parameters (in radians)
         @JvmField var maxAngVel: Double = Math.PI // shared with path

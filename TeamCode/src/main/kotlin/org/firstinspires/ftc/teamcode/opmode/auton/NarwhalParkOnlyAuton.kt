@@ -4,18 +4,16 @@ import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import org.firstinspires.ftc.teamcode.drive.MecanumDrive
-import org.firstinspires.ftc.teamcode.hardware.HardwareManager
+import org.firstinspires.ftc.teamcode.opmode.AutonBase
 
 @Suppress("Unused")
 @Autonomous(name = "Narwhal Park Only", group = "Narwhal")
-class NarwhalParkOnlyAuton : LinearOpMode() {
+class NarwhalParkOnlyAuton : AutonBase() {
+    private val initialPose = Pose2d(40.0, 63.5, Math.toRadians(270.0))
+
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-        val initialPose = Pose2d(40.0, 63.5, Math.toRadians(270.0))
-        val hardware = HardwareManager(hardwareMap)
-        val drive = MecanumDrive(hardware, initialPose)
+        initialize(initialPose)
 
         waitForStart()
 

@@ -6,7 +6,7 @@ import com.acmerobotics.roadrunner.Action
 import com.arcrobotics.ftclib.command.Command
 import com.arcrobotics.ftclib.command.Subsystem
 
-class ActionCommand(private val action: Action, private val requirements: Set<Subsystem>) : Command {
+class ActionCommand(private val action: Action, private val requirements: Set<Subsystem> = setOf()) : Command {
     private var isFinished: Boolean = false
 
     override fun getRequirements(): Set<Subsystem> = requirements
