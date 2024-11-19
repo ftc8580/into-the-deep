@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystem.ArmRotationPosition
 import org.firstinspires.ftc.teamcode.subsystem.WristRotationPosition
 
 @Suppress("Unused")
-@Autonomous(name = "Narwhal Samples Only", group = "Narwhal")
+@Autonomous(name = "Narwhal Sample Only", group = "Narwhal")
 class NarwhalSampleAuton : AutonBase() {
     private val initialX = 40.0
     private val initialY = 63.5

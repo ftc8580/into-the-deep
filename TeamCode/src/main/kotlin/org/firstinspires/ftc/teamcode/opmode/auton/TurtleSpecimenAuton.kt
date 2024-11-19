@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.opmode.AutonBase
 import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 
 @Suppress("Unused")
-@Autonomous(name = "Turtle Specimen", group = "Turtle")
+@Autonomous(name = "Turtle Single Specimen", group = "Turtle")
 class TurtleSpecimenAuton : AutonBase() {
     private val initialPose = Pose2d(-8.0, 63.5, Math.toRadians(270.0))
 

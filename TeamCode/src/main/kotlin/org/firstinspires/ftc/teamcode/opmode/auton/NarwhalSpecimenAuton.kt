@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 import org.firstinspires.ftc.teamcode.subsystem.WristRotationPosition
 
 @Suppress("Unused")
-@Autonomous(name = "Narwhal Specimen", group = "Narwhal")
+@Autonomous(name = "Narwhal Single Specimen", group = "Narwhal")
 class NarwhalSpecimenAuton : AutonBase() {
     private val initialPose = Pose2d(40.0, 63.5, Math.toRadians(270.0))
 
