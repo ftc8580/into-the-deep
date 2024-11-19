@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.subsystem.ActiveIntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.GripperSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.ArmRotationSubsystem
+import org.firstinspires.ftc.teamcode.subsystem.ViperExtensionSubsystem
 
 abstract class AutonBase : LinearOpMode() {
     protected lateinit var hardware: HardwareManager
@@ -15,6 +16,7 @@ abstract class AutonBase : LinearOpMode() {
     protected lateinit var activeIntakeSubsystem: ActiveIntakeSubsystem
     protected lateinit var gripperSubsystem: GripperSubsystem
     protected lateinit var armRotationSubsystem: ArmRotationSubsystem
+    protected lateinit var armExtensionSubsystem: ViperExtensionSubsystem
 
     protected fun initialize(initialPose: Pose2d) {
         hardware = HardwareManager(hardwareMap)
@@ -23,5 +25,6 @@ abstract class AutonBase : LinearOpMode() {
         activeIntakeSubsystem = ActiveIntakeSubsystem(hardware)
         gripperSubsystem = GripperSubsystem(hardware)
         armRotationSubsystem = ArmRotationSubsystem(hardware)
+        armExtensionSubsystem = ViperExtensionSubsystem(hardware)
     }
 }

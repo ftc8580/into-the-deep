@@ -17,23 +17,14 @@ fun buildArmPositionAction(
     rotationTarget: ArmRotationPosition,
     wristTarget: WristRotationPosition
 ): Action {
-    val currentExtensionPosition = extensionSubsystem.currentPosition ?: 0
     val currentRotationPosition = rotationSubsystem.currentPosition ?: 0
-    val currentWristPosition = intakeSubsystem.currentPosition ?: 0.0
 
-    val extensionDelta = extensionTarget.position - currentExtensionPosition
-    val rotationDelta = rotationTarget.position - currentRotationPosition
-    val wristDelta = wristTarget.position - currentWristPosition
+    val extensionDelay = if (currentRotationPosition > 500) 0.0 else 250.0
+    val wristDelay = if (currentRotationPosition < 200) 250.0 else 0.0
 
-    // TODO: How to calculate appropriate delays for the various systems based on current position and target position
     return ParallelAction(
-        ExtensionPosition(extensionSubsystem, extensionTarget),
+        ExtensionPosition(extensionSubsystem, extensionTarget, extensionDelay),
         RotationPosition(rotationSubsystem, rotationTarget),
-        WristPosition(intakeSubsystem, wristTarget)
+        WristPosition(intakeSubsystem, wristTarget, wristDelay)
     )
-}
-
-// Returns the height of the end of the arm above the floor in MM
-private fun armAboveFloorHeight(): Double {
-    TODO("Write the function")
 }

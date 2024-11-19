@@ -9,6 +9,11 @@ import com.arcrobotics.ftclib.command.Subsystem
 class ActionCommand(private val action: Action, private val requirements: Set<Subsystem> = setOf()) : Command {
     private var isFinished: Boolean = false
 
+    override fun initialize() {
+        isFinished = false
+        super.initialize()
+    }
+
     override fun getRequirements(): Set<Subsystem> = requirements
 
     override fun execute() {

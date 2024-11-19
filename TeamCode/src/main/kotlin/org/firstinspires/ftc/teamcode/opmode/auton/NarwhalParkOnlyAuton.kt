@@ -15,15 +15,16 @@ class NarwhalParkOnlyAuton : AutonBase() {
     override fun runOpMode() {
         initialize(initialPose)
 
+        val action = drive.actionBuilder(initialPose)
+            .strafeToConstantHeading(Vector2d(36.0, 12.0))
+            .turnTo(Math.toRadians(180.0))
+            .strafeToConstantHeading(Vector2d(23.5, 12.0))
+            .build()
+
         waitForStart()
 
         if (isStopRequested) return
 
-        runBlocking(
-            drive.actionBuilder(initialPose)
-                .splineTo(Vector2d(44.0, 7.5), Math.toRadians(180.0))
-                .splineTo(Vector2d(23.5, 7.5), Math.toRadians(180.0))
-                .build()
-        )
+        runBlocking(action)
     }
 }

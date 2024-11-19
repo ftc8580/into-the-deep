@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop
 
 import android.annotation.SuppressLint
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.ParallelAction
 import com.acmerobotics.roadrunner.PoseVelocity2d
 import com.acmerobotics.roadrunner.SequentialAction
@@ -44,9 +46,19 @@ class CDTeleop : OpModeBase() {
         }
     }
 
+    // Actions
+
+    private val armDrivePositionAction = ParallelAction(
+        ExtensionPosition(armExtensionSubsystem, ArmExtensionPosition.HOME),
+        RotationPosition(armRotationSubsystem, ArmRotationPosition.DRIVE),
+        WristPosition(activeIntakeSubsystem, WristRotationPosition.PICKUP, 500.0)
+    )
+
     @SuppressLint("UseValueOf")
     override fun run() {
         super.run()
+
+        val packet = TelemetryPacket()
 
         mecanumDrive.setDrivePowers(
             PoseVelocity2d(
@@ -128,6 +140,12 @@ class CDTeleop : OpModeBase() {
             armRotationSubsystem.correctRotationGroupFollower()
         }
 
+        if (gamepad2.a) {
+            armDrivePositionAction.run(packet)
+        }
+
+        FtcDashboard.getInstance().sendTelemetryPacket(packet)
+
         writeTelemetry()
     }
 
@@ -165,7 +183,7 @@ class CDTeleop : OpModeBase() {
         val wristLeftButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
         val wristRightButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
 
-        val armDrivePositionButton = gamepad.getGamepadButton(GamepadKeys.Button.A)
+//        val armDrivePositionButton = gamepad.getGamepadButton(GamepadKeys.Button.A)
         val armPickupPositionButton = gamepad.getGamepadButton(GamepadKeys.Button.B)
         val armLowPositionButton = gamepad.getGamepadButton(GamepadKeys.Button.X)
         val armHighPositionButton = gamepad.getGamepadButton(GamepadKeys.Button.Y)
@@ -178,15 +196,15 @@ class CDTeleop : OpModeBase() {
         wristRightButton.whileHeld(Runnable { activeIntakeSubsystem.rotateIncrementUp() })
 
         // TODO: Refactor this to use ArmPosition when ready
-        armDrivePositionButton.whenPressed(
-            ActionCommand(
-                ParallelAction(
-                    ExtensionPosition(armExtensionSubsystem, ArmExtensionPosition.HOME),
-                    RotationPosition(armRotationSubsystem, ArmRotationPosition.DRIVE),
-                    WristPosition(activeIntakeSubsystem, WristRotationPosition.PICKUP, 500.0)
-                )
-            )
-        )
+//        armDrivePositionButton.whenPressed(
+//            ActionCommand(
+//                ParallelAction(
+//                    ExtensionPosition(armExtensionSubsystem, ArmExtensionPosition.HOME),
+//                    RotationPosition(armRotationSubsystem, ArmRotationPosition.DRIVE),
+//                    WristPosition(activeIntakeSubsystem, WristRotationPosition.PICKUP, 500.0)
+//                )
+//            )
+//        )
         armPickupPositionButton.whenPressed(
             ActionCommand(
                 ParallelAction(

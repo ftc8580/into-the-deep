@@ -5,19 +5,16 @@ import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.actions.DeliverSample
-import org.firstinspires.ftc.teamcode.actions.GripperPosition
 import org.firstinspires.ftc.teamcode.actions.IntakeSample
 import org.firstinspires.ftc.teamcode.actions.buildArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
 import org.firstinspires.ftc.teamcode.subsystem.ArmExtensionPosition
 import org.firstinspires.ftc.teamcode.subsystem.ArmRotationPosition
-import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 import org.firstinspires.ftc.teamcode.subsystem.WristRotationPosition
 
 @Suppress("Unused")
-@Autonomous(name = "Narwhal Max", group = "Narwhal")
-class NarwhalMaxAuton : AutonBase() {
-
+@Autonomous(name = "Narwhal Samples Only", group = "Narwhal")
+class NarwhalSampleAuton : AutonBase() {
     private val initialX = 40.0
     private val initialY = 63.5
     private val initialHeading = Math.toRadians(270.0)
@@ -88,12 +85,7 @@ class NarwhalMaxAuton : AutonBase() {
         initialize(initialPose)
 
         val action = drive.actionBuilder(initialPose) // Starting position
-            .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH)) // Raise gripper
-            .waitSeconds(0.8) // Wait long enough for gripper to reach max position before arriving at submersible
-            .splineToConstantHeading(Vector2d(5.0, 33.0), Math.toRadians(270.0)) // Drive to submersible delivery position
-            .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HOME)) // Lower gripper
-            .waitSeconds(0.3) // Wait long enough to hook specimen before driving away
-            .setTangent(Math.toRadians(90.0)) // Start spline in 90deg direction
+            .afterTime(0.0, armToDrivePositionAction) // Move arm to drive position while driving
             // DELIVER FIRST SAMPLE
             .splineToConstantHeading(Vector2d(pickupX1, pickupYStart), initialHeading) // Spline to first pickup position
             .afterTime(0.0, armToPickupPositionAction) // Get ready to pick up the sample
