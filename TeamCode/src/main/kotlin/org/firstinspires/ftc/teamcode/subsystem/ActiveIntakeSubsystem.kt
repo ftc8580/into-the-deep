@@ -40,6 +40,9 @@ class ActiveIntakeSubsystem(hardware: HardwareManager) {
         intakeFrontServo?.power = 0.0
     }
 
+    val currentPosition: Double?
+        get() = wristServo?.position
+
     companion object {
         private const val WRIST_STEP = 0.01
         private const val INTAKE_MAX_POWER = 1.0

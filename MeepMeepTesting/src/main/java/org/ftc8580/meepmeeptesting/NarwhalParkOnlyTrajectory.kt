@@ -19,9 +19,9 @@ fun main(args: Array<String>) {
     val action = bot.drive.actionBuilder(
         Pose2d(40.0, 63.5, Math.toRadians(270.0))
     )
-        .strafeToConstantHeading(Vector2d(36.0, 7.5))
+        .strafeToConstantHeading(Vector2d(36.0, 12.0))
         .turnTo(Math.toRadians(180.0))
-        .strafeToConstantHeading(Vector2d(23.5, 7.5))
+        .strafeToConstantHeading(Vector2d(23.5, 12.0))
         .build()
 
     bot.runAction(action)

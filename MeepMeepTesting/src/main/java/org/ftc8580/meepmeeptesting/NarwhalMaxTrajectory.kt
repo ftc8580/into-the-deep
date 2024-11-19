@@ -19,6 +19,9 @@ fun main(args: Array<String>) {
     val action = bot.drive.actionBuilder(
         Pose2d(40.0, 63.5, Math.toRadians(270.0))
     )
+        .splineToConstantHeading(Vector2d(5.0, 33.0), Math.toRadians(270.0))
+        .waitSeconds(0.5)
+        .setTangent(Math.toRadians(90.0))
         .splineToConstantHeading(Vector2d(48.5, 33.0), Math.toRadians(270.0))
         .waitSeconds(1.0)
         .lineToY(36.0)
