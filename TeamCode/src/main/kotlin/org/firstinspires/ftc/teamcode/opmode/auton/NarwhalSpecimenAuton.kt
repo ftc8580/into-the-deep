@@ -18,30 +18,31 @@ import org.firstinspires.ftc.teamcode.subsystem.WristRotationPosition
 class NarwhalSpecimenAuton : AutonBase() {
     private val initialPose = Pose2d(40.0, 63.5, Math.toRadians(270.0))
 
-    private val armToPreParkPositionAction = buildArmPositionAction(
-        armExtensionSubsystem,
-        armRotationSubsystem,
-        activeIntakeSubsystem,
-        ArmExtensionPosition.HOME,
-        ArmRotationPosition.DRIVE,
-        WristRotationPosition.PICKUP
-    )
-
-    private val armToParkPositionAction = buildArmPositionAction(
-        armExtensionSubsystem,
-        armRotationSubsystem,
-        activeIntakeSubsystem,
-        ArmExtensionPosition.HOME,
-        ArmRotationPosition.PARK,
-        WristRotationPosition.DELIVER
-    )
-
     @Throws(InterruptedException::class)
     override fun runOpMode() {
         initialize(initialPose)
 
+        val armToPreParkPositionAction = buildArmPositionAction(
+            armExtensionSubsystem,
+            armRotationSubsystem,
+            activeIntakeSubsystem,
+            ArmExtensionPosition.HOME,
+            ArmRotationPosition.DRIVE,
+            WristRotationPosition.PICKUP
+        )
+
+        val armToParkPositionAction = buildArmPositionAction(
+            armExtensionSubsystem,
+            armRotationSubsystem,
+            activeIntakeSubsystem,
+            ArmExtensionPosition.HOME,
+            ArmRotationPosition.PARK,
+            WristRotationPosition.PICKUP
+        )
+
         val action = drive.actionBuilder(initialPose)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH)) // Raise gripper to delivery position
+            .waitSeconds(0.5)
             .splineToConstantHeading(Vector2d(5.0, 33.0), Math.toRadians(270.0)) // Spline to specimen delivery position
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HOME)) // Hang specimen
             .waitSeconds(0.3) // Wait for specimen to hook

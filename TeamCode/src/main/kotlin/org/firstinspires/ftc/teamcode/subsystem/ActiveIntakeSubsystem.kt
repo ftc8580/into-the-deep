@@ -26,13 +26,13 @@ class ActiveIntakeSubsystem(hardware: HardwareManager) {
     }
 
     fun runIntake() {
-        intakeRearServo?.power = -INTAKE_MAX_POWER
-        intakeFrontServo?.power = INTAKE_MAX_POWER
+        intakeRearServo?.power = INTAKE_MAX_POWER
+        intakeFrontServo?.power = -INTAKE_MAX_POWER
     }
 
     fun runEject() {
-        intakeRearServo?.power = INTAKE_MAX_POWER
-        intakeFrontServo?.power = -INTAKE_MAX_POWER
+        intakeRearServo?.power = -INTAKE_MAX_POWER
+        intakeFrontServo?.power = INTAKE_MAX_POWER
     }
 
     fun stopIntake() {

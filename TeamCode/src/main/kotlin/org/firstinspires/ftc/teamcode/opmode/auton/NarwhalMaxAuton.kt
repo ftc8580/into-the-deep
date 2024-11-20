@@ -80,7 +80,7 @@ class NarwhalMaxAuton : AutonBase() {
         activeIntakeSubsystem,
         ArmExtensionPosition.HOME,
         ArmRotationPosition.PARK,
-        WristRotationPosition.DELIVER
+        WristRotationPosition.PICKUP
     )
 
     @Throws(InterruptedException::class)
@@ -89,7 +89,7 @@ class NarwhalMaxAuton : AutonBase() {
 
         val action = drive.actionBuilder(initialPose) // Starting position
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH)) // Raise gripper
-            .waitSeconds(0.8) // Wait long enough for gripper to reach max position before arriving at submersible
+            .waitSeconds(0.5) // Wait long enough for gripper to reach max position before arriving at submersible
             .splineToConstantHeading(Vector2d(5.0, 33.0), Math.toRadians(270.0)) // Drive to submersible delivery position
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HOME)) // Lower gripper
             .waitSeconds(0.3) // Wait long enough to hook specimen before driving away
