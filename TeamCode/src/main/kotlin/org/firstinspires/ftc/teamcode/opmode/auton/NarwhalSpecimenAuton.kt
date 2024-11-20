@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.actions.GripperPosition
 import org.firstinspires.ftc.teamcode.actions.RotationPosition
 import org.firstinspires.ftc.teamcode.actions.buildArmPositionAction
+import org.firstinspires.ftc.teamcode.actions.buildParkArmPositionAction
+import org.firstinspires.ftc.teamcode.actions.buildPreParkArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
 import org.firstinspires.ftc.teamcode.subsystem.ArmExtensionPosition
 import org.firstinspires.ftc.teamcode.subsystem.ArmRotationPosition
@@ -48,9 +50,9 @@ class NarwhalSpecimenAuton : AutonBase() {
             .waitSeconds(0.3) // Wait for specimen to hook
             .setTangent(Math.toRadians(90.0)) // Set exit heading
             .splineToLinearHeading(Pose2d(28.0, 40.0, Math.toRadians(200.0)), Math.toRadians(0.0)) // Intermediate pose around submersible
-            .afterTime(0.2, armToPreParkPositionAction) // Move arm to pre-park position while driving
+            .afterTime(0.2, armSubsystems.buildPreParkArmPositionAction()) // Move arm to pre-park position while driving
             .splineToLinearHeading(Pose2d(23.5, 12.0, Math.toRadians(180.0)), Math.toRadians(180.0)) // Finish drive into park position
-            .afterTime(0.0, armToParkPositionAction) // Move arm to contact rung
+            .afterTime(0.0, armSubsystems.buildParkArmPositionAction()) // Move arm to contact rung
             .waitSeconds(2.0) // Ensure wait until arm is moved
             .build()
 

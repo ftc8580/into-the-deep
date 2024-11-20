@@ -5,6 +5,8 @@ import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.actions.buildArmPositionAction
+import org.firstinspires.ftc.teamcode.actions.buildParkArmPositionAction
+import org.firstinspires.ftc.teamcode.actions.buildPreParkArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
 import org.firstinspires.ftc.teamcode.subsystem.ArmExtensionPosition
 import org.firstinspires.ftc.teamcode.subsystem.ArmRotationPosition
@@ -19,30 +21,12 @@ class NarwhalParkOnlyAuton : AutonBase() {
     override fun runOpMode() {
         initialize(initialPose)
 
-        val armToPreParkPositionAction = buildArmPositionAction(
-            armExtensionSubsystem,
-            armRotationSubsystem,
-            activeIntakeSubsystem,
-            ArmExtensionPosition.HOME,
-            ArmRotationPosition.DRIVE,
-            WristRotationPosition.PICKUP
-        )
-
-        val armToParkPositionAction = buildArmPositionAction(
-            armExtensionSubsystem,
-            armRotationSubsystem,
-            activeIntakeSubsystem,
-            ArmExtensionPosition.HOME,
-            ArmRotationPosition.PARK,
-            WristRotationPosition.PICKUP
-        )
-
         val action = drive.actionBuilder(initialPose)
             .strafeToConstantHeading(Vector2d(36.0, 12.0))
             .turnTo(Math.toRadians(180.0))
-            .afterTime(0.0, armToPreParkPositionAction) // Move arm to pre-park position while driving
+            .afterTime(0.0, armSubsystems.buildPreParkArmPositionAction()) // Move arm to pre-park position while driving
             .strafeToConstantHeading(Vector2d(23.5, 12.0))
-            .afterTime(0.0, armToParkPositionAction) // Move arm to contact rung
+            .afterTime(0.0, armSubsystems.buildParkArmPositionAction()) // Move arm to contact rung
             .waitSeconds(2.0) // Ensure wait until arm is moved
             .build()
 

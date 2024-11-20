@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode
 
 import com.acmerobotics.roadrunner.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import org.firstinspires.ftc.teamcode.actions.ArmSubsystems
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.subsystem.ActiveIntakeSubsystem
@@ -17,6 +18,7 @@ abstract class AutonBase : LinearOpMode() {
     protected lateinit var gripperSubsystem: GripperSubsystem
     protected lateinit var armRotationSubsystem: ArmRotationSubsystem
     protected lateinit var armExtensionSubsystem: ViperExtensionSubsystem
+    protected lateinit var armSubsystems: ArmSubsystems
 
     protected fun initialize(initialPose: Pose2d) {
         hardware = HardwareManager(hardwareMap)
@@ -26,5 +28,11 @@ abstract class AutonBase : LinearOpMode() {
         gripperSubsystem = GripperSubsystem(hardware)
         armRotationSubsystem = ArmRotationSubsystem(hardware)
         armExtensionSubsystem = ViperExtensionSubsystem(hardware)
+
+        armSubsystems = ArmSubsystems(
+            armExtensionSubsystem,
+            armRotationSubsystem,
+            activeIntakeSubsystem
+        )
     }
 }

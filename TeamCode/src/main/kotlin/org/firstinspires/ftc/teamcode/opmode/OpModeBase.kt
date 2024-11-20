@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.acmerobotics.roadrunner.Pose2d
 import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.gamepad.GamepadEx
+import org.firstinspires.ftc.teamcode.actions.ArmSubsystems
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.subsystem.ActiveIntakeSubsystem
@@ -23,6 +24,7 @@ abstract class OpModeBase : CommandOpMode() {
     lateinit var gripperSubsystem: GripperSubsystem
     lateinit var armRotationSubsystem: ArmRotationSubsystem
     lateinit var armExtensionSubsystem: ViperExtensionSubsystem
+    lateinit var armSubsystems: ArmSubsystems
 
     fun initHardware() {
         hardware = HardwareManager(hardwareMap)
@@ -34,6 +36,12 @@ abstract class OpModeBase : CommandOpMode() {
         gripperSubsystem = GripperSubsystem(hardware)
         armRotationSubsystem = ArmRotationSubsystem(hardware)
         armExtensionSubsystem = ViperExtensionSubsystem(hardware)
+
+        armSubsystems = ArmSubsystems(
+            armExtensionSubsystem,
+            armRotationSubsystem,
+            activeIntakeSubsystem
+        )
 
         driverGamepad = GamepadEx(gamepad1)
         accessoryGamepad = GamepadEx(gamepad2)
