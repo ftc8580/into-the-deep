@@ -48,11 +48,11 @@ class CDTeleop : OpModeBase() {
 
     // Actions
 
-    private val armDrivePositionAction = ParallelAction(
-        ExtensionPosition(armExtensionSubsystem, ArmExtensionPosition.HOME),
-        RotationPosition(armRotationSubsystem, ArmRotationPosition.DRIVE),
-        WristPosition(activeIntakeSubsystem, WristRotationPosition.PICKUP, 500.0)
-    )
+//    private val armDrivePositionAction = ParallelAction(
+//        ExtensionPosition(armExtensionSubsystem, ArmExtensionPosition.HOME),
+//        RotationPosition(armRotationSubsystem, ArmRotationPosition.DRIVE),
+//        WristPosition(activeIntakeSubsystem, WristRotationPosition.PICKUP, 500.0)
+//    )
 
     @SuppressLint("UseValueOf")
     override fun run() {
@@ -140,9 +140,9 @@ class CDTeleop : OpModeBase() {
             armRotationSubsystem.correctRotationGroupFollower()
         }
 
-        if (gamepad2.a) {
-            armDrivePositionAction.run(packet)
-        }
+//        if (gamepad2.a) {
+//            armDrivePositionAction.run(packet)
+//        }
 
         FtcDashboard.getInstance().sendTelemetryPacket(packet)
 

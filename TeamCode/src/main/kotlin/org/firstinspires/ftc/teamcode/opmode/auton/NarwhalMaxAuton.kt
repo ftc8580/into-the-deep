@@ -38,54 +38,54 @@ class NarwhalMaxAuton : AutonBase() {
     private val initialPose = Pose2d(initialX, initialY, initialHeading)
     private val deliveryPose = Pose2d(deliveryXY, deliveryXY, deliveryRobotHeading)
 
-    private val armToDrivePositionAction = buildArmPositionAction(
-        armExtensionSubsystem,
-        armRotationSubsystem,
-        activeIntakeSubsystem,
-        ArmExtensionPosition.AUTON_PICKUP,
-        ArmRotationPosition.DRIVE,
-        WristRotationPosition.PICKUP
-    )
-
-    private val armToPickupPositionAction = buildArmPositionAction(
-        armExtensionSubsystem,
-        armRotationSubsystem,
-        activeIntakeSubsystem,
-        ArmExtensionPosition.AUTON_PICKUP,
-        ArmRotationPosition.AUTON_PICKUP,
-        WristRotationPosition.PICKUP
-    )
-
-    private val armToDeliveryPositionAction = buildArmPositionAction(
-        armExtensionSubsystem,
-        armRotationSubsystem,
-        activeIntakeSubsystem,
-        ArmExtensionPosition.MAX_UP,
-        ArmRotationPosition.TOP,
-        WristRotationPosition.DELIVER
-    )
-
-    private val armToPreParkPositionAction = buildArmPositionAction(
-        armExtensionSubsystem,
-        armRotationSubsystem,
-        activeIntakeSubsystem,
-        ArmExtensionPosition.HOME,
-        ArmRotationPosition.DRIVE,
-        WristRotationPosition.PICKUP
-    )
-
-    private val armToParkPositionAction = buildArmPositionAction(
-        armExtensionSubsystem,
-        armRotationSubsystem,
-        activeIntakeSubsystem,
-        ArmExtensionPosition.HOME,
-        ArmRotationPosition.PARK,
-        WristRotationPosition.PICKUP
-    )
-
     @Throws(InterruptedException::class)
     override fun runOpMode() {
         initialize(initialPose)
+
+        val armToDrivePositionAction = buildArmPositionAction(
+            armExtensionSubsystem,
+            armRotationSubsystem,
+            activeIntakeSubsystem,
+            ArmExtensionPosition.AUTON_PICKUP,
+            ArmRotationPosition.DRIVE,
+            WristRotationPosition.PICKUP
+        )
+
+        val armToPickupPositionAction = buildArmPositionAction(
+            armExtensionSubsystem,
+            armRotationSubsystem,
+            activeIntakeSubsystem,
+            ArmExtensionPosition.AUTON_PICKUP,
+            ArmRotationPosition.AUTON_PICKUP,
+            WristRotationPosition.PICKUP
+        )
+
+        val armToDeliveryPositionAction = buildArmPositionAction(
+            armExtensionSubsystem,
+            armRotationSubsystem,
+            activeIntakeSubsystem,
+            ArmExtensionPosition.MAX_UP,
+            ArmRotationPosition.TOP,
+            WristRotationPosition.DELIVER
+        )
+
+        val armToPreParkPositionAction = buildArmPositionAction(
+            armExtensionSubsystem,
+            armRotationSubsystem,
+            activeIntakeSubsystem,
+            ArmExtensionPosition.HOME,
+            ArmRotationPosition.DRIVE,
+            WristRotationPosition.PICKUP
+        )
+
+        val armToParkPositionAction = buildArmPositionAction(
+            armExtensionSubsystem,
+            armRotationSubsystem,
+            activeIntakeSubsystem,
+            ArmExtensionPosition.HOME,
+            ArmRotationPosition.PARK,
+            WristRotationPosition.PICKUP
+        )
 
         val action = drive.actionBuilder(initialPose) // Starting position
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH)) // Raise gripper
