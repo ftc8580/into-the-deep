@@ -7,17 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.actions.DeliverSample
 import org.firstinspires.ftc.teamcode.actions.GripperPosition
 import org.firstinspires.ftc.teamcode.actions.IntakeSample
-import org.firstinspires.ftc.teamcode.actions.buildArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildHighDeliveryArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildParkArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildPickupArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildPreParkArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildPrePickupArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
-import org.firstinspires.ftc.teamcode.subsystem.ArmExtensionPosition
-import org.firstinspires.ftc.teamcode.subsystem.ArmRotationPosition
 import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
-import org.firstinspires.ftc.teamcode.subsystem.WristRotationPosition
 
 @Suppress("Unused")
 @Autonomous(name = "Narwhal Max", group = "Narwhal")
@@ -93,6 +89,7 @@ class NarwhalMaxAuton : AutonBase() {
             .waitSeconds(4.0) // Wait for the sample to go in the basket
             // PARK
             .afterTime(0.0, armSubsystems.buildPreParkArmPositionAction()) // After delivery, go to pre-park position
+            .waitSeconds(0.3)
             .setTangent(deliveryRobotHeading) // Leave the pickup position in the right direction
             .splineToLinearHeading(Pose2d(parkX, parkY, parkHeading), parkHeading) // Spline to the park position
             .afterTime(0.0, armSubsystems.buildParkArmPositionAction()) // Move arm to touch submersible for parking points

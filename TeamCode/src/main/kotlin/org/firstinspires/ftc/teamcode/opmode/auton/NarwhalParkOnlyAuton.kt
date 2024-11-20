@@ -4,13 +4,9 @@ import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import org.firstinspires.ftc.teamcode.actions.buildArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildParkArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildPreParkArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
-import org.firstinspires.ftc.teamcode.subsystem.ArmExtensionPosition
-import org.firstinspires.ftc.teamcode.subsystem.ArmRotationPosition
-import org.firstinspires.ftc.teamcode.subsystem.WristRotationPosition
 
 @Suppress("Unused")
 @Autonomous(name = "Narwhal Park Only", group = "Narwhal")

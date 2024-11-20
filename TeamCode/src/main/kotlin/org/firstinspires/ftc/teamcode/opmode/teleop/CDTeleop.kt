@@ -173,7 +173,7 @@ class CDTeleop : OpModeBase() {
         normalDriveButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_NORMAL})
 
         gripperPickupButton.whenPressed(Runnable { gripperSubsystem.set(GripperHeight.HOME) })
-        gripperLowDeliveryButton.whenPressed(Runnable { gripperSubsystem.set(GripperHeight.LOW) })
+        gripperLowDeliveryButton.whenPressed(Runnable { gripperSubsystem.set(GripperHeight.HOME) })
         gripperHighDeliveryButton.whenPressed(Runnable { gripperSubsystem.set(GripperHeight.HIGH) })
 
         // TODO: Set correct numbers from telemetry

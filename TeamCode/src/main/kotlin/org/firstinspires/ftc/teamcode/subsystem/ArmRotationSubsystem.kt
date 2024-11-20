@@ -62,7 +62,7 @@ enum class ArmRotationPosition(val position: Int) {
     HOME(0),
     AUTON_PICKUP(325),
     DRIVE(750),
-    PARK(1686),
+    PARK(1650),
     TOP(3300)
 }
 

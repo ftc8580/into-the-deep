@@ -5,15 +5,10 @@ import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.actions.GripperPosition
-import org.firstinspires.ftc.teamcode.actions.RotationPosition
-import org.firstinspires.ftc.teamcode.actions.buildArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildParkArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildPreParkArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
-import org.firstinspires.ftc.teamcode.subsystem.ArmExtensionPosition
-import org.firstinspires.ftc.teamcode.subsystem.ArmRotationPosition
 import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
-import org.firstinspires.ftc.teamcode.subsystem.WristRotationPosition
 
 @Suppress("Unused")
 @Autonomous(name = "Narwhal Single Specimen", group = "Narwhal")
@@ -23,24 +18,6 @@ class NarwhalSpecimenAuton : AutonBase() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {
         initialize(initialPose)
-
-        val armToPreParkPositionAction = buildArmPositionAction(
-            armExtensionSubsystem,
-            armRotationSubsystem,
-            activeIntakeSubsystem,
-            ArmExtensionPosition.HOME,
-            ArmRotationPosition.DRIVE,
-            WristRotationPosition.PICKUP
-        )
-
-        val armToParkPositionAction = buildArmPositionAction(
-            armExtensionSubsystem,
-            armRotationSubsystem,
-            activeIntakeSubsystem,
-            ArmExtensionPosition.HOME,
-            ArmRotationPosition.PARK,
-            WristRotationPosition.PICKUP
-        )
 
         val action = drive.actionBuilder(initialPose)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH)) // Raise gripper to delivery position
