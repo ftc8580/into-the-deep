@@ -23,7 +23,7 @@ class NarwhalSampleAuton : AutonBase() {
     private val deliveryTangentHeadingDegrees = 45.0
     private val deliveryTangentHeading = Math.toRadians(deliveryTangentHeadingDegrees)
     private val deliveryRobotHeading = Math.toRadians(deliveryTangentHeadingDegrees + 180.0)
-    private val finalDeliveryRobotHeading = Math.toRadians(deliveryTangentHeadingDegrees + 255.0)
+    private val finalDeliveryRobotHeading = Math.toRadians(deliveryTangentHeadingDegrees + 260.0)
     private val intermediateHeadingDegrees = 90.0
     private val pickupYStart = 42.0
     private val pickupYEnd = 47.0
@@ -42,43 +42,52 @@ class NarwhalSampleAuton : AutonBase() {
 
         val action = drive.actionBuilder(initialPose) // Starting position
             .afterTime(0.0, armSubsystems.buildPrePickupArmPositionAction()) // Move arm to drive position while driving
+            //DELIVER PRELOADED SPECIMEN
+            .setTangent(finalDeliveryRobotHeading) // Leave the start position in the right direction
+            .splineToLinearHeading(deliveryPose, deliveryTangentHeading) // Spline to the delivery position
+            .afterTime(0.0, armSubsystems.buildHighDeliveryArmPositionAction()) // Move the arm into the delivery position while driving
+            .afterTime(2.25, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
+            .waitSeconds(3.25) // Wait for the sample to go in the basket
+            .afterTime(0.0, armSubsystems.buildPrePickupArmPositionAction()) // After delivery, return to drive position while driving to next pickup
+            .waitSeconds(1.70)
             // DELIVER FIRST SAMPLE
-            .splineToConstantHeading(Vector2d(pickupX1, pickupYStart), initialHeading) // Spline to first pickup position
+            //.splineToConstantHeading(Vector2d(pickupX1, pickupYStart), initialHeading) // Spline to first pickup position
+            .splineToLinearHeading(Pose2d(pickupX1, pickupYStart, initialHeading), initialHeading)
             .afterTime(0.0, armSubsystems.buildPickupArmPositionAction()) // Get ready to pick up the sample
-            .waitSeconds(0.75) // Wait for the arm to get in the pickup position
+            .waitSeconds(0.5) // Wait for the arm to get in the pickup position
             .afterTime(0.0, IntakeSample(activeIntakeSubsystem)) // Start intake servos
             .lineToY(pickupYEnd) // Move backwards to pull in the sample
             .afterTime(0.0, armSubsystems.buildHighDeliveryArmPositionAction()) // Move the arm into the delivery position while driving
             .setTangent(intermediateHeadingDegrees) // Leave the pickup position in the right direction
             .splineToLinearHeading(deliveryPose, deliveryTangentHeading) // Spline to the delivery position
-            .afterTime(3.0, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
-            .waitSeconds(4.0) // Wait for the sample to go in the basket
+            .afterTime(2.25, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
+            .waitSeconds(3.25) // Wait for the sample to go in the basket
             .afterTime(0.0, armSubsystems.buildPrePickupArmPositionAction()) // After delivery, return to drive position while driving to next pickup
-            .waitSeconds(2.0)
+            .waitSeconds(1.70)
             // DELIVER SECOND SAMPLE
             .splineToLinearHeading(Pose2d(pickupX2, pickupYStart, initialHeading), initialHeading) // Spline to the second pickup position
             .afterTime(0.0, armSubsystems.buildPickupArmPositionAction()) // Get ready to pick up the sample
-            .waitSeconds(0.75) // Wait for the arm to get in the pickup position
+            .waitSeconds(0.5) // Wait for the arm to get in the pickup position
             .afterTime(0.0, IntakeSample(activeIntakeSubsystem)) // Start intake servos
             .lineToY(pickupYEnd) // Move backwards to pull in the sample
             .afterTime(0.0, armSubsystems.buildHighDeliveryArmPositionAction()) // Move the arm into the delivery position while driving
             .setTangent(intermediateHeadingDegrees) // Leave the pickup position in the right direction
             .splineToLinearHeading(deliveryPose, deliveryTangentHeading) // Spline to the delivery position
-            .afterTime(3.0, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
-            .waitSeconds(4.0) // Wait for the sample to go in the basket
+            .afterTime(2.25, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
+            .waitSeconds(3.25) // Wait for the sample to go in the basket
             .afterTime(0.0, armSubsystems.buildPrePickupArmPositionAction()) // After delivery, return to drive position while driving to next pickup
-            .waitSeconds(2.0)
+            .waitSeconds(1.70)
             // DELIVER THIRD SAMPLE
-            .splineToLinearHeading(Pose2d(pickupX2, pickupYStart, finalDeliveryRobotHeading), initialHeading) // Go to the final pickup position
+            .splineToLinearHeading(Pose2d(pickupX2, pickupYStart - 3.0, finalDeliveryRobotHeading), initialHeading) // Go to the final pickup position
             .afterTime(0.0, armSubsystems.buildPickupArmPositionAction()) // Get ready to pick up the sample
-            .waitSeconds(0.75) // Wait for the arm to get in the pickup position
+            .waitSeconds(0.5) // Wait for the arm to get in the pickup position
             .afterTime(0.0, IntakeSample(activeIntakeSubsystem)) // Start intake servos
             .lineToY(pickupYEnd) // Move backwards to pull in the sample
             .afterTime(0.0, armSubsystems.buildHighDeliveryArmPositionAction()) // Move the arm into the delivery position while driving
             .setTangent(deliveryTangentHeadingDegrees) // Leave the pickup position in the right direction
             .splineToLinearHeading(deliveryPose, deliveryTangentHeading) // Spline to the delivery position
-            .afterTime(3.0, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
-            .waitSeconds(4.0) // Wait for the sample to go in the basket
+            .afterTime(2.25, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
+            .waitSeconds(3.25) // Wait for the sample to go in the basket
             // PARK
             .afterTime(0.0, armSubsystems.buildPreParkArmPositionAction()) // After delivery, go to pre-park position
             .waitSeconds(0.3)

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.util.isTimedOut
 // TODO: Can we read voltage (or something) to know if we have a sample in the intake?
 class IntakeSample(
     private val intakeSubsystem: ActiveIntakeSubsystem,
-    private val timeout: Double = 1000.0
+    private val timeout: Double = 1250.0
 ) : Action {
     private var currentState = ActionState.IDLE
     private var elapsedTime = ElapsedTime()
