@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.auton
 
 import com.acmerobotics.roadrunner.Pose2d
-import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.actions.DeliverSample
