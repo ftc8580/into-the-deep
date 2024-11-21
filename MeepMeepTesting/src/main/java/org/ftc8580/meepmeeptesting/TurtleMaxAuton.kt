@@ -1,6 +1,8 @@
 package org.ftc8580.meepmeeptesting
 
 import com.acmerobotics.roadrunner.Pose2d
+import com.acmerobotics.roadrunner.ProfileAccelConstraint
+import com.acmerobotics.roadrunner.TranslationalVelConstraint
 import com.acmerobotics.roadrunner.Vector2d
 import com.noahbres.meepmeep.MeepMeep
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder
@@ -10,10 +12,13 @@ fun main(args: Array<String>) {
     System.setProperty("sun.java2d.opengl", "true")
     val meepMeep = MeepMeep(800)
 
+    val slowSegmentVelocityConstraint = TranslationalVelConstraint(50.0)
+    val slowSegmentAccelerationConstraint = ProfileAccelConstraint(-30.0, 45.0)
+
     val bot = DefaultBotBuilder(meepMeep) // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
         .setDriveTrainType(DriveTrainType.MECANUM)
         .setDimensions(14.0, 17.0)
-        .setConstraints(60.0, 60.0, Math.PI, Math.PI, 13.0)
+        .setConstraints(65.0, 58.0, Math.PI, Math.PI, 13.0)
         .build()
 
     val action = bot.drive.actionBuilder(
@@ -25,14 +30,14 @@ fun main(args: Array<String>) {
         .setTangent(Math.toRadians(150.0)) // Set exit direction
         .splineToConstantHeading(Vector2d(-37.0, 24.0), Math.toRadians(270.0)) // Spline around submersible corner
         .setTangent(Math.toRadians(270.0)) // Continue moving in the correct direction
-        .splineToConstantHeading(Vector2d(-47.5, 12.0), Math.toRadians(90.0)) // Continue spline to position behind first sample
-        .splineToConstantHeading(Vector2d(-47.5, 53.0), Math.toRadians(90.0)) // Push first sample to observation zone
+        .splineToConstantHeading(Vector2d(-47.5, 12.0), Math.toRadians(90.0), slowSegmentVelocityConstraint) // Continue spline to position behind first sample
+        .splineToConstantHeading(Vector2d(-47.5, 53.0), Math.toRadians(90.0), null, slowSegmentAccelerationConstraint) // Push first sample to observation zone
         .setTangent(Math.toRadians(90.0))
-        .splineToConstantHeading(Vector2d(-50.5, 53.0), Math.toRadians(270.0)) // Make a short loop to head back to pickup
-        .splineToConstantHeading(Vector2d(-50.5, 12.0), Math.toRadians(270.0)) // Drive back to next pickup
+        .splineToConstantHeading(Vector2d(-49.5, 53.0), Math.toRadians(270.0), slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint) // Make a short loop to head back to pickup
+        .splineToConstantHeading(Vector2d(-49.5, 12.0), Math.toRadians(270.0), null, slowSegmentAccelerationConstraint) // Drive back to next pickup
         .setTangent(Math.toRadians(270.0))
-        .splineToConstantHeading(Vector2d(-57.5, 16.0), Math.toRadians(90.0)) // Make a short loop to position behind second sample
-        .splineToConstantHeading(Vector2d(-57.5, 53.0), Math.toRadians(90.0)) // Push second sample to the observation area
+        .splineToConstantHeading(Vector2d(-57.5, 16.0), Math.toRadians(90.0), slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint) // Make a short loop to position behind second sample
+        .splineToConstantHeading(Vector2d(-57.5, 53.0), Math.toRadians(90.0), null, slowSegmentAccelerationConstraint) // Push second sample to the observation area
 //        .setTangent(Math.toRadians(90.0))
 //        .splineToConstantHeading(Vector2d(-59.5, 53.0), Math.toRadians(270.0)) // Make a short loop to head back to pickup
 //        .splineToConstantHeading(Vector2d(-59.5, 12.0), Math.toRadians(270.0)) // Drive back to next pickup
