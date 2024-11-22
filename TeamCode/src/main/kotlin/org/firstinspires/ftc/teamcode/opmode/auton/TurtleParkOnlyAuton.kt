@@ -4,8 +4,10 @@ import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
 
+@Disabled
 @Suppress("Unused")
 @Autonomous(name = "Turtle Park Only", group = "Turtle")
 class TurtleParkOnlyAuton : AutonBase() {

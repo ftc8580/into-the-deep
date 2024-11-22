@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 @Suppress("Unused")
 @Autonomous(name = "Turtle Max", group = "Turtle")
 class TurtleMaxAuton : AutonBase() {
-    private val initialPose = Pose2d(-8.0, 63.5, Math.toRadians(270.0))
+    private val initialPose = Pose2d(-8.0, 63.0, Math.toRadians(270.0))
 
     @Throws(InterruptedException::class)
     override fun runOpMode() {
@@ -21,21 +21,24 @@ class TurtleMaxAuton : AutonBase() {
             Pose2d(-8.0, 63.0, Math.toRadians(270.0))
         )
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
-            .waitSeconds(1.0) // Wait for gripper to raise
+            .waitSeconds(1.1) // Wait for gripper to raise
             .lineToY(33.0) // Drive to first delivery position
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HOME))
             .waitSeconds(0.25) // Wait for gripper to deliver
+            .splineToConstantHeading(Vector2d(-8.0, 38.0), Math.toRadians(270.0))
             .setTangent(Math.toRadians(150.0)) // Set exit direction
             .splineToConstantHeading(Vector2d(-37.0, 24.0), Math.toRadians(270.0)) // Spline around submersible corner
-            .setTangent(Math.toRadians(270.0)) // Continue moving in the correct direction
-            .splineToConstantHeading(Vector2d(-47.5, 12.0), Math.toRadians(90.0), slowSegmentVelocityConstraint) // Continue spline to position behind first sample
-            .splineToConstantHeading(Vector2d(-47.5, 53.0), Math.toRadians(90.0), null, slowSegmentAccelerationConstraint) // Push first sample to observation zone
+            //.setTangent(Math.toRadians(270.0)) // Continue moving in the correct direction
+            .splineToConstantHeading(Vector2d(-47.5, 14.0), Math.toRadians(90.0))
+            //.splineToConstantHeading(Vector2d(-47.5, 12.0), Math.toRadians(90.0), slowSegmentVelocityConstraint) // Continue spline to position behind first sample
+            //.splineToConstantHeading(Vector2d(-47.5, 57.0), Math.toRadians(90.0))
+            .splineToConstantHeading(Vector2d(-47.5, 59.0), Math.toRadians(90.0), null, slowSegmentAccelerationConstraint) // Push first sample to observation zone
             .setTangent(Math.toRadians(90.0))
-            .splineToConstantHeading(Vector2d(-49.5, 53.0), Math.toRadians(270.0), slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint) // Make a short loop to head back to pickup
-            .splineToConstantHeading(Vector2d(-49.5, 12.0), Math.toRadians(270.0), null, slowSegmentAccelerationConstraint) // Drive back to next pickup
+            //.splineToConstantHeading(Vector2d(-45.5, 30.0), Math.toRadians(270.0), slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint) // Make a short loop to head back to pickup
+            .splineToConstantHeading(Vector2d(-42.5, 12.0), Math.toRadians(270.0), null, slowSegmentAccelerationConstraint) // Drive back to next pickup
             .setTangent(Math.toRadians(270.0))
-            .splineToConstantHeading(Vector2d(-57.5, 16.0), Math.toRadians(90.0), slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint) // Make a short loop to position behind second sample
-            .splineToConstantHeading(Vector2d(-57.5, 53.0), Math.toRadians(90.0), null, slowSegmentAccelerationConstraint) // Push second sample to the observation area
+            .splineToConstantHeading(Vector2d(-57.5, 14.0), Math.toRadians(90.0), slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint) // Make a short loop to position behind second sample
+            .splineToConstantHeading(Vector2d(-57.5, 57.0), Math.toRadians(90.0), null, slowSegmentAccelerationConstraint) // Push second sample to the observation area
 //        .setTangent(Math.toRadians(90.0))
 //        .splineToConstantHeading(Vector2d(-59.5, 53.0), Math.toRadians(270.0)) // Make a short loop to head back to pickup
 //        .splineToConstantHeading(Vector2d(-59.5, 12.0), Math.toRadians(270.0)) // Drive back to next pickup

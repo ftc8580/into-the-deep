@@ -4,12 +4,14 @@ import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import org.firstinspires.ftc.teamcode.actions.GripperPosition
 import org.firstinspires.ftc.teamcode.actions.buildParkArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildPreParkArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
 import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 
+@Disabled
 @Suppress("Unused")
 @Autonomous(name = "Narwhal Single Specimen", group = "Narwhal")
 class NarwhalSpecimenAuton : AutonBase() {
