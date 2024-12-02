@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.TouchSensor
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import org.firstinspires.ftc.teamcode.config.ImuParams
+import org.firstinspires.ftc.teamcode.hardware.drivers.MaxbotixMB1643
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil
 import org.firstinspires.ftc.teamcode.util.MotorGroup
 
@@ -54,8 +55,8 @@ class HardwareManager(hardware: HardwareMap) {
     var viperExtensionMotorGroup: MotorGroup? = null
     var viperRotationMotorGroup: MotorGroup? = null
 
-    // LED Lights
-    var intakeIndicatorLight: Servo? = null
+    // Distance sensor
+    var distanceSensor: MaxbotixMB1643? = null
 
     init {
         systemCheck(hardware)
@@ -67,7 +68,6 @@ class HardwareManager(hardware: HardwareMap) {
         initializeSensors(hardware)
         initializeServos(hardware)
         initializeAccessoryMotors(hardware)
-        initializeLights(hardware)
     }
 
     private fun systemCheck(hardware: HardwareMap)  {
@@ -139,6 +139,8 @@ class HardwareManager(hardware: HardwareMap) {
         if (armRotationEncoderMotor != null) {
             armRotationEncoder = RawEncoder(armRotationEncoderMotor)
         }
+
+        distanceSensor = safelyGetHardware<MaxbotixMB1643>(hardware, "frontDistance")
     }
 
     private fun initializeServos(hardware: HardwareMap) {
@@ -146,16 +148,6 @@ class HardwareManager(hardware: HardwareMap) {
         intakeWheelServoFront = safelyGetHardware<CRServo>(hardware, "intakeWheelServoFront")
         intakeRotateServo = safelyGetHardware<Servo>(hardware, "intakeRotateServo")
         gripperServo = safelyGetHardware<Servo>(hardware, "gripperServo")
-
-        // Set ranges
-        gripperServo?.scaleRange(0.0, 0.2)
-
-        // Initialize servo positions
-        gripperServo?.position = 0.0
-    }
-
-    private fun initializeLights(hardware: HardwareMap) {
-        intakeIndicatorLight = safelyGetHardware<Servo>(hardware, "intakeIndicatorLight")
     }
 
     private fun initializeAccessoryMotors(hardware: HardwareMap) {

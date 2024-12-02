@@ -17,14 +17,12 @@ import org.firstinspires.ftc.teamcode.actions.buildPickupArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
 import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 import org.firstinspires.ftc.teamcode.subsystem.WristRotationPosition
-import org.firstinspires.ftc.teamcode.util.RevColor
 import kotlin.math.pow
 
 @Suppress("UNUSED")
 @TeleOp(name="CDTeleop")
 class CDTeleop : OpModeBase() {
     private var driveSpeedScale = DRIVE_SPEED_NORMAL
-    private var revColorSensor: RevColor? = null
 
     private var extensionGroupState = MotorGroupState.STOPPED
     private var rotationGroupState = MotorGroupState.STOPPED
@@ -36,10 +34,6 @@ class CDTeleop : OpModeBase() {
         initHardware()
         initializeDriverGamepad(driverGamepad)
         initializeCoDriverGamepad(accessoryGamepad)
-
-        hardware.intakeColorSensor?.let {
-            revColorSensor = RevColor(it)
-        }
     }
 
     @SuppressLint("UseValueOf")
@@ -61,18 +55,6 @@ class CDTeleop : OpModeBase() {
 
         if (armExtensionSubsystem.isExtensionHome) {
             armExtensionSubsystem.resetMotorEncoders()
-        }
-
-        revColorSensor?.let {
-            hardware.intakeIndicatorLight?.position = if (it.isBlue) {
-                0.645
-            } else if (it.isRed) {
-                0.278
-            } else if (it.isYellow) {
-                0.388
-            } else {
-                0.0
-            }
         }
 
         // Driver controls
@@ -228,6 +210,14 @@ class CDTeleop : OpModeBase() {
         hardware.armRotationEncoder?.let {
             telemetry.addLine("rotation position: ${it.getPositionAndVelocity().position}")
         } ?: telemetry.addLine("[WARNING] arm rotation encoder not found")
+
+        hardware.distanceSensor?.let {
+            telemetry.addLine("MB1643 raw max voltage: ${it.getRawMaxVoltage()}")
+            telemetry.addLine("MB1643 max voltage: ${it.getMaxVoltage()}")
+            telemetry.addLine("MB1643 raw voltage: ${it.readRawVoltage()}")
+            telemetry.addLine("MB1643 bounded voltage: ${it.getBoundedVoltage()}")
+            telemetry.addLine(it.toString())
+        } ?: telemetry.addLine("[WARNING] distance sensor not found")
 
         telemetry.update()
     }
