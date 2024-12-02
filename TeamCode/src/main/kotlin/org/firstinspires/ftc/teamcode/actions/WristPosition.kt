@@ -19,7 +19,7 @@ class WristPosition(
     override fun run(p: TelemetryPacket): Boolean {
         when (currentState) {
             ActionState.IDLE -> {
-                if (!elapsedTime.isTimedOut(delayMs)) return false
+                if (!elapsedTime.isTimedOut(delayMs)) return true
 
                 intakeSubsystem.set(target)
                 currentState = ActionState.STARTED

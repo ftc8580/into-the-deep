@@ -24,7 +24,7 @@ class ExtensionPosition(
     override fun run(p: TelemetryPacket): Boolean {
         when (currentState) {
             ActionState.IDLE -> {
-                if (!elapsedTime.isTimedOut(delayMs)) return false
+                if (!elapsedTime.isTimedOut(delayMs)) return true
 
                 currentState = ActionState.STARTED
                 initialPosition = armExtensionSubsystem.currentPosition!!

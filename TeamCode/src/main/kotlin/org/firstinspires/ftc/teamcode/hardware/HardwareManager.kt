@@ -46,6 +46,7 @@ class HardwareManager(hardware: HardwareMap) {
     var intakeWheelServoFront: CRServo? = null
     var intakeRotateServo: Servo? = null
     var gripperServo: Servo? = null
+    var climbServo: CRServo? = null
 
     // Accessory  motors
     private var viperExtensionMotorLeft: DcMotorEx? = null
@@ -148,6 +149,7 @@ class HardwareManager(hardware: HardwareMap) {
         intakeWheelServoFront = safelyGetHardware<CRServo>(hardware, "intakeWheelServoFront")
         intakeRotateServo = safelyGetHardware<Servo>(hardware, "intakeRotateServo")
         gripperServo = safelyGetHardware<Servo>(hardware, "gripperServo")
+        climbServo = safelyGetHardware<CRServo>(hardware, "climbServo")
     }
 
     private fun initializeAccessoryMotors(hardware: HardwareMap) {
@@ -184,18 +186,5 @@ class HardwareManager(hardware: HardwareMap) {
             println("Problem getting hardware $deviceName")
             null
         }
-    }
-
-    val rawExternalHeading: Double
-        get() = 0.0
-
-    val externalHeadingVelocity: Double
-        get() = 0.0
-
-    fun setMotorPowers(frontLeft: Double, rearLeft: Double, rearRight: Double, frontRight: Double) {
-        leftFrontMotor.power = frontLeft
-        leftRearMotor.power = rearLeft
-        rightRearMotor.power = rearRight
-        rightFrontMotor.power = frontRight
     }
 }
