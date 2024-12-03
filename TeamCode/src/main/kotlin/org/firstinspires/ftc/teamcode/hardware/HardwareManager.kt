@@ -57,7 +57,12 @@ class HardwareManager(hardware: HardwareMap) {
     var viperRotationMotorGroup: MotorGroup? = null
 
     // Distance sensor
-    var distanceSensor: MaxbotixMB1643? = null
+    var frontDistanceSensor: MaxbotixMB1643? = null
+    var leftDistanceSensor: MaxbotixMB1643? = null
+    var rightDistanceSensor: MaxbotixMB1643? = null
+    var rearDistanceSensor: MaxbotixMB1643? = null
+
+    lateinit var distanceSensors: Map<String, MaxbotixMB1643?>
 
     init {
         systemCheck(hardware)
@@ -141,7 +146,17 @@ class HardwareManager(hardware: HardwareMap) {
             armRotationEncoder = RawEncoder(armRotationEncoderMotor)
         }
 
-        distanceSensor = safelyGetHardware<MaxbotixMB1643>(hardware, "frontDistance")
+        frontDistanceSensor = safelyGetHardware<MaxbotixMB1643>(hardware, "frontDistance")
+        leftDistanceSensor = safelyGetHardware<MaxbotixMB1643>(hardware, "leftDistance")
+        rightDistanceSensor = safelyGetHardware<MaxbotixMB1643>(hardware, "rightDistance")
+        rearDistanceSensor = safelyGetHardware<MaxbotixMB1643>(hardware, "rearDistance")
+
+        distanceSensors = mapOf(
+            "front" to frontDistanceSensor,
+            "left" to leftDistanceSensor,
+            "right" to rightDistanceSensor,
+            "rear" to rearDistanceSensor
+        )
     }
 
     private fun initializeServos(hardware: HardwareMap) {

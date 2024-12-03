@@ -211,7 +211,7 @@ class CDTeleop : OpModeBase() {
             telemetry.addLine("rotation position: ${it.getPositionAndVelocity().position}")
         } ?: telemetry.addLine("[WARNING] arm rotation encoder not found")
 
-        hardware.distanceSensor?.let {
+        hardware.frontDistanceSensor?.let {
             telemetry.addLine("MB1643 raw max voltage: ${it.getRawMaxVoltage()}")
             telemetry.addLine("MB1643 max voltage: ${it.getMaxVoltage()}")
             telemetry.addLine("MB1643 raw voltage: ${it.readRawVoltage()}")
