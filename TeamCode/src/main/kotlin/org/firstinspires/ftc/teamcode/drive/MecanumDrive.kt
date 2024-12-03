@@ -24,6 +24,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder
 import com.acmerobotics.roadrunner.TrajectoryBuilderParams
 import com.acmerobotics.roadrunner.TurnConstraints
 import com.acmerobotics.roadrunner.Twist2dDual
+import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.VelConstraint
 import com.acmerobotics.roadrunner.ftc.DownsampledWriter
 import com.acmerobotics.roadrunner.ftc.FlightRecorder.write
@@ -272,6 +273,13 @@ class MecanumDrive(private val hardware: HardwareManager, pose: Pose2d) {
         val twist: Twist2dDual<Time> = localizer.update()
         pose = pose.plus(twist.value())
 
+        val sensorPose = getEstimatedSensorLocation(pose)
+
+        // Make sure the calculated pose from the distance sensors is non-null and different than the roadrunner pose before replacing
+        if (sensorPose != null && !(pose.position.x == sensorPose.position.x && pose.position.y == sensorPose.position.y)) {
+            pose = sensorPose
+        }
+
         poseHistory.add(pose)
         while (poseHistory.size > 100) {
             poseHistory.removeFirst()
@@ -280,6 +288,100 @@ class MecanumDrive(private val hardware: HardwareManager, pose: Pose2d) {
 //        estimatedPoseWriter.write(PoseMessage(pose))
 
         return twist.velocity().value()
+    }
+
+    private fun getEstimatedSensorLocation(roadrunnerPose: Pose2d): Pose2d? {
+        val sensorReadings = mapOf(
+            "front" to hardware.distanceSensors["front"]?.currentInches,
+            "left" to hardware.distanceSensors["left"]?.currentInches,
+            "right" to hardware.distanceSensors["right"]?.currentInches,
+            "rear" to hardware.distanceSensors["rear"]?.currentInches
+        )
+
+        when (roadrunnerPose.heading.toDouble()) {
+            in Math.toRadians(85.0)..Math.toRadians(95.0) -> { // Front is facing alliance wall
+                return if (roadrunnerPose.position.x >= 0) { // Narwhal side
+                    Pose2d(
+                        Vector2d(
+                            sensorReadings["right"]?.let {
+                                72.0 - it - rightDistanceSensorOffset.y
+                            } ?: roadrunnerPose.position.x,
+                            sensorReadings["front"]?.let {
+                                72.0 - it - frontDistanceSensorOffset.x
+                            } ?: roadrunnerPose.position.y
+                        ),
+                        roadrunnerPose.heading
+                    )
+                } else { // Turtle side
+                    Pose2d(
+                        Vector2d(
+                            sensorReadings["left"]?.let {
+                                -72.0 + it + leftDistanceSensorOffset.y
+                            } ?: roadrunnerPose.position.x,
+                            sensorReadings["front"]?.let {
+                                72.0 - it - frontDistanceSensorOffset.x
+                            } ?: roadrunnerPose.position.y
+                        ),
+                        roadrunnerPose.heading
+                    )
+                }
+            }
+            in Math.toRadians(175.0)..Math.toRadians(185.0) -> { // Right side is facing alliance wall
+                return if (roadrunnerPose.position.x >= 0) {
+                    Pose2d(
+                        Vector2d(
+                            sensorReadings["rear"]?.let {
+                                72.0 - it - rearDistanceSensorOffset.x
+                            } ?: roadrunnerPose.position.x,
+                            sensorReadings["right"]?.let {
+                                72.0 - it - rightDistanceSensorOffset.y
+                            } ?: roadrunnerPose.position.y
+                        ),
+                        roadrunnerPose.heading
+                    )
+                } else {
+                    Pose2d(
+                        Vector2d(
+                            sensorReadings["front"]?.let {
+                                -72.0 + it + rearDistanceSensorOffset.x
+                            } ?: roadrunnerPose.position.x,
+                            sensorReadings["right"]?.let {
+                                72.0 - it - rightDistanceSensorOffset.y
+                            } ?: roadrunnerPose.position.y
+                        ),
+                        roadrunnerPose.heading
+                    )
+                }
+            }
+            in Math.toRadians(265.0)..Math.toRadians(275.0) -> { // Rear is facing alliance wall
+                return if (roadrunnerPose.position.x >= 0) {
+                    Pose2d(
+                        Vector2d(
+                            sensorReadings["left"]?.let {
+                                72.0 - it - leftDistanceSensorOffset.y
+                            } ?: roadrunnerPose.position.x,
+                            sensorReadings["rear"]?.let {
+                                72.0 - it - rearDistanceSensorOffset.x
+                            } ?: roadrunnerPose.position.y
+                        ),
+                        roadrunnerPose.heading
+                    )
+                } else {
+                    Pose2d(
+                        Vector2d(
+                            sensorReadings["right"]?.let {
+                                -72.0 + it + rightDistanceSensorOffset.y
+                            } ?: roadrunnerPose.position.x,
+                            sensorReadings["rear"]?.let {
+                                72.0 - it - rearDistanceSensorOffset.x
+                            } ?: roadrunnerPose.position.y
+                        ),
+                        roadrunnerPose.heading
+                    )
+                }
+            }
+            else -> return null
+        }
     }
 
     private fun drawPoseHistory(c: Canvas) {
@@ -311,6 +413,14 @@ class MecanumDrive(private val hardware: HardwareManager, pose: Pose2d) {
             defaultTurnConstraints,
             defaultVelConstraint, defaultAccelConstraint
         )
+    }
+
+    companion object {
+        // TODO: Fix these offsets and probably just make them Doubles
+        private val frontDistanceSensorOffset = Vector2d(6.0, 0.0)
+        private val leftDistanceSensorOffset = Vector2d(0.0, 5.0)
+        private val rightDistanceSensorOffset = Vector2d(0.0, 5.0)
+        private val rearDistanceSensorOffset = Vector2d(6.0, 0.0)
     }
 }
 
