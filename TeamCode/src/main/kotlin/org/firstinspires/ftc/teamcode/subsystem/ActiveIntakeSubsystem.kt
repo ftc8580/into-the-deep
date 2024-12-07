@@ -30,9 +30,9 @@ class ActiveIntakeSubsystem(hardware: HardwareManager) {
         intakeFrontServo?.power = -INTAKE_MAX_POWER
     }
 
-    fun runEject() {
-        intakeRearServo?.power = -INTAKE_MAX_POWER
-        intakeFrontServo?.power = INTAKE_MAX_POWER
+    fun runEject(power: Double? = null) {
+        intakeRearServo?.power = -(power ?: EJECT_MAX_POWER)
+        intakeFrontServo?.power = power ?: EJECT_MAX_POWER
     }
 
     fun stopIntake() {
@@ -45,7 +45,8 @@ class ActiveIntakeSubsystem(hardware: HardwareManager) {
 
     companion object {
         private const val WRIST_STEP = 0.01
-        private const val INTAKE_MAX_POWER = 1.0
+        private const val INTAKE_MAX_POWER = 0.8
+        private const val EJECT_MAX_POWER = 0.5
     }
 }
 

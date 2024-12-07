@@ -18,7 +18,7 @@ class NarwhalSampleAuton : AutonBase() {
     private val initialX = 40.0
     private val initialY = 63.5
     private val initialHeading = Math.toRadians(270.0)
-    private val deliveryXY = 54.0
+    private val deliveryXY = 53.0
     private val deliveryTangentHeadingDegrees = 45.0
     private val deliveryTangentHeading = Math.toRadians(deliveryTangentHeadingDegrees)
     private val deliveryRobotHeading = Math.toRadians(deliveryTangentHeadingDegrees + 180.0)
@@ -45,10 +45,10 @@ class NarwhalSampleAuton : AutonBase() {
             .setTangent(finalDeliveryRobotHeading) // Leave the start position in the right direction
             .splineToLinearHeading(deliveryPose, deliveryTangentHeading) // Spline to the delivery position
             .afterTime(0.0, armSubsystems.buildHighDeliveryArmPositionAction()) // Move the arm into the delivery position while driving
-            .afterTime(2.25, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
-            .waitSeconds(3.25) // Wait for the sample to go in the basket
+            .afterTime(2.2, DeliverSample(activeIntakeSubsystem, power = 0.3)) // Eject the sample from the intake
+            .waitSeconds(2.5) // Wait for the sample to go in the basket
             .afterTime(0.0, armSubsystems.buildPrePickupArmPositionAction()) // After delivery, return to drive position while driving to next pickup
-            .waitSeconds(1.70)
+            .waitSeconds(1.0)
             // DELIVER FIRST SAMPLE
             //.splineToConstantHeading(Vector2d(pickupX1, pickupYStart), initialHeading) // Spline to first pickup position
             .splineToLinearHeading(Pose2d(pickupX1, pickupYStart, initialHeading), initialHeading)
@@ -59,10 +59,10 @@ class NarwhalSampleAuton : AutonBase() {
             .afterTime(0.0, armSubsystems.buildHighDeliveryArmPositionAction()) // Move the arm into the delivery position while driving
             .setTangent(intermediateHeadingDegrees) // Leave the pickup position in the right direction
             .splineToLinearHeading(deliveryPose, deliveryTangentHeading) // Spline to the delivery position
-            .afterTime(2.25, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
-            .waitSeconds(3.25) // Wait for the sample to go in the basket
+            .afterTime(2.0, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
+            .waitSeconds(2.5) // Wait for the sample to go in the basket
             .afterTime(0.0, armSubsystems.buildPrePickupArmPositionAction()) // After delivery, return to drive position while driving to next pickup
-            .waitSeconds(1.70)
+            .waitSeconds(1.0)
             // DELIVER SECOND SAMPLE
             .splineToLinearHeading(Pose2d(pickupX2, pickupYStart, initialHeading), initialHeading) // Spline to the second pickup position
             .afterTime(0.0, armSubsystems.buildPickupArmPositionAction()) // Get ready to pick up the sample
@@ -72,10 +72,10 @@ class NarwhalSampleAuton : AutonBase() {
             .afterTime(0.0, armSubsystems.buildHighDeliveryArmPositionAction()) // Move the arm into the delivery position while driving
             .setTangent(intermediateHeadingDegrees) // Leave the pickup position in the right direction
             .splineToLinearHeading(deliveryPose, deliveryTangentHeading) // Spline to the delivery position
-            .afterTime(2.25, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
-            .waitSeconds(3.25) // Wait for the sample to go in the basket
+            .afterTime(2.0, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
+            .waitSeconds(2.5) // Wait for the sample to go in the basket
             .afterTime(0.0, armSubsystems.buildPrePickupArmPositionAction()) // After delivery, return to drive position while driving to next pickup
-            .waitSeconds(1.70)
+            .waitSeconds(1.0)
             // DELIVER THIRD SAMPLE
             .splineToLinearHeading(Pose2d(pickupX2, pickupYStart - 3.0, finalDeliveryRobotHeading), initialHeading) // Go to the final pickup position
             .afterTime(0.0, armSubsystems.buildPickupArmPositionAction()) // Get ready to pick up the sample
@@ -85,8 +85,8 @@ class NarwhalSampleAuton : AutonBase() {
             .afterTime(0.0, armSubsystems.buildHighDeliveryArmPositionAction()) // Move the arm into the delivery position while driving
             .setTangent(deliveryTangentHeadingDegrees) // Leave the pickup position in the right direction
             .splineToLinearHeading(deliveryPose, deliveryTangentHeading) // Spline to the delivery position
-            .afterTime(2.25, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
-            .waitSeconds(3.25) // Wait for the sample to go in the basket
+            .afterTime(2.0, DeliverSample(activeIntakeSubsystem)) // Eject the sample from the intake
+            .waitSeconds(2.5) // Wait for the sample to go in the basket
             // PARK
             .afterTime(0.0, armSubsystems.buildPreParkArmPositionAction()) // After delivery, go to pre-park position
             .waitSeconds(0.3)

@@ -18,11 +18,17 @@ data class ArmSubsystems(
 fun ArmSubsystems.buildArmPositionAction(
     extensionTarget: ArmExtensionPosition,
     rotationTarget: ArmRotationPosition,
-    wristTarget: WristRotationPosition
+    wristTarget: WristRotationPosition,
+    extensionDelayMs: Double? = null,
 ): Action {
     val currentRotationPosition = rotationSubsystem.currentPosition ?: 0
 
-    val extensionDelay = if (currentRotationPosition > 500) 0.0 else 250.0
+    val extensionDelay = extensionDelayMs
+        ?: if (currentRotationPosition > 500) {
+            0.0
+        } else {
+            250.0
+        }
     val wristDelay = if (currentRotationPosition < 200) 250.0 else 0.0
 
     return ParallelAction(
@@ -35,7 +41,8 @@ fun ArmSubsystems.buildArmPositionAction(
 fun ArmSubsystems.buildPreParkArmPositionAction(): Action = this.buildArmPositionAction(
     ArmExtensionPosition.HOME,
     ArmRotationPosition.DRIVE,
-    WristRotationPosition.PICKUP
+    WristRotationPosition.PICKUP,
+    500.0
 )
 
 fun ArmSubsystems.buildParkArmPositionAction(): Action = this.buildArmPositionAction(
@@ -70,7 +77,7 @@ fun ArmSubsystems.buildLowDeliveryArmPositionAction(): Action = this.buildArmPos
 
 fun ArmSubsystems.buildHighDeliveryArmPositionAction(): Action = this.buildArmPositionAction(
     ArmExtensionPosition.MAX_UP,
-    ArmRotationPosition.TOP,
+    ArmRotationPosition.AUTON_DELIVERY,
     WristRotationPosition.DELIVER
 )
 

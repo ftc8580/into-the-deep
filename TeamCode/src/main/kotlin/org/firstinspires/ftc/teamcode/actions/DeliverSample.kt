@@ -10,7 +10,8 @@ import org.firstinspires.ftc.teamcode.util.isTimedOut
 // TODO: Can we read voltage (or something) to know if we no longer have a sample in the intake?
 class DeliverSample(
     private val intakeSubsystem: ActiveIntakeSubsystem,
-    private val timeout: Double = 1000.0
+    private val timeout: Double = 1000.0,
+    private val power: Double? = null
 ) : Action {
     private var currentState = ActionState.IDLE
     private var elapsedTime = ElapsedTime()
@@ -19,7 +20,7 @@ class DeliverSample(
         when (currentState) {
             ActionState.IDLE -> {
                 elapsedTime.reset()
-                intakeSubsystem.runEject()
+                intakeSubsystem.runEject(power)
                 currentState = ActionState.STARTED
                 return true
             }

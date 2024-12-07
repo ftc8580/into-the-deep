@@ -115,7 +115,7 @@ class CDTeleop : OpModeBase() {
         if (gamepad2.a) {
             runningActions.add(armSubsystems.buildDriveArmPositionAction())
         } else if (gamepad2.b) {
-            runningActions.add(armSubsystems.buildPickupArmPositionAction())
+//            runningActions.add(armSubsystems.buildPickupArmPositionAction())
         } else if (gamepad2.x) {
             runningActions.add(armSubsystems.buildLowDeliveryArmPositionAction())
         } else if (gamepad2.y) {

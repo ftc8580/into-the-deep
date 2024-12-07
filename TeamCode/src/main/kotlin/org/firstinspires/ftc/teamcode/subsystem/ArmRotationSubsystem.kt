@@ -61,8 +61,9 @@ class ArmRotationSubsystem(hardware: HardwareManager) : MotorGroupSubsystem() {
 enum class ArmRotationPosition(val position: Int) {
     HOME(0),
     AUTON_PICKUP(325),
-    DRIVE(750),
-    PARK(1650),
+    DRIVE(750), // TODO
+    PARK(1650), // TODO
+    AUTON_DELIVERY(3150),
     TOP(3300)
 }
 
