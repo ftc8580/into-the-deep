@@ -5,6 +5,8 @@ import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.actions.GripperPosition
+import org.firstinspires.ftc.teamcode.actions.buildHomeArmPositionAction
+import org.firstinspires.ftc.teamcode.actions.buildPickupArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
 import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 
@@ -51,14 +53,17 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
             .splineToConstantHeading(Vector2d(-35.0, 28.0), Math.toRadians(270.0), null, null) // Spline around submersible corner
             .splineToConstantHeading(Vector2d(-41.0, 16.0), Math.toRadians(180.0), slowestSegmentVelocityConstraint, null) //waypoint for smooth curve
             .splineToConstantHeading(Vector2d(-47.0, 20.0), Math.toRadians(90.0), slowestSegmentVelocityConstraint, null)  //lineup to push first sample
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             .splineToConstantHeading(Vector2d(-47.0, 48.0), Math.toRadians(90.0), fastSegmentVelocityConstraint, null) // Push first sample to observation zone
             .splineToConstantHeading(Vector2d(-45.0, 53.0), Math.toRadians(0.0), slowestSegmentVelocityConstraint, null) //waypoint for smooth curve
             .splineToConstantHeading(Vector2d(-43.0, 48.0), Math.toRadians(270.0), slowestSegmentVelocityConstraint, null) //waypoint for smooth curve
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
-            .splineToConstantHeading(Vector2d(-43.0, 17.0), Math.toRadians(270.0), fastSegmentVelocityConstraint, null) // Drive back to next pickup
-            .splineToConstantHeading(Vector2d(-50.0, 16.0), Math.toRadians(180.0), slowestSegmentVelocityConstraint, null) // waypoint Drive back to next pickup
+            .splineToConstantHeading(Vector2d(-43.0, 20.0), Math.toRadians(270.0), fastSegmentVelocityConstraint, null) // Drive back to next pickup
+            .splineToConstantHeading(Vector2d(-50.0, 15.0), Math.toRadians(180.0), slowestSegmentVelocityConstraint, null) // waypoint Drive back to next pickup
             .splineToConstantHeading(Vector2d(-57.0, 20.0), Math.toRadians(90.0), slowestSegmentVelocityConstraint, null) // waypoint Drive back to next pickup
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             .splineToConstantHeading(Vector2d(-57.5, 48.0), Math.toRadians(90.0), fastSegmentVelocityConstraint, null) // Push second sample to the observation area
             .splineToConstantHeading(Vector2d(-55.5, 53.0), Math.toRadians(0.0), slowestSegmentVelocityConstraint, null) // waypoint Push second sample to the observation area
@@ -71,7 +76,7 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
 //
 //            .splineToConstantHeading(Vector2d(-63.5, 48.0), Math.toRadians(90.0), fastSegmentVelocityConstraint, null)// Push third sample to the observation area
 //            .splineToConstantHeading(Vector2d(-60.5, 53.0), Math.toRadians(0.0), slowestSegmentVelocityConstraint, null) // waypoint Push third sample to the observation area
-
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //ROTATE TO PRE-PICKUP POSITION AND PICKUP SPECIMEN 2
             .splineToLinearHeading(Pose2d(-44.0, 57.0, Math.toRadians(90.0)), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
@@ -79,55 +84,64 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
             .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
             .waitSeconds(0.2)
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //DELIVER SPECIMEN 2 ON HIGH CHAMBER
             .setTangent(Math.toRadians(-30.0))
-            .splineToSplineHeading(Pose2d(-6.0, 33.0, Math.toRadians(-90.0)), Math.toRadians(-90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
+            .splineToSplineHeading(Pose2d(-6.0, 33.0, Math.toRadians(-90.0)), Math.toRadians(-90.0))//, midSegmentVelocityConstraint, null)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HOME))
             .waitSeconds(0.1)
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //ROTATE TO PRE-PICKUP POSITION AND PICKUP SPECIMEN 3
             .splineToLinearHeading(Pose2d(-6.0, 33.01, Math.toRadians(-90.0)), Math.toRadians(120.0)) //adding this changes rotation direction
-            .splineToLinearHeading(Pose2d(-44.0, 57.0, Math.toRadians(93.0)), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
+            .splineToLinearHeading(Pose2d(-44.0, 57.0, Math.toRadians(90.0)), Math.toRadians(90.0))//, midSegmentVelocityConstraint, null)
             //.waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
             .waitSeconds(0.2)
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //DELIVER SPECIMEN 3 ON HIGH CHAMBER
             .setTangent(Math.toRadians(-30.0))
-            .splineToSplineHeading(Pose2d(-4.0, 33.0, Math.toRadians(-90.0)), Math.toRadians(-90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
+            .splineToSplineHeading(Pose2d(-4.0, 33.0, Math.toRadians(-90.0)), Math.toRadians(-90.0))//, midSegmentVelocityConstraint, null)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HOME))
             .waitSeconds(0.1)
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //ROTATE TO PRE-PICKUP POSITION AND PICKUP SPECIMEN 4
             .splineToLinearHeading(Pose2d(-4.0, 33.01, Math.toRadians(-90.0)), Math.toRadians(120.0)) //adding this changes rotation direction
-            .splineToLinearHeading(Pose2d(-44.0, 57.0, Math.toRadians(93.0)), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
+            .splineToLinearHeading(Pose2d(-44.0, 57.0, Math.toRadians(90.0)), Math.toRadians(90.0))//, midSegmentVelocityConstraint, null)
             //.waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
             .waitSeconds(0.2)
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //DELIVER SPECIMEN 4 ON HIGH
             .setTangent(Math.toRadians(-30.0))
-            .splineToSplineHeading(Pose2d(-2.0, 33.0, Math.toRadians(-90.0)), Math.toRadians(-90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
+            .splineToSplineHeading(Pose2d(-2.0, 33.0, Math.toRadians(-90.0)), Math.toRadians(-90.0))//, midSegmentVelocityConstraint, null)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HOME))
             .waitSeconds(0.1)
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //ROTATE TO PRE-PICKUP POSITION AND PICKUP SPECIMEN 5
             .splineToLinearHeading(Pose2d(-2.0, 33.01, Math.toRadians(-90.0)), Math.toRadians(120.0)) //adding this changes rotation direction
-            .splineToLinearHeading(Pose2d(-44.0, 57.0, Math.toRadians(93.0)), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
+            .splineToLinearHeading(Pose2d(-44.0, 57.0, Math.toRadians(90.0)), Math.toRadians(90.0))//, midSegmentVelocityConstraint, null)
             //.waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
             .waitSeconds(0.2)
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
 //            //DELIVER SPECIMEN 5 ON HIGH
 //            .setTangent(Math.toRadians(-30.0))
 //            .splineToSplineHeading(Pose2d(0.0, 33.0, Math.toRadians(-90.0)), Math.toRadians(-90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
 //            .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HOME))
 //            .waitSeconds(0.1)
+//            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 //
+
 //            //PARK
 //            .setTangent(Math.toRadians(90.0))
 //            .splineToConstantHeading(Vector2d(-56.0, 58.0), Math.toRadians(180.0))
