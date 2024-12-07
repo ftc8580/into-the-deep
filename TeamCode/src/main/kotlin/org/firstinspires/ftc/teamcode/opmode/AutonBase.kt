@@ -22,8 +22,12 @@ abstract class AutonBase : LinearOpMode() {
     protected lateinit var armExtensionSubsystem: ViperExtensionSubsystem
     protected lateinit var armSubsystems: ArmSubsystems
 
+    protected val fastSegmentVelocityConstraint = TranslationalVelConstraint(75.0)
     protected val slowSegmentVelocityConstraint = TranslationalVelConstraint(50.0)
+    protected val slowerSegmentVelocityConstraint = TranslationalVelConstraint(40.0)
+    protected val slowestSegmentVelocityConstraint = TranslationalVelConstraint(20.0) //faster than this on tight curves is not accurate
     protected val slowSegmentAccelerationConstraint = ProfileAccelConstraint(-30.0, 45.0)
+    protected val slowerSegmentAccelerationConstraint = ProfileAccelConstraint(-15.0, 22.0)
 
     protected fun initialize(initialPose: Pose2d) {
         hardware = HardwareManager(hardwareMap)

@@ -4,11 +4,12 @@ import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import org.firstinspires.ftc.teamcode.actions.GripperPosition
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
 import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 
-//@Disabled
+@Disabled
 @Suppress("Unused")
 @Autonomous(name = "Turtle Max FAST KM", group = "Turtle")
 class TurtleMaxFASTAutonKM : AutonBase() {
@@ -32,15 +33,15 @@ class TurtleMaxFASTAutonKM : AutonBase() {
             .setTangent(Math.toRadians(120.0))
             ///.splineToConstantHeading(Vector2d(-8.0, 38.0), Math.toRadians(270.0))
             ///.setTangent(Math.toRadians(150.0)) // Set exit direction
-            .splineToConstantHeading(Vector2d(-37.0, 28.0), Math.toRadians(270.0)) // Spline around submersible corner
+            .splineToConstantHeading(Vector2d(-35.0, 28.0), Math.toRadians(270.0)) // Spline around submersible corner
             //.setTangent(Math.toRadians(270.0)) // Continue moving in the correct direction
-            .splineToConstantHeading(Vector2d(-44.0, 12.0), Math.toRadians(110.0))
+            .splineToConstantHeading(Vector2d(-47.0, 14.0), Math.toRadians(90.0))
             //.splineToConstantHeading(Vector2d(-47.5, 12.0), Math.toRadians(90.0), slowSegmentVelocityConstraint) // Continue spline to position behind first sample
             //.splineToConstantHeading(Vector2d(-47.5, 57.0), Math.toRadians(90.0))
-            .splineToConstantHeading(Vector2d(-52.0, 57.0), Math.toRadians(90.0), null, slowSegmentAccelerationConstraint) // Push first sample to observation zone
+            .splineToConstantHeading(Vector2d(-47.0, 57.0), Math.toRadians(90.0), null, slowSegmentAccelerationConstraint) // Push first sample to observation zone
             .setTangent(Math.toRadians(90.0))
             //.splineToConstantHeading(Vector2d(-45.5, 30.0), Math.toRadians(270.0), slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint) // Make a short loop to head back to pickup
-            .splineToConstantHeading(Vector2d(-38.5, 14.0), Math.toRadians(270.0), null, slowSegmentAccelerationConstraint) // Drive back to next pickup
+            .splineToConstantHeading(Vector2d(-43.0, 12.0), Math.toRadians(270.0), null, slowSegmentAccelerationConstraint) // Drive back to next pickup
             .setTangent(Math.toRadians(270.0))
             .splineToConstantHeading(Vector2d(-57.5, 14.0), Math.toRadians(90.0), slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint) // Make a short loop to position behind second sample
             .splineToConstantHeading(Vector2d(-57.5, 57.0), Math.toRadians(90.0), null, slowSegmentAccelerationConstraint) // Push second sample to the observation area
@@ -52,9 +53,9 @@ class TurtleMaxFASTAutonKM : AutonBase() {
 //        .splineToConstantHeading(Vector2d(-63.0, 53.0), Math.toRadians(90.0)) // Push third sample to the observation area
 
             //PUSH 3RD SAMPLE
-            .splineToConstantHeading(Vector2d(-46.5, 14.0), Math.toRadians(270.0))//, null, slowSegmentAccelerationConstraint) // Drive back to next pickup
+            .splineToConstantHeading(Vector2d(-53.0, 12.0), Math.toRadians(270.0), null, slowSegmentAccelerationConstraint) // Drive back to next pickup
             .setTangent(Math.toRadians(270.0))
-            .splineToConstantHeading(Vector2d(-63.5, 14.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint) // Make a short loop to position behind second sample
+            .splineToConstantHeading(Vector2d(-63.5, 14.0), Math.toRadians(90.0), slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint) // Make a short loop to position behind second sample
             .splineToConstantHeading(Vector2d(-63.5, 57.0), Math.toRadians(90.0))//, null, slowSegmentAccelerationConstraint) // Push second sample to the observation area
 
             //ROTATE TO PRE-PICKUP POSITION AND PICKUP SPECIMEN 2
