@@ -6,7 +6,6 @@ import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.actions.GripperPosition
 import org.firstinspires.ftc.teamcode.actions.buildHomeArmPositionAction
-import org.firstinspires.ftc.teamcode.actions.buildPickupArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
 import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 
@@ -83,7 +82,7 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
             //.waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
-            .waitSeconds(0.2)
+            .waitSeconds(0.15)
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //DELIVER SPECIMEN 2 ON HIGH CHAMBER
@@ -99,7 +98,7 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
             //.waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
-            .waitSeconds(0.2)
+            .waitSeconds(0.15)
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //DELIVER SPECIMEN 3 ON HIGH CHAMBER
@@ -115,7 +114,7 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
             //.waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
-            .waitSeconds(0.2)
+            .waitSeconds(0.15)
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //DELIVER SPECIMEN 4 ON HIGH
@@ -131,7 +130,7 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
             //.waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
-            .waitSeconds(0.2)
+            .waitSeconds(0.15)
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
 //            //DELIVER SPECIMEN 5 ON HIGH

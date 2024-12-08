@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareManager
 import org.firstinspires.ftc.teamcode.subsystem.ActiveIntakeSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.GripperSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.ArmRotationSubsystem
+import org.firstinspires.ftc.teamcode.subsystem.ClimbSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.ViperExtensionSubsystem
 
 abstract class OpModeBase : CommandOpMode() {
@@ -25,6 +26,7 @@ abstract class OpModeBase : CommandOpMode() {
     lateinit var armRotationSubsystem: ArmRotationSubsystem
     lateinit var armExtensionSubsystem: ViperExtensionSubsystem
     lateinit var armSubsystems: ArmSubsystems
+    lateinit var climbSubsystem: ClimbSubsystem
 
     fun initHardware() {
         hardware = HardwareManager(hardwareMap)
@@ -36,6 +38,7 @@ abstract class OpModeBase : CommandOpMode() {
         gripperSubsystem = GripperSubsystem(hardware)
         armRotationSubsystem = ArmRotationSubsystem(hardware)
         armExtensionSubsystem = ViperExtensionSubsystem(hardware)
+        climbSubsystem = ClimbSubsystem(hardware)
 
         armSubsystems = ArmSubsystems(
             armExtensionSubsystem,

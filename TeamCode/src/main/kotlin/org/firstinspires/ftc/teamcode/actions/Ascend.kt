@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.actions
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.Action
 import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.teamcode.subsystem.ArmExtensionPosition
+import org.firstinspires.ftc.teamcode.subsystem.ArmRotationPosition
 import org.firstinspires.ftc.teamcode.subsystem.ArmRotationSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.ClimbSubsystem
 import org.firstinspires.ftc.teamcode.subsystem.ViperExtensionSubsystem
@@ -24,40 +26,47 @@ class Ascend(
                 return true
             }
             AscensionState.STARTED -> {
-                currentState = AscensionState.L2_CLIMBING
+                if (target == AscensionTarget.LEVEL_3) {
+                    extensionSubsystem.setRunToPosition()
+                    rotationSubsystem.setRunToPosition()
+                }
+
+                currentState = when (target) {
+                    AscensionTarget.LEVEL_2 -> AscensionState.L2_CLIMBING
+                    AscensionTarget.LEVEL_3 -> AscensionState.L3_CLIMBING
+                }
+
                 elapsedTime.reset()
                 return true
             }
             AscensionState.L2_CLIMBING -> {
-                if (elapsedTime.isTimedOut(L2_CLIMB_TIMEOUT)) {
+                val isTimedOut = elapsedTime.isTimedOut(L2_CLIMB_TIMEOUT)
+                val isRotated = (rotationSubsystem.currentPosition ?: 0) < L2_ROTATE_POSITION
+
+                if (isTimedOut) {
                     climbSubsystem.set(0.0)
-                    currentState = AscensionState.L2_ROTATING
-                    return true
                 } else {
-                    climbSubsystem.set(-1.0) // TODO: Is this rotating in the right direction?
-                    return true
+                    climbSubsystem.set(-1.0) // Negative pulls the robot up
                 }
-            }
-            AscensionState.L2_ROTATING -> {
-                if ((rotationSubsystem.currentPosition ?: 0) < L2_ROTATE_POSITION) {
-                    rotationSubsystem.setRotationMotorGroupPower(1.0)
+
+                if (isRotated) {
+                    rotationSubsystem.setRotationMotorGroupPower(-1.0)
                 } else {
                     rotationSubsystem.setRotationMotorGroupPower(0.0)
                 }
 
-                currentState = if (target == AscensionTarget.LEVEL_2) {
-                    AscensionState.FINISHED
-                } else {
-                    AscensionState.L3_CLIMBING
+                if (isTimedOut && isRotated) {
+                    currentState = AscensionState.FINISHED
                 }
 
                 return true
             }
             AscensionState.L3_CLIMBING -> {
-                TODO()
-            }
-            AscensionState.L3_ROTATING -> {
-                TODO()
+                extensionSubsystem.extendToPosition(ArmExtensionPosition.ASCEND)
+                rotationSubsystem.rotateToPosition(ArmRotationPosition.HOME)
+
+                currentState = AscensionState.FINISHED
+                return true
             }
             AscensionState.FINISHED -> {
                 currentState = AscensionState.IDLE
@@ -70,16 +79,14 @@ class Ascend(
         IDLE,
         STARTED,
         L2_CLIMBING,
-        L2_ROTATING,
         L3_CLIMBING,
-        L3_ROTATING,
         FINISHED
     }
 
     companion object {
         // TODO: Validate all of these values
-        private const val L2_CLIMB_TIMEOUT = 2000.0
-        private const val L2_ROTATE_POSITION = 2000
+        private const val L2_CLIMB_TIMEOUT = 4000.0
+        private const val L2_ROTATE_POSITION = 3300
     }
 }
 

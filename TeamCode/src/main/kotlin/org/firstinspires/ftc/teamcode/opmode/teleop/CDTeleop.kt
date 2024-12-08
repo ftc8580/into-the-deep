@@ -9,9 +9,10 @@ import com.acmerobotics.roadrunner.Vector2d
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.actions.Ascend
+import org.firstinspires.ftc.teamcode.actions.AscensionTarget
 import org.firstinspires.ftc.teamcode.actions.buildDriveArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildHighDeliveryArmPositionAction
-import org.firstinspires.ftc.teamcode.actions.buildHomeArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildLowDeliveryArmPositionAction
 import org.firstinspires.ftc.teamcode.actions.buildPickupArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase
@@ -98,7 +99,6 @@ class CDTeleop : OpModeBase() {
         } else if (extensionGroupState == MotorGroupState.ACTIVE) {
             extensionGroupState = MotorGroupState.STOPPED
             armExtensionSubsystem.setExtensionMotorGroupPower(0.0)
-//            viperArmSubsystem.correctExtensionGroupFollower()
         }
 
         if (accessoryGamepad.leftY > VARIABLE_INPUT_DEAD_ZONE || accessoryGamepad.leftY < -VARIABLE_INPUT_DEAD_ZONE) {
@@ -115,13 +115,17 @@ class CDTeleop : OpModeBase() {
         if (gamepad2.a) {
             runningActions.add(armSubsystems.buildDriveArmPositionAction())
         } else if (gamepad2.b) {
-//            runningActions.add(armSubsystems.buildPickupArmPositionAction())
+            runningActions.add(armSubsystems.buildPickupArmPositionAction())
         } else if (gamepad2.x) {
             runningActions.add(armSubsystems.buildLowDeliveryArmPositionAction())
         } else if (gamepad2.y) {
             runningActions.add(armSubsystems.buildHighDeliveryArmPositionAction())
-        } else if (gamepad2.right_bumper) {
-            runningActions.add(armSubsystems.buildHomeArmPositionAction())
+        }
+
+        if (gamepad2.right_bumper) {
+            runningActions.add(Ascend(climbSubsystem, armExtensionSubsystem, armRotationSubsystem, AscensionTarget.LEVEL_2))
+        } else if (gamepad2.left_bumper) {
+            runningActions.add(Ascend(climbSubsystem, armExtensionSubsystem, armRotationSubsystem, AscensionTarget.LEVEL_3))
         }
 
         // update running actions
@@ -147,9 +151,6 @@ class CDTeleop : OpModeBase() {
         val gripperLowDeliveryButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
         val gripperHighDeliveryButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
 
-//        val retractForClimbButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-//        val ratchetClimbButton = gamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-
         speedFastButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_FAST })
         speedSlowButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_SLOW })
         normalDriveButton.whenPressed(Runnable { driveSpeedScale = DRIVE_SPEED_NORMAL})
@@ -157,14 +158,6 @@ class CDTeleop : OpModeBase() {
         gripperPickupButton.whenPressed(Runnable { gripperSubsystem.set(GripperHeight.HOME) })
         gripperLowDeliveryButton.whenPressed(Runnable { gripperSubsystem.set(GripperHeight.HOME) })
         gripperHighDeliveryButton.whenPressed(Runnable { gripperSubsystem.set(GripperHeight.HIGH) })
-
-        // TODO: Set correct numbers from telemetry
-//        retractForClimbButton.whenPressed(Runnable { viperArmSubsystem.extendToPosition(0) })
-//        ratchetClimbButton.whenPressed(Runnable {
-//            viperArmSubsystem.rotateToPosition(0)
-//            viperArmSubsystem.extendToPosition(0)
-//            viperArmSubsystem.rotateToPosition(200)
-//        })
     }
 
     private fun initializeCoDriverGamepad(gamepad: GamepadEx) {
@@ -185,39 +178,17 @@ class CDTeleop : OpModeBase() {
         telemetry.addLine("speed mult: $driveSpeedScale")
         telemetry.addLine()
 
-        // TODO: Comment out telemetry we only need for troubleshooting
-
         hardware.viperExtensionMotorGroup?.let {
             telemetry.addLine("viperExtensionPos: ${armExtensionSubsystem.extensionPositions}")
         } ?: telemetry.addLine("[WARNING] viperExtensionGroup not found")
-
-        hardware.intakeRotateServo?.let {
-            telemetry.addLine("intakeRotationPosition: ${it.position}")
-        } ?: telemetry.addLine("[WARNING] wrist servo not found")
 
         hardware.extensionHomeSensor?.let {
             telemetry.addLine("extensionHomeSensor pressed?: ${it.isPressed}")
         } ?: telemetry.addLine("[WARNING] extension home sensor not found")
 
-        hardware.rotationHomeSensor?.let {
-            telemetry.addLine("rotationHomeSensor pressed?: ${it.isPressed}")
-        } ?: telemetry.addLine("[WARNING] rotation home sensor not found")
-
-        hardware.gripperServo?.let {
-            telemetry.addLine("gripperServo position: ${it.position}")
-        } ?: telemetry.addLine("[WARNING] gripper servo not found")
-
         hardware.armRotationEncoder?.let {
             telemetry.addLine("rotation position: ${it.getPositionAndVelocity().position}")
         } ?: telemetry.addLine("[WARNING] arm rotation encoder not found")
-
-        hardware.distanceSensor?.let {
-            telemetry.addLine("MB1643 raw max voltage: ${it.getRawMaxVoltage()}")
-            telemetry.addLine("MB1643 max voltage: ${it.getMaxVoltage()}")
-            telemetry.addLine("MB1643 raw voltage: ${it.readRawVoltage()}")
-            telemetry.addLine("MB1643 bounded voltage: ${it.getBoundedVoltage()}")
-            telemetry.addLine(it.toString())
-        } ?: telemetry.addLine("[WARNING] distance sensor not found")
 
         telemetry.update()
     }

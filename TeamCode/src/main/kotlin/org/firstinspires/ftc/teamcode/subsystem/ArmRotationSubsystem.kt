@@ -13,6 +13,10 @@ class ArmRotationSubsystem(hardware: HardwareManager) : MotorGroupSubsystem() {
         rotationMotorGroup?.mode = DcMotor.RunMode.RUN_USING_ENCODER
     }
 
+    fun setRunToPosition() {
+        rotationMotorGroup?.mode = DcMotor.RunMode.RUN_TO_POSITION
+    }
+
     fun correctRotationGroupFollower() {
         rotationMotorGroup?.correctFollower()
     }
@@ -44,12 +48,6 @@ class ArmRotationSubsystem(hardware: HardwareManager) : MotorGroupSubsystem() {
         rotationMotorGroup?.safelyGoToPosition(-safePosition, ROTATION_SPEED)
     }
 
-    fun rotateHome() = rotateToPosition(ArmRotationPosition.HOME)
-
-    fun rotateDrive() = rotateToPosition(ArmRotationPosition.DRIVE)
-
-    fun rotateMax() = rotateToPosition(ArmRotationPosition.TOP)
-
     val currentPosition: Int?
         get() = rotationEncoder?.getPositionAndVelocity()?.position
 
@@ -61,10 +59,8 @@ class ArmRotationSubsystem(hardware: HardwareManager) : MotorGroupSubsystem() {
 enum class ArmRotationPosition(val position: Int) {
     HOME(0),
     AUTON_PICKUP(325),
-    DRIVE(750), // TODO
-    PARK(1650), // TODO
+    DRIVE(750),
+    PARK(1650),
     AUTON_DELIVERY(3150),
     TOP(3300)
 }
-
-// Pickup position - rotation = 325, extension = 2600

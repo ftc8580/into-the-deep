@@ -14,6 +14,10 @@ class ViperExtensionSubsystem(hardware: HardwareManager) : MotorGroupSubsystem()
         extensionMotorGroup?.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
     }
 
+    fun setRunToPosition() {
+        extensionMotorGroup?.mode = DcMotor.RunMode.RUN_TO_POSITION
+    }
+
     fun resetMotorEncoders() {
         extensionMotorGroup?.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         extensionMotorGroup?.mode = DcMotor.RunMode.RUN_USING_ENCODER
@@ -60,12 +64,6 @@ class ViperExtensionSubsystem(hardware: HardwareManager) : MotorGroupSubsystem()
         extensionMotorGroup?.safelyGoToPosition(safePosition, EXTENSION_SPEED)
     }
 
-    fun extendLowerBasket() = extendToPosition(ArmExtensionPosition.LOW_BASKET)
-
-    fun extendFully() = extendToPosition(ArmExtensionPosition.MAX_UP)
-
-    fun retract() = extendToPosition(ArmExtensionPosition.HOME)
-
     val isExtensionHome: Boolean
         get() = extensionHomeSensor?.isPressed == true
 
@@ -83,8 +81,9 @@ class ViperExtensionSubsystem(hardware: HardwareManager) : MotorGroupSubsystem()
 
 enum class ArmExtensionPosition(val position: Int) {
     HOME(0),
-    LOW_BASKET(700), // 1162
-    AUTON_PICKUP(1450), // TODO
-    MAX_DOWN(2250), // 5100
-    MAX_UP(4000) // 6200
+    ASCEND(10),
+    LOW_BASKET(700),
+    AUTON_PICKUP(1450),
+    MAX_DOWN(2250),
+    MAX_UP(4000)
 }
