@@ -39,7 +39,7 @@ class Ascend(
             }
             AscensionState.L2_CLIMBING -> {
                 val isTimedOut = elapsedTime.isTimedOut(L2_CLIMB_TIMEOUT)
-                val isRotated = (rotationSubsystem.currentPosition ?: 0) >= L2_ROTATE_POSITION
+                val isRotated = (rotationSubsystem.currentPosition ?: L2_ROTATE_POSITION) >= L2_ROTATE_POSITION
 
                 if (isTimedOut) {
                     climbSubsystem.set(0.0)
@@ -48,28 +48,40 @@ class Ascend(
                 }
 
                 if (isRotated) {
-                    rotationSubsystem.setRotationMotorGroupPower(0.0)
-                    rotationSubsystem.rotateToPosition(ArmRotationPosition.PRE_L3)
-                } else {
-                    rotationSubsystem.setRotationMotorGroupPower(-1.0)
+                    rotationSubsystem.setRotationMotorGroupPower_UNSAFE(0.0)
+                } else if (isTimedOut) {
+                    rotationSubsystem.setRotationMotorGroupPower_UNSAFE(-1.0)
                 }
 
                 if (isTimedOut && isRotated) {
-                    currentState = AscensionState.FINISHED
+                    currentState = AscensionState.L3_CLIMBING
                 }
 
                 return true
             }
             AscensionState.L3_CLIMBING -> {
-                if ((extensionSubsystem.currentPosition ?: 0) >= 200) {
+                val extensionPosition = extensionSubsystem.currentPosition ?: 0
+                val rotationPosition = rotationSubsystem.currentPosition ?: L2_ROTATE_POSITION
+
+                if (extensionPosition >= 900) {
                     extensionSubsystem.extendToPosition(ArmExtensionPosition.ASCEND)
-                    rotationSubsystem.rotateToPosition(ArmRotationPosition.PRE_L3)
+                    if (rotationPosition >= L2_ROTATE_POSITION) {
+                        rotationSubsystem.setRotationMotorGroupPower_UNSAFE(0.0)
+                    } else {
+                        rotationSubsystem.setRotationMotorGroupPower_UNSAFE(-1.0)
+                    }
                 } else {
                     extensionSubsystem.extendToPosition(ArmExtensionPosition.ASCEND)
-                    rotationSubsystem.rotateToPosition(ArmRotationPosition.HOME)
+                    if (rotationPosition <= 20) {
+                        rotationSubsystem.setRotationMotorGroupPower_UNSAFE(0.0)
+                    } else if (rotationPosition <= 150) {
+                        rotationSubsystem.setRotationMotorGroupPower_UNSAFE(0.25)
+                    } else {
+                        rotationSubsystem.setRotationMotorGroupPower_UNSAFE(1.0)
+                    }
                 }
 
-                currentState = AscensionState.FINISHED
+//                currentState = AscensionState.FINISHED
                 return true
             }
             AscensionState.FINISHED -> {
@@ -89,7 +101,7 @@ class Ascend(
 
     companion object {
         // TODO: Validate all of these values
-        private const val L2_CLIMB_TIMEOUT = 5000.0
+        private const val L2_CLIMB_TIMEOUT = 4500.0
         private const val L2_ROTATE_POSITION = 3300
     }
 }

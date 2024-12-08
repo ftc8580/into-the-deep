@@ -34,6 +34,12 @@ class ArmRotationSubsystem(hardware: HardwareManager) : MotorGroupSubsystem() {
         }
     }
 
+    fun setRotationMotorGroupPower_UNSAFE(power: Double) {
+        if (rotationMotorGroup == null) return
+
+        rotationMotorGroup.power = power
+    }
+
     fun rotateToPosition(input: ArmRotationPosition) {
         val safePosition = getBoundedPosition(
             input.position,
@@ -58,6 +64,5 @@ enum class ArmRotationPosition(val position: Int) {
     DRIVE(750),
     PARK(1650),
     AUTON_DELIVERY(3150),
-    TOP(3300),
-    PRE_L3(3500)
+    TOP(3300)
 }

@@ -77,10 +77,11 @@ class ViperExtensionSubsystem(hardware: HardwareManager) : MotorGroupSubsystem()
 
 enum class ArmExtensionPosition(val position: Int) {
     HOME(0),
-    ASCEND(10),
+    ASCEND(50),
     LOW_BASKET(700),
     AUTON_PICKUP(1450),
     MAX_DOWN(2250),
     PRE_ASCENT(3350),
-    MAX_UP(4000)
+    MAX_UP(3650),
+    AUTON_MAX(4000)
 }

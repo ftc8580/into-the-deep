@@ -86,8 +86,8 @@ class CDTeleop : OpModeBase() {
             hardware.intakeWheelServoRear?.power = 1.0
             hardware.intakeWheelServoFront?.power = -1.0
         } else if (accessoryRightTriggerValue > VARIABLE_INPUT_DEAD_ZONE) {
-            hardware.intakeWheelServoRear?.power = -1.0
-            hardware.intakeWheelServoFront?.power = 1.0
+            hardware.intakeWheelServoRear?.power = -0.6
+            hardware.intakeWheelServoFront?.power = 0.6
         } else {
             hardware.intakeWheelServoRear?.power = 0.0
             hardware.intakeWheelServoFront?.power = 0.0
@@ -124,8 +124,6 @@ class CDTeleop : OpModeBase() {
 
         if (gamepad2.right_bumper) {
             runningActions.add(Ascend(climbSubsystem, armExtensionSubsystem, armRotationSubsystem, AscensionTarget.LEVEL_2))
-        } else if (gamepad2.left_bumper) {
-            runningActions.add(Ascend(climbSubsystem, armExtensionSubsystem, armRotationSubsystem, AscensionTarget.LEVEL_3))
         }
 
         // update running actions

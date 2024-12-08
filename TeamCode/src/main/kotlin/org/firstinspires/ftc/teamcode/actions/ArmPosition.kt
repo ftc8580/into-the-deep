@@ -76,7 +76,7 @@ fun ArmSubsystems.buildLowDeliveryArmPositionAction(): Action = this.buildArmPos
 )
 
 fun ArmSubsystems.buildHighDeliveryArmPositionAction(): Action = this.buildArmPositionAction(
-    ArmExtensionPosition.MAX_UP,
+    ArmExtensionPosition.AUTON_MAX,
     ArmRotationPosition.AUTON_DELIVERY,
     WristRotationPosition.DELIVER
 )
