@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem.internal
 
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.teamcode.util.MotorGroup
 
@@ -9,6 +10,7 @@ abstract class MotorGroupSubsystem {
         motorSpeed: Double
     ) {
         this.targetPosition = targetPosition
+        this.mode = DcMotor.RunMode.RUN_TO_POSITION
         this.power = motorSpeed
     }
 

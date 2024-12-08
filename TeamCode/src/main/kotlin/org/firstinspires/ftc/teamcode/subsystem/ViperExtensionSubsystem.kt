@@ -14,10 +14,6 @@ class ViperExtensionSubsystem(hardware: HardwareManager) : MotorGroupSubsystem()
         extensionMotorGroup?.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
     }
 
-    fun setRunToPosition() {
-        extensionMotorGroup?.mode = DcMotor.RunMode.RUN_TO_POSITION
-    }
-
     fun resetMotorEncoders() {
         extensionMotorGroup?.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         extensionMotorGroup?.mode = DcMotor.RunMode.RUN_USING_ENCODER
@@ -85,5 +81,6 @@ enum class ArmExtensionPosition(val position: Int) {
     LOW_BASKET(700),
     AUTON_PICKUP(1450),
     MAX_DOWN(2250),
+    PRE_ASCENT(3350),
     MAX_UP(4000)
 }

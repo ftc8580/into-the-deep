@@ -13,10 +13,6 @@ class ArmRotationSubsystem(hardware: HardwareManager) : MotorGroupSubsystem() {
         rotationMotorGroup?.mode = DcMotor.RunMode.RUN_USING_ENCODER
     }
 
-    fun setRunToPosition() {
-        rotationMotorGroup?.mode = DcMotor.RunMode.RUN_TO_POSITION
-    }
-
     fun correctRotationGroupFollower() {
         rotationMotorGroup?.correctFollower()
     }
@@ -62,5 +58,6 @@ enum class ArmRotationPosition(val position: Int) {
     DRIVE(750),
     PARK(1650),
     AUTON_DELIVERY(3150),
-    TOP(3300)
+    TOP(3300),
+    PRE_L3(3500)
 }

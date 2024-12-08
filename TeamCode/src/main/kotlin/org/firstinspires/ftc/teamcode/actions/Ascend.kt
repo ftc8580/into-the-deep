@@ -26,22 +26,20 @@ class Ascend(
                 return true
             }
             AscensionState.STARTED -> {
-                if (target == AscensionTarget.LEVEL_3) {
-                    extensionSubsystem.setRunToPosition()
-                    rotationSubsystem.setRunToPosition()
-                }
-
                 currentState = when (target) {
                     AscensionTarget.LEVEL_2 -> AscensionState.L2_CLIMBING
                     AscensionTarget.LEVEL_3 -> AscensionState.L3_CLIMBING
                 }
+
+                // Hold extension in position for L3
+                extensionSubsystem.extendToPosition(ArmExtensionPosition.PRE_ASCENT)
 
                 elapsedTime.reset()
                 return true
             }
             AscensionState.L2_CLIMBING -> {
                 val isTimedOut = elapsedTime.isTimedOut(L2_CLIMB_TIMEOUT)
-                val isRotated = (rotationSubsystem.currentPosition ?: 0) < L2_ROTATE_POSITION
+                val isRotated = (rotationSubsystem.currentPosition ?: 0) >= L2_ROTATE_POSITION
 
                 if (isTimedOut) {
                     climbSubsystem.set(0.0)
@@ -50,9 +48,10 @@ class Ascend(
                 }
 
                 if (isRotated) {
-                    rotationSubsystem.setRotationMotorGroupPower(-1.0)
-                } else {
                     rotationSubsystem.setRotationMotorGroupPower(0.0)
+                    rotationSubsystem.rotateToPosition(ArmRotationPosition.PRE_L3)
+                } else {
+                    rotationSubsystem.setRotationMotorGroupPower(-1.0)
                 }
 
                 if (isTimedOut && isRotated) {
@@ -62,8 +61,13 @@ class Ascend(
                 return true
             }
             AscensionState.L3_CLIMBING -> {
-                extensionSubsystem.extendToPosition(ArmExtensionPosition.ASCEND)
-                rotationSubsystem.rotateToPosition(ArmRotationPosition.HOME)
+                if ((extensionSubsystem.currentPosition ?: 0) >= 200) {
+                    extensionSubsystem.extendToPosition(ArmExtensionPosition.ASCEND)
+                    rotationSubsystem.rotateToPosition(ArmRotationPosition.PRE_L3)
+                } else {
+                    extensionSubsystem.extendToPosition(ArmExtensionPosition.ASCEND)
+                    rotationSubsystem.rotateToPosition(ArmRotationPosition.HOME)
+                }
 
                 currentState = AscensionState.FINISHED
                 return true
@@ -85,7 +89,7 @@ class Ascend(
 
     companion object {
         // TODO: Validate all of these values
-        private const val L2_CLIMB_TIMEOUT = 4000.0
+        private const val L2_CLIMB_TIMEOUT = 5000.0
         private const val L2_ROTATE_POSITION = 3300
     }
 }
