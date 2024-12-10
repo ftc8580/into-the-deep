@@ -112,17 +112,18 @@ class CDTeleop : OpModeBase() {
 
         // Preset buttons
 
-        if (gamepad2.a) {
-            runningActions.add(armSubsystems.buildDriveArmPositionAction())
-        } else if (gamepad2.b) {
-            runningActions.add(armSubsystems.buildPickupArmPositionAction())
-        } else if (gamepad2.x) {
-            runningActions.add(armSubsystems.buildLowDeliveryArmPositionAction())
-        } else if (gamepad2.y) {
-            runningActions.add(armSubsystems.buildHighDeliveryArmPositionAction())
-        }
+//        if (gamepad2.a) {
+//            runningActions.add(armSubsystems.buildDriveArmPositionAction())
+//        } else if (gamepad2.b) {
+//            runningActions.add(armSubsystems.buildPickupArmPositionAction())
+//        } else if (gamepad2.x) {
+//            runningActions.add(armSubsystems.buildLowDeliveryArmPositionAction())
+//        } else if (gamepad2.y) {
+//            runningActions.add(armSubsystems.buildHighDeliveryArmPositionAction())
+//        }
 
-        if (gamepad2.right_bumper) {
+        // Require both bumpers to be pressed in order to start ascent
+        if (gamepad2.right_bumper && gamepad2.left_bumper) {
             runningActions.add(Ascend(climbSubsystem, armExtensionSubsystem, armRotationSubsystem, AscensionTarget.LEVEL_2))
         }
 
