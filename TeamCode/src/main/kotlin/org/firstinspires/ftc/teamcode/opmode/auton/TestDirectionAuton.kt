@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
 
+@Disabled
 @Suppress("Unused")
 @Autonomous(name = "Test Direction Auton")
 class TestDirectionAuton : AutonBase() {

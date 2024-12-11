@@ -25,7 +25,7 @@ abstract class AutonBase : LinearOpMode() {
     protected val fastSegmentVelocityConstraint = TranslationalVelConstraint(75.0)
     protected val midSegmentVelocityConstraint = TranslationalVelConstraint(60.0)
     protected val slowSegmentVelocityConstraint = TranslationalVelConstraint(50.0)
-    protected val slowerSegmentVelocityConstraint = TranslationalVelConstraint(25.0)
+    protected val slowerSegmentVelocityConstraint = TranslationalVelConstraint(20.75)
     protected val slowestSegmentVelocityConstraint = TranslationalVelConstraint(23.50) //faster than this on tight curves is not accurate
     protected val slowSegmentAccelerationConstraint = ProfileAccelConstraint(-30.0, 45.0)
     protected val slowerSegmentAccelerationConstraint = ProfileAccelConstraint(-15.0, 22.0)

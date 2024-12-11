@@ -23,7 +23,7 @@ import kotlin.math.pow
 @Suppress("UNUSED")
 @TeleOp(name="CDTeleop")
 class CDTeleop : OpModeBase() {
-    private var driveSpeedScale = DRIVE_SPEED_NORMAL
+    private var driveSpeedScale = DRIVE_SPEED_FAST
 
     private var extensionGroupState = MotorGroupState.STOPPED
     private var rotationGroupState = MotorGroupState.STOPPED

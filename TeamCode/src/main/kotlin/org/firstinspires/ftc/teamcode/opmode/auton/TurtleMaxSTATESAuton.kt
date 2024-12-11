@@ -4,16 +4,15 @@ import com.acmerobotics.roadrunner.Pose2d
 import com.acmerobotics.roadrunner.Vector2d
 import com.acmerobotics.roadrunner.ftc.runBlocking
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import org.firstinspires.ftc.teamcode.actions.GripperPosition
 import org.firstinspires.ftc.teamcode.actions.buildHomeArmPositionAction
 import org.firstinspires.ftc.teamcode.opmode.AutonBase
 import org.firstinspires.ftc.teamcode.subsystem.GripperHeight
 
-@Disabled
+//@Disabled
 @Suppress("Unused")
-@Autonomous(name = "Turtle Max SMOOTH", group = "Turtle")
-class TurtleMaxSMOOTHAuton : AutonBase() {
+@Autonomous(name = "Turtle Max STATES", group = "Turtle")
+class TurtleMaxSTATESAuton : AutonBase() {
     private val initialPose = Pose2d(-8.0, 63.0, Math.toRadians(270.0))
 
     @Throws(InterruptedException::class)
@@ -51,39 +50,40 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
             //PUSH SAMPLES TO OBSERVATION ZONE
             .setTangent(Math.toRadians(120.0)) // Set exit direction
             .splineToConstantHeading(Vector2d(-35.0, 28.0), Math.toRadians(270.0), null, null) // Spline around submersible corner
-            .splineToConstantHeading(Vector2d(-41.0, 16.0), Math.toRadians(180.0), slowestSegmentVelocityConstraint, null) //waypoint for smooth curve
-            .splineToConstantHeading(Vector2d(-47.0, 20.0), Math.toRadians(90.0), slowestSegmentVelocityConstraint, null)  //lineup to push first sample
+            .splineToConstantHeading(Vector2d(-36.0, 19.0), Math.toRadians(225.0), slowerSegmentVelocityConstraint, null) //waypoint for smooth curve
+            .splineToConstantHeading(Vector2d(-41.0, 16.50), Math.toRadians(180.0), slowerSegmentVelocityConstraint, null) //waypoint for smooth curve
+            .splineToConstantHeading(Vector2d(-47.0, 20.0), Math.toRadians(90.0), slowerSegmentVelocityConstraint, null)  //lineup to push first sample
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             .splineToConstantHeading(Vector2d(-47.0, 48.0), Math.toRadians(90.0), fastSegmentVelocityConstraint, null) // Push first sample to observation zone
-            .splineToConstantHeading(Vector2d(-45.0, 53.0), Math.toRadians(0.0), slowestSegmentVelocityConstraint, null) //waypoint for smooth curve
-            .splineToConstantHeading(Vector2d(-43.0, 48.0), Math.toRadians(270.0), slowestSegmentVelocityConstraint, null) //waypoint for smooth curve
+            .splineToConstantHeading(Vector2d(-45.0, 53.0), Math.toRadians(0.0), slowerSegmentVelocityConstraint, null) //waypoint for smooth curve
+            .splineToConstantHeading(Vector2d(-43.0, 48.0), Math.toRadians(270.0), slowerSegmentVelocityConstraint, null) //waypoint for smooth curve
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
-            .splineToConstantHeading(Vector2d(-43.0, 20.0), Math.toRadians(270.0), fastSegmentVelocityConstraint, null) // Drive back to next pickup
-            .splineToConstantHeading(Vector2d(-50.0, 15.0), Math.toRadians(180.0), slowestSegmentVelocityConstraint, null) // waypoint Drive back to next pickup
-            .splineToConstantHeading(Vector2d(-57.0, 20.0), Math.toRadians(90.0), slowestSegmentVelocityConstraint, null) // waypoint Drive back to next pickup
+            .splineToConstantHeading(Vector2d(-43.0, 19.0), Math.toRadians(270.0), fastSegmentVelocityConstraint, null) // Drive back to next pickup
+            .splineToConstantHeading(Vector2d(-50.0, 14.0), Math.toRadians(180.0), slowerSegmentVelocityConstraint, null) // waypoint Drive back to next pickup
+            .splineToConstantHeading(Vector2d(-57.0, 20.0), Math.toRadians(90.0), slowerSegmentVelocityConstraint, null) // waypoint Drive back to next pickup
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             .splineToConstantHeading(Vector2d(-57.5, 48.0), Math.toRadians(90.0), fastSegmentVelocityConstraint, null) // Push second sample to the observation area
-            .splineToConstantHeading(Vector2d(-55.5, 53.0), Math.toRadians(0.0), slowestSegmentVelocityConstraint, null) // waypoint Push second sample to the observation area
-//            .splineToConstantHeading(Vector2d(-53.5, 48.0), Math.toRadians(270.0), slowestSegmentVelocityConstraint, null) // waypoint Push second sample to the observation area
+            .splineToConstantHeading(Vector2d(-55.5, 53.0), Math.toRadians(0.0), slowerSegmentVelocityConstraint, null) // waypoint Push second sample to the observation area
+//            .splineToConstantHeading(Vector2d(-53.5, 48.0), Math.toRadians(270.0), slowerSegmentVelocityConstraint, null) // waypoint Push second sample to the observation area
 //
 //            //PUSH 3RD SAMPLE
 //            .splineToConstantHeading(Vector2d(-53.5, 17.0), Math.toRadians(270.0), fastSegmentVelocityConstraint, null) // Drive back to next pickup
-//            .splineToConstantHeading(Vector2d(-58.0, 16.0), Math.toRadians(180.0), slowestSegmentVelocityConstraint, null) // waypoint Drive back to next pickup
-//            .splineToConstantHeading(Vector2d(-63.5, 20.0), Math.toRadians(90.0), slowestSegmentVelocityConstraint, null) // waypoint Drive back to next pickup
+//            .splineToConstantHeading(Vector2d(-58.0, 16.0), Math.toRadians(180.0), slowerSegmentVelocityConstraint, null) // waypoint Drive back to next pickup
+//            .splineToConstantHeading(Vector2d(-63.5, 20.0), Math.toRadians(90.0), slowerSegmentVelocityConstraint, null) // waypoint Drive back to next pickup
 //
 //            .splineToConstantHeading(Vector2d(-63.5, 48.0), Math.toRadians(90.0), fastSegmentVelocityConstraint, null)// Push third sample to the observation area
-//            .splineToConstantHeading(Vector2d(-60.5, 53.0), Math.toRadians(0.0), slowestSegmentVelocityConstraint, null) // waypoint Push third sample to the observation area
+//            .splineToConstantHeading(Vector2d(-60.5, 53.0), Math.toRadians(0.0), slowerSegmentVelocityConstraint, null) // waypoint Push third sample to the observation area
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //ROTATE TO PRE-PICKUP POSITION AND PICKUP SPECIMEN 2
-            .splineToLinearHeading(Pose2d(-44.0, 57.0, Math.toRadians(90.0)), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
+            .splineToLinearHeading(Pose2d(-43.50, 57.0, Math.toRadians(90.0)), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             //.waitSeconds(1.0)
-            .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
+            .splineToConstantHeading(Vector2d(-43.50, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
-            .waitSeconds(0.15)
+            .waitSeconds(0.11)
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //DELIVER SPECIMEN 2 ON HIGH CHAMBER
@@ -99,7 +99,7 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
             //.waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
-            .waitSeconds(0.15)
+            .waitSeconds(0.11)
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //DELIVER SPECIMEN 3 ON HIGH CHAMBER
@@ -115,7 +115,7 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
             //.waitSeconds(1.0)
             .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
             .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
-            .waitSeconds(0.15)
+            .waitSeconds(0.11)
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
             //DELIVER SPECIMEN 4 ON HIGH
@@ -125,14 +125,14 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
             .waitSeconds(0.1)
             .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
-            //ROTATE TO PRE-PICKUP POSITION AND PICKUP SPECIMEN 5
-            .splineToLinearHeading(Pose2d(-2.0, 33.01, Math.toRadians(-90.0)), Math.toRadians(120.0)) //adding this changes rotation direction
-            .splineToLinearHeading(Pose2d(-44.0, 57.0, Math.toRadians(90.0)), Math.toRadians(90.0))//, midSegmentVelocityConstraint, null)
-            //.waitSeconds(1.0)
-            .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
-            .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
-            .waitSeconds(0.15)
-            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
+//            //ROTATE TO PRE-PICKUP POSITION AND PICKUP SPECIMEN 5
+//            .splineToLinearHeading(Pose2d(-2.0, 33.01, Math.toRadians(-90.0)), Math.toRadians(120.0)) //adding this changes rotation direction
+//            .splineToLinearHeading(Pose2d(-44.0, 57.0, Math.toRadians(90.0)), Math.toRadians(90.0))//, midSegmentVelocityConstraint, null)
+//            //.waitSeconds(1.0)
+//            .splineToConstantHeading(Vector2d(-44.0, 63.0), Math.toRadians(90.0))//, slowSegmentVelocityConstraint, slowSegmentAccelerationConstraint)
+//            .afterTime(0.0, GripperPosition(gripperSubsystem, GripperHeight.HIGH))
+//            .waitSeconds(0.15)
+//            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 
 //            //DELIVER SPECIMEN 5 ON HIGH
 //            .setTangent(Math.toRadians(-30.0))
@@ -142,9 +142,11 @@ class TurtleMaxSMOOTHAuton : AutonBase() {
 //            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
 //
 
-//            //PARK
-//            .setTangent(Math.toRadians(90.0))
-//            .splineToConstantHeading(Vector2d(-56.0, 58.0), Math.toRadians(180.0))
+            //PARK
+            .setTangent(Math.toRadians(120.0)) // Set exit direction
+            .splineToSplineHeading(Pose2d(-3.0, 35.0, Math.toRadians(-90.0)), Math.toRadians(120.0))
+            .splineToConstantHeading(Vector2d(-52.0, 61.0), Math.toRadians(135.0), fastSegmentVelocityConstraint, null)
+            .afterTime(0.0, armSubsystems.buildHomeArmPositionAction())
             .build()
 
         waitForStart()
